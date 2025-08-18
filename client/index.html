@@ -2,9 +2,41 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>MATCHBOX - Scambia le tue figurine Panini</title>
     <meta name="description" content="MATCHBOX - App per lo scambio di figurine Panini tra collezionisti" />
+    
+    <!-- PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#05637b" />
+    
+    <!-- Status Bar Styling -->
+    <style>
+      /* Ensure full screen coverage */
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        background-color: #05637b;
+        /* Safe area support for iPhone notch */
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+      
+      #root {
+        height: 100vh;
+        background-color: #05637b;
+      }
+      
+      /* Status bar area styling */
+      @supports (padding-top: env(safe-area-inset-top)) {
+        body {
+          padding-top: env(safe-area-inset-top);
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>

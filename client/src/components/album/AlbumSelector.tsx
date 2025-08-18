@@ -28,9 +28,6 @@ export const AlbumSelector: React.FC<AlbumSelectorProps> = ({
       {/* Content scrollable */}
       <div className="flex-1 overflow-y-auto px-4 py-6">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-[#052b3e] mb-4">
-            I Tuoi Album
-          </h1>
           <p className="text-[#05637b] text-lg">
             Seleziona un album per gestire la tua collezione di figurine
           </p>

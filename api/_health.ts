@@ -7,7 +7,8 @@ export function registerHealthRoutes(app: Express) {
       // Check database connection
       let dbOk = false;
       try {
-        await storage.getUser("1"); // Simple DB query to test connection
+        // Test DB connection by attempting to get all users (will work even if empty)
+        await storage.getAllUsers();
         dbOk = true;
       } catch (error) {
         console.error("Database health check failed:", error);

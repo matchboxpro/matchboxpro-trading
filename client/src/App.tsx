@@ -9,6 +9,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { initializePWA } from "@/utils/pwaUtils";
 
 import Login from "@/pages/login";
+import Intro from "@/pages/intro";
 import Dashboard from "@/pages/dashboard";
 import Album from "@/pages/album";
 import Match from "@/pages/match";
@@ -32,10 +33,22 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (isLoading) return;
     
+    // Controlla se deve mostrare l'intro
+    const hasSeenIntro = localStorage.getItem('hasSeenIntro');
+    const shouldShowIntro = !hasSeenIntro || sessionStorage.getItem('showIntroOnReturn');
+    
     if (!user && location !== "/login") {
       setLocation("/login");
     } else if (user && location === "/login") {
-      setLocation("/");
+      if (shouldShowIntro) {
+        sessionStorage.removeItem('showIntroOnReturn');
+        setLocation("/intro");
+      } else {
+        setLocation("/");
+      }
+    } else if (user && location === "/" && shouldShowIntro) {
+      sessionStorage.removeItem('showIntroOnReturn');
+      setLocation("/intro");
     }
   }, [user, isLoading, location, setLocation]);
 
@@ -69,13 +82,14 @@ function AppContent() {
     );
   }
 
-  // Don't show bottom nav on login or admin pages
-  const showBottomNav = location !== "/login" && !location.startsWith("/admin") && isMobile;
+  // Don't show bottom nav on login, intro or admin pages
+  const showBottomNav = location !== "/login" && location !== "/intro" && !location.startsWith("/admin") && isMobile;
 
   return (
     <div className="relative h-screen bg-[#fff4d6] overflow-hidden">
       <Switch>
         <Route path="/login" component={Login} />
+        <Route path="/intro" component={Intro} />
         <Route path="/admin" component={Admin} />
         
         {/* Protected routes */}
@@ -117,6 +131,25 @@ function AppContent() {
 function App() {
   useEffect(() => {
     initializePWA();
+    
+    // Segna per mostrare intro quando l'app viene riaperta
+    const handleBeforeUnload = () => {
+      sessionStorage.setItem('showIntroOnReturn', 'true');
+    };
+    
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        sessionStorage.setItem('showIntroOnReturn', 'true');
+      }
+    };
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   return (

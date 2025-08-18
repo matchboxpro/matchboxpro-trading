@@ -6,6 +6,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { BottomNavigation } from "@/components/ui/bottom-navigation";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { initializePWA } from "@/utils/pwaUtils";
 
 import Login from "@/pages/login";
 import Dashboard from "@/pages/dashboard";
@@ -72,7 +73,7 @@ function AppContent() {
   const showBottomNav = location !== "/login" && !location.startsWith("/admin") && isMobile;
 
   return (
-    <div className="relative min-h-screen bg-[#fff4d6]">
+    <div className="relative h-screen bg-[#fff4d6] overflow-hidden">
       <Switch>
         <Route path="/login" component={Login} />
         <Route path="/admin" component={Admin} />
@@ -114,6 +115,10 @@ function AppContent() {
 }
 
 function App() {
+  useEffect(() => {
+    initializePWA();
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AppContent />

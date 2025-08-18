@@ -8,18 +8,24 @@
     
     <!-- PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#05637b" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
     
     <!-- Status Bar Styling -->
     <style>
-      /* Ensure full screen coverage */
+      /* Ensure full screen coverage and prevent browser UI from showing */
       html, body {
         margin: 0;
         padding: 0;
         height: 100vh;
+        height: 100dvh; /* Dynamic viewport height for mobile */
         background-color: #05637b;
+        overflow: hidden; /* Prevent scrolling that triggers browser UI */
+        position: fixed;
+        width: 100%;
         /* Safe area support for iPhone notch */
         padding-top: env(safe-area-inset-top);
         padding-bottom: env(safe-area-inset-bottom);
@@ -27,7 +33,24 @@
       
       #root {
         height: 100vh;
+        height: 100dvh;
         background-color: #05637b;
+        overflow: hidden;
+        position: relative;
+      }
+      
+      /* Prevent any scrolling on the main container */
+      * {
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      /* Force fullscreen behavior */
+      @media (display-mode: standalone) {
+        html, body {
+          height: 100vh;
+          height: 100dvh;
+          overflow: hidden;
+        }
       }
       
       /* Status bar area styling */

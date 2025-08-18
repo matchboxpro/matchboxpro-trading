@@ -1,0 +1,10 @@
+node_modules
+dist
+client/dist
+.DS_Store
+.env
+*.log
+*.tar.gz
+.replit
+replit.md
+cookies.txt

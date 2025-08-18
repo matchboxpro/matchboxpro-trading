@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# MatchboxPro Pre-commit Hook
+# Enforces code governance rules before allowing commits
+
+echo "🔍 MatchboxPro Governance Check - Pre-commit Hook"
+
+# Check if Node.js is available
+if ! command -v node &> /dev/null; then
+    echo "❌ Node.js not found. Please install Node.js to run governance checks."
+    exit 1
+fi
+
+# Run file size governance check
+echo "📏 Checking file sizes..."
+if ! node scripts/check-file-sizes.js; then
+    echo ""
+    echo "🚨 COMMIT BLOCKED: File size governance violations detected!"
+    echo "   Please refactor large files before committing."
+    echo ""
+    echo "💡 Suggested actions:"
+    echo "   1. Break large components into smaller ones"
+    echo "   2. Extract dialog/modal components"
+    echo "   3. Separate business logic from UI components"
+    echo "   4. Use custom hooks for complex state management"
+    echo ""
+    exit 1
+fi
+
+# Run ESLint with governance rules (if available)
+if [ -f ".eslintrc.governance.js" ] && command -v npx &> /dev/null; then
+    echo "🔧 Running ESLint governance checks..."
+    if ! npx eslint --config .eslintrc.governance.js --ext .ts,.tsx,.js,.jsx client/src server --quiet; then
+        echo ""
+        echo "🚨 COMMIT BLOCKED: ESLint governance violations detected!"
+        echo "   Please fix code quality issues before committing."
+        exit 1
+    fi
+fi
+
+echo "✅ All governance checks passed!"
+echo "🎉 Commit approved - maintaining clean architecture!"
+
+exit 0

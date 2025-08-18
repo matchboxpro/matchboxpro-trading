@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #fff4d6;
+  --foreground: #052b3e;
+  --muted: #fff4d6;
+  --muted-foreground: #052b3e;
+  --popover: #05637b;
+  --popover-foreground: #fff4d6;
+  --card: #05637b;
+  --card-foreground: #fff4d6;
+  --border: #05637b;
+  --input: #fff4d6;
+  --primary: #05637b;
+  --primary-foreground: #fff4d6;
+  --secondary: #f8b400;
+  --secondary-foreground: #052b3e;
+  --accent: #f8b400;
+  --accent-foreground: #052b3e;
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: #fff4d6;
+  --ring: #05637b;
+  --radius: 0.5rem;
+  
+  /* MATCHNODE Brand Colors */
+  --brand-azzurro: #05637b;
+  --brand-bianco: #fff4d6;
+  --brand-giallo: #f8b400;
+  --brand-nero: #052b3e;
+  --sticker-yes: hsl(142, 76%, 36%);
+  --sticker-no: #052b3e;
+  --sticker-double: #f8b400;
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(190, 90%, 50%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Disabilita feedback touch sui pulsanti figurine */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  .touch-manipulation:hover {
+    background-color: inherit !important;
+    opacity: 1 !important;
+  }
+  
+  .touch-manipulation:active {
+    background-color: inherit !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  /* MATCHBOX Brand Colors - Solo classi utilizzate */
+  .text-brand-azzurro {
+    color: var(--brand-azzurro);
+  }
+  
+  .bg-brand-azzurro {
+    background-color: var(--brand-azzurro);
+  }
+  
+  .text-brand-giallo {
+    color: var(--brand-giallo);
+  }
+  
+  .bg-brand-giallo {
+    background-color: var(--brand-giallo);
+  }
+  
+  /* Sticker Status Colors - Ottimizzate per performance */
+  .bg-sticker-yes {
+    background-color: var(--sticker-yes);
+  }
+  
+  .bg-sticker-no {
+    background-color: var(--sticker-no);
+  }
+  
+  .bg-sticker-double {
+    background-color: var(--sticker-double);
+  }
+}
+
+/* Mobile-first ottimizzato */
+.chat-container {
+  scroll-behavior: smooth;
+}
+
+/* Scrollbar ottimizzato per mobile-first */
+@media (min-width: 768px) {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: hsl(220, 14%, 60%);
+    border-radius: 2px;
+  }
+}

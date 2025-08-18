@@ -1,93 +1,65 @@
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, X, Copy } from "lucide-react";
 
 interface StickerDetailDialogProps {
   sticker: any | null;
   isOpen: boolean;
   onClose: () => void;
   status: string;
-  onUpdateSticker: (stickerId: string, status: "yes" | "no" | "double") => void;
+  onUpdateSticker?: (stickerId: string, status: "yes" | "no" | "double") => void;
 }
 
 export const StickerDetailDialog: React.FC<StickerDetailDialogProps> = ({
   sticker,
   isOpen,
   onClose,
-  status,
-  onUpdateSticker
+  status
 }) => {
   if (!sticker) return null;
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "yes": return <Badge className="bg-green-500 text-white">Posseduta</Badge>;
-      case "double": return <Badge className="bg-blue-500 text-white">Doppione</Badge>;
-      default: return <Badge variant="outline">Mancante</Badge>;
+      case "yes": return <Badge className="bg-green-500 text-white text-sm px-3 py-1">Posseduta</Badge>;
+      case "double": return <Badge className="bg-[#f4a623] text-black text-sm px-3 py-1">Doppione</Badge>;
+      default: return <Badge className="bg-red-500 text-white text-sm px-3 py-1">Mancante</Badge>;
     }
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-[#052b3e]">
-            Figurina #{sticker.number}
+      <DialogContent className="max-w-sm bg-[#fff4d6] border-4 border-[#05637b] rounded-2xl">
+        <DialogHeader className="text-center pb-2">
+          <div className="flex items-center justify-center mb-2">
+            <img 
+              src="/matchbox-logo.png" 
+              alt="MATCHBOX" 
+              className="h-8 w-auto"
+            />
+          </div>
+          <DialogTitle className="text-[#05637b] text-xl font-bold">
+            Figurina #{sticker.number.toString().padStart(3, '0')}
           </DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-4">
-          <div>
-            <h3 className="font-semibold text-[#052b3e] mb-2">{sticker.name}</h3>
+        <div className="space-y-4 text-center">
+          <div className="bg-[#05637b] rounded-xl p-4 text-white">
+            <h3 className="font-bold text-lg mb-2">{sticker.name}</h3>
             {sticker.team && (
-              <p className="text-[#05637b] text-sm">{sticker.team}</p>
+              <p className="text-white/80 text-sm">{sticker.team}</p>
             )}
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-[#05637b]">Stato:</span>
+          <div className="flex items-center justify-center gap-2">
+            <span className="text-[#05637b] font-medium">Stato:</span>
             {getStatusBadge(status)}
           </div>
 
-          <div className="flex gap-2 pt-4">
-            <Button
-              variant={status === "yes" ? "default" : "outline"}
-              className={`flex-1 ${status === "yes" ? "bg-green-500 hover:bg-green-600" : "hover:bg-green-50"}`}
-              onClick={() => {
-                onUpdateSticker(sticker.id, status === "yes" ? "no" : "yes");
-                onClose();
-              }}
-            >
-              <Check className="w-4 h-4 mr-2" />
-              {status === "yes" ? "Rimuovi" : "Posseduta"}
-            </Button>
-            
-            <Button
-              variant={status === "double" ? "default" : "outline"}
-              className={`flex-1 ${status === "double" ? "bg-blue-500 hover:bg-blue-600" : "hover:bg-blue-50"}`}
-              onClick={() => {
-                onUpdateSticker(sticker.id, status === "double" ? "no" : "double");
-                onClose();
-              }}
-            >
-              <Copy className="w-4 h-4 mr-2" />
-              {status === "double" ? "Rimuovi" : "Doppione"}
-            </Button>
-            
-            <Button
-              variant={status === "no" ? "default" : "outline"}
-              className={`flex-1 ${status === "no" ? "bg-gray-500 hover:bg-gray-600" : "hover:bg-gray-50"}`}
-              onClick={() => {
-                onUpdateSticker(sticker.id, "no");
-                onClose();
-              }}
-            >
-              <X className="w-4 h-4 mr-2" />
-              Mancante
-            </Button>
-          </div>
+          {sticker.description && (
+            <div className="bg-white/50 rounded-lg p-3">
+              <p className="text-[#05637b] text-sm">{sticker.description}</p>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

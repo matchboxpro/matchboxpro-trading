@@ -35,31 +35,34 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
   };
 
   return (
-    <div className="bg-[#05637b] p-4 text-white relative pb-20">
-
-      {/* Titolo e statistiche centrati */}
-      <div className="text-center mb-6">
-        <div className="flex items-center justify-center mb-2">
+    <div className="bg-[#05637b] text-white relative w-full">
+      {/* Header azzurro con logo - identico alle altre pagine */}
+      <div className="bg-brand-azzurro border-b border-brand-azzurro p-2">
+        <div className="flex items-center justify-center">
           <img 
             src="/matchbox-logo.png" 
             alt="MATCHBOX" 
             className="h-12 w-auto"
           />
         </div>
-        <h1 className="text-2xl font-bold text-white mb-2">
+      </div>
+
+      {/* Titolo e statistiche centrati */}
+      <div className="text-center px-4 py-3">
+        <h1 className="text-lg font-bold text-white mb-1">
           {album?.name}
         </h1>
-        <div className="text-white/80 text-sm">
+        <div className="text-white/80 text-xs">
           {ownedStickers}/{totalStickers} figurine ({Math.round((ownedStickers / totalStickers) * 100)}%)
         </div>
       </div>
 
       {/* Filtri orizzontali */}
-      <div className="absolute bottom-0 left-0 right-0 px-4 pb-2">
-        <div className="grid grid-cols-4 gap-2">
+      <div className="px-4 pb-3">
+        <div className="grid grid-cols-4 gap-1">
           <Button
             onClick={() => onFilterChange("all")}
-            className={`py-2 rounded-lg text-sm font-medium ${
+            className={`py-2 rounded-lg text-xs font-medium ${
               filter === "all" 
                 ? "bg-[#f4a623] text-black font-semibold" 
                 : "bg-[#05637b] text-white font-semibold hover:bg-[#f4a623] hover:text-black"
@@ -69,7 +72,7 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
           </Button>
           <Button
             onClick={() => onFilterChange("mine")}
-            className={`py-2 rounded-lg text-sm font-medium ${
+            className={`py-2 rounded-lg text-xs font-medium ${
               filter === "mine" 
                 ? "bg-[#f4a623] text-black font-semibold" 
                 : "bg-[#05637b] text-white font-semibold hover:bg-[#f4a623] hover:text-black"
@@ -79,7 +82,7 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
           </Button>
           <Button
             onClick={() => onFilterChange("missing")}
-            className={`py-2 rounded-lg text-sm font-medium ${
+            className={`py-2 rounded-lg text-xs font-medium ${
               filter === "missing" 
                 ? "bg-[#f4a623] text-black font-semibold" 
                 : "bg-[#05637b] text-white font-semibold hover:bg-[#f4a623] hover:text-black"
@@ -89,7 +92,7 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
           </Button>
           <Button
             onClick={() => onFilterChange("double")}
-            className={`py-2 rounded-lg text-sm font-medium ${
+            className={`py-2 rounded-lg text-xs font-medium ${
               filter === "double" 
                 ? "bg-[#f4a623] text-black font-semibold" 
                 : "bg-[#05637b] text-white font-semibold hover:bg-[#f4a623] hover:text-black"

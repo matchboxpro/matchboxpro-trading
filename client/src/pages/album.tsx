@@ -170,7 +170,7 @@ export default function Album() {
   // If no album selected, show album selection
   if (!selectedAlbum) {
     return (
-      <div className="min-h-screen bg-[#fff4d6] p-8">
+      <div className="h-screen bg-[#fff4d6] flex flex-col overflow-hidden fixed inset-0">
         <AlbumSelector
           albums={albums as any[]}
           onAlbumSelect={setSelectedAlbum}
@@ -182,8 +182,8 @@ export default function Album() {
   const selectedAlbumData = (albums as any[]).find((a: any) => a.id === selectedAlbum);
 
   return (
-    <div className="h-screen bg-[#05637b] flex flex-col overflow-hidden">
-      <div className="flex-shrink-0 p-4">
+    <div className="h-screen bg-[#05637b] flex flex-col overflow-hidden fixed inset-0">
+      <div className="flex-shrink-0">
         <AlbumHeader
           album={selectedAlbumData}
           stickers={stickers as any[]}
@@ -194,7 +194,7 @@ export default function Album() {
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden">
         <StickerGrid
           stickers={stickers as any[]}
           userStickers={userStickers as any[]}

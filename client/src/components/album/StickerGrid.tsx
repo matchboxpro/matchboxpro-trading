@@ -20,7 +20,7 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
   onUpdateSticker
 }) => {
   const getUserStickerStatus = (stickerId: string) => {
-    const userSticker = userStickers.find((us: any) => us.stickerId === stickerId);
+    const userSticker = (userStickers || []).find((us: any) => us.stickerId === stickerId);
     return userSticker?.status || "no";
   };
 

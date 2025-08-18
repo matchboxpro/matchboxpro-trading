@@ -97,7 +97,12 @@ export function registerStickerRoutes(app: Express, requireAuth: any, requireAdm
   app.put("/api/user/stickers/:stickerId", requireAuth, async (req, res) => {
     try {
       const userId = (req as any).user.userId;
-      const { status } = insertUserStickerSchema.parse(req.body);
+      
+      // Schema per update - solo status richiesto
+      const updateSchema = z.object({
+        status: z.enum(["yes", "no", "double"])
+      });
+      const { status } = updateSchema.parse(req.body);
       
       const userSticker = await storage.updateUserSticker(userId, req.params.stickerId, status);
       res.json(userSticker);

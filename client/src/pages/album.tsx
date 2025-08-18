@@ -41,8 +41,8 @@ export default function Album() {
   });
 
   const { data: userStickers = [] } = useQuery({
-    queryKey: ["/api/user-stickers", selectedAlbum],
-    queryFn: () => fetch(`/api/user-stickers/${selectedAlbum}`, { credentials: 'include' }).then(res => res.json()),
+    queryKey: ["/api/user/stickers", selectedAlbum],
+    queryFn: () => fetch(`/api/user/stickers/${selectedAlbum}`, { credentials: 'include' }).then(res => res.json()),
     enabled: !!selectedAlbum,
     staleTime: 2 * 60 * 1000, // 2 minuti cache
   });
@@ -71,20 +71,18 @@ export default function Album() {
 
   const updateStickerMutation = useMutation({
     mutationFn: async ({ stickerId, status }: { stickerId: string; status: "yes" | "no" | "double" }) => {
-      const response = await apiRequest("POST", "/api/user-stickers", { 
-        stickerId, 
-        status,
-        albumId: selectedAlbum 
+      const response = await apiRequest("PUT", `/api/user/stickers/${stickerId}`, { 
+        status 
       });
       return response.json();
     },
     onMutate: async ({ stickerId, status }) => {
       // Ottimizzazione: aggiornamento ottimistico per UI istantanea
-      await queryClient.cancelQueries({ queryKey: ["/api/user-stickers", selectedAlbum] });
+      await queryClient.cancelQueries({ queryKey: ["/api/user/stickers", selectedAlbum] });
       
-      const previousData = queryClient.getQueryData(["/api/user-stickers", selectedAlbum]);
+      const previousData = queryClient.getQueryData(["/api/user/stickers", selectedAlbum]);
       
-      queryClient.setQueryData(["/api/user-stickers", selectedAlbum], (old: any) => {
+      queryClient.setQueryData(["/api/user/stickers", selectedAlbum], (old: any) => {
         if (!old) return old;
         
         const existingIndex = old.findIndex((us: any) => us.stickerId === stickerId);
@@ -104,7 +102,7 @@ export default function Album() {
     onError: (error: any, variables, context) => {
       // Rollback in caso di errore
       if (context?.previousData) {
-        queryClient.setQueryData(["/api/user-stickers", selectedAlbum], context.previousData);
+        queryClient.setQueryData(["/api/user/stickers", selectedAlbum], context.previousData);
       }
       toast({
         title: "Errore",
@@ -114,7 +112,7 @@ export default function Album() {
     },
     onSettled: () => {
       // Sincronizza con il server
-      queryClient.invalidateQueries({ queryKey: ["/api/user-stickers", selectedAlbum] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/stickers", selectedAlbum] });
     },
   });
 
@@ -138,33 +136,31 @@ export default function Album() {
       // Processa batch sequenzialmente per evitare sovraccarico DB
       for (const batch of batches) {
         const promises = batch.map((sticker: any) => {
-          return apiRequest("POST", "/api/user-stickers", { 
-            stickerId: sticker.id, 
-            status: "no",
-            albumId: selectedAlbum 
+          return apiRequest("PUT", `/api/user/stickers/${sticker.id}`, { 
+            status: "no"
           });
         });
         await Promise.all(promises);
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/user-stickers", selectedAlbum] });
+      queryClient.invalidateQueries({ queryKey: ["/api/user/stickers", selectedAlbum] });
     },
   });
 
-  // Auto-set solo quando ci sono figurine senza stato - ottimizzato per evitare auto-set inutili
-  useEffect(() => {
-    if (!selectedAlbum || !stickers.length || userStickers.length >= stickers.length) return;
-    
-    const stickersWithoutStatus = stickers.filter((sticker: any) => {
-      return !userStickers.find((us: any) => us.stickerId === sticker.id);
-    });
-    
-    // Solo se ci sono molte figurine senza stato (evita micro-batch inutili)
-    if (stickersWithoutStatus.length > 10 && !autoSetMissingMutation.isPending) {
-      autoSetMissingMutation.mutate();
-    }
-  }, [stickers, userStickers, selectedAlbum]);
+  // Auto-set disabilitato per evitare rate limiting
+  // useEffect(() => {
+  //   if (!selectedAlbum || !stickers.length || userStickers.length >= stickers.length) return;
+  //   
+  //   const stickersWithoutStatus = stickers.filter((sticker: any) => {
+  //     return !userStickers.find((us: any) => us.stickerId === sticker.id);
+  //   });
+  //   
+  //   // Solo se ci sono molte figurine senza stato (evita micro-batch inutili)
+  //   if (stickersWithoutStatus.length > 10 && !autoSetMissingMutation.isPending) {
+  //     autoSetMissingMutation.mutate();
+  //   }
+  // }, [stickers, userStickers, selectedAlbum]);
 
   const getUserStickerStatus = (stickerId: string) => {
     const userSticker = (userStickers as any[]).find((us: any) => us.stickerId === stickerId);

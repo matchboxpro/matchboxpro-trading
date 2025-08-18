@@ -20,14 +20,16 @@ app.use(morgan(isProd ? "tiny" : "dev", {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Rate limit gentile SOLO su /api/user/stickers
-app.use("/api/user/stickers", rateLimit({
-  windowMs: 10_000, // 10s
-  max: 30,          // 30 richieste/10s per IP
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { ok: false, reason: "rate_limited" }
-}));
+// Rate limit gentile SOLO su /api/user/stickers (disabilitato in development)
+if (isProd) {
+  app.use("/api/user/stickers", rateLimit({
+    windowMs: 10_000, // 10s
+    max: 30,          // 30 richieste/10s per IP
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { ok: false, reason: "rate_limited" }
+  }));
+}
 
 // Dedup ravvicinato (idempotenza base)
 const dedupCache = new LRUCache({ max: 5000, ttl: 3000 }); // 3s

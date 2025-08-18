@@ -21,9 +21,9 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
   onBack
 }) => {
   const totalStickers = stickers.length;
-  const ownedStickers = userStickers.filter((us: any) => us.status === "yes" || us.status === "double").length;
+  const ownedStickers = (userStickers || []).filter((us: any) => us.status === "yes" || us.status === "double").length;
   const missingStickers = totalStickers - ownedStickers;
-  const doubleStickers = userStickers.filter((us: any) => us.status === "double").length;
+  const doubleStickers = (userStickers || []).filter((us: any) => us.status === "double").length;
 
   const getFilterCount = (filterType: string) => {
     switch (filterType) {

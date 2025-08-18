@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "builds": [],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "status": 404,
+      "headers": {
+        "X-Deployment-Disabled": "This project is configured for Render deployment only"
+      }
+    }
+  ]
+}

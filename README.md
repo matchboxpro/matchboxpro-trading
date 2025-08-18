@@ -56,6 +56,9 @@ MatchboxPro è una piattaforma moderna per collezionisti di figurine Panini che 
 - **Trust proxy** per deployment sicuro
 - **Prepared statements** per prevenire SQL injection
 - **Input validation** server-side
+- **Rate limiting** (30 req/10s su endpoint critici)
+- **Request deduplication** (3s TTL anti-spam)
+- **Production logging** (solo errori ≥400)
 
 ## 📋 Funzionalità
 
@@ -263,6 +266,6 @@ Progetto privato - Tutti i diritti riservati
 
 ---
 
-**Ultimo aggiornamento**: 2025-08-18 - Deploy completo Render + JWT + documentazione aggiornata
+**Ultimo aggiornamento**: 2025-08-18 - Deploy completo + JWT + anti-spam + documentazione aggiornata
 
 Made with ❤️ by MatchboxPro Team

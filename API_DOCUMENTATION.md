@@ -13,6 +13,9 @@ L'API utilizza **JWT (JSON Web Tokens)** con cookie HttpOnly sicuri per l'autent
 - Token JWT firmati con secret sicuro
 - Cookie HttpOnly, Secure, SameSite=Lax
 - Trust proxy abilitato per deployment su Render
+- **Rate limiting**: 30 richieste/10s su `/api/user/stickers`
+- **Request deduplication**: Cache LRU 3s TTL per anti-spam
+- **Production logging**: Solo errori (≥400) e richieste lente
 
 ### Endpoints Autenticazione
 

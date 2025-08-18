@@ -6,7 +6,13 @@ MatchboxPro espone una REST API completa per la gestione di utenti, album, figur
 
 ## 🔐 Autenticazione
 
-L'API utilizza sessioni Express per l'autenticazione. Tutti gli endpoint protetti richiedono una sessione valida.
+L'API utilizza **JWT (JSON Web Tokens)** con cookie HttpOnly sicuri per l'autenticazione. Tutti gli endpoint protetti richiedono un token JWT valido.
+
+### Sicurezza
+- Password hashate con **bcrypt**
+- Token JWT firmati con secret sicuro
+- Cookie HttpOnly, Secure, SameSite=Lax
+- Trust proxy abilitato per deployment su Render
 
 ### Endpoints Autenticazione
 
@@ -32,6 +38,8 @@ Login utente con nickname e password.
   }
 }
 ```
+
+**Note**: Il token JWT viene automaticamente impostato come cookie HttpOnly sicuro.
 
 #### `POST /api/auth/logout`
 Logout utente e distruzione sessione.
@@ -440,10 +448,10 @@ export const db = drizzle(pool);
 ## 🔒 Middleware di Sicurezza
 
 ### `requireAuth`
-Verifica presenza sessione utente valida.
+Verifica presenza e validità del token JWT dal cookie `auth-token`.
 
 ### `requireAdmin`
-Verifica che l'utente abbia role "admin".
+Verifica che l'utente abbia role "admin" dal token JWT decodificato.
 
 ## 📝 Codici di Stato HTTP
 
@@ -460,12 +468,12 @@ Verifica che l'utente abbia role "admin".
 L'API è ottimizzata per l'uso con React Query nel frontend:
 
 ```typescript
-// Esempio query
+// Esempio query con JWT cookie automatico
 const { data: albums } = useQuery({
   queryKey: ['/api/albums'],
   queryFn: async () => {
     const response = await fetch('/api/albums', {
-      credentials: 'include'
+      credentials: 'include' // Include JWT cookie automaticamente
     });
     return response.json();
   }
@@ -487,4 +495,30 @@ const mutation = useMutation({
 
 ---
 
-**Ultimo aggiornamento**: 2025-08-16 - Documentazione completa API con architettura storage modulare
+## 🩺 Endpoint Diagnostici
+
+### `GET /api/_health`
+Health check completo del sistema.
+
+**Response (200):**
+```json
+{
+  "status": "ok",
+  "timestamp": "2025-08-18T20:37:37.000Z",
+  "commit": "caf0631",
+  "branch": "main",
+  "DB_OK": true,
+  "HAS_JWT_SECRET": true,
+  "environment": "production"
+}
+```
+
+### `GET /api/_seed`
+Seeding utenti di test (solo development).
+
+### `GET /api/_whoami`
+Informazioni utente corrente dal token JWT.
+
+---
+
+**Ultimo aggiornamento**: 2025-08-18 - Migrazione completa a JWT, deployment Render, endpoint diagnostici

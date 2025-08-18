@@ -6,12 +6,13 @@
 
 - **Nome Progetto**: MatchboxPro (MATCHBOX)
 - **Tipo**: Web Application per scambio figurine Panini tra utenti
-- **Stack**: React + TypeScript + Express + Supabase
+- **Stack**: React + TypeScript + Express + PostgreSQL
 - **Porta Server**: 3001 (configurata per evitare conflitto AirTunes macOS su porta 5000)
-- **Build Tool**: Vite
-- **Database**: Supabase (PostgreSQL)
-- **Autenticazione**: Sistema sessioni Express (nickname + password)
-- **Ultimo Backup**: 15/08/2025 23:02 - Sistema backup automatico a 2 rotazioni
+- **Build Tool**: Vite (frontend) + esbuild (backend)
+- **Database**: PostgreSQL su Render
+- **Autenticazione**: JWT con cookie HttpOnly sicuri + bcrypt
+- **Deployment**: Render Starter ($7/mese) - https://matchboxpro.onrender.com
+- **Ultimo Aggiornamento**: 18/08/2025 - Deploy completo su Render con JWT
 
 ## 🎯 Obiettivo Progetto (PROMPT ORIGINALE)
 
@@ -29,9 +30,12 @@
 - **Export**: Dati in CSV/JSON
 
 ### 🔐 Autenticazione & Sicurezza
-- **Login**: nickname + password (unico)
-- **Profilo**: cap, raggioKm, albumSelezionato, startTrial, isPremium, role
+- **Login**: nickname + password con JWT tokens
+- **Password**: Hashate con bcrypt (salt rounds: 10)
+- **Tokens**: JWT firmati, cookie HttpOnly, Secure, SameSite=Lax
+- **Profilo**: cap, raggioKm, albumSelezionato, role
 - **Validazioni**: CAP 5 cifre, nickname lunghezza, anti-spam
+- **Trust Proxy**: Abilitato per deployment Render
 
 ### 💬 Sistema Match & Chat
 - **Algoritmo**: 1:1 per figurine mancanti/doppie
@@ -48,12 +52,15 @@
 ### Directory Principale
 ```
 /Users/dero/Documents/MatchboxPro_Portable/matchboxpro_current/
-├── client/          ← DIRECTORY ATTIVA servita da Vite
-├── server/          ← Backend Express
-├── matchboxpro/     ← Directory con duplicati (server/shared)
-├── shared/          ← Tipi condivisi
-├── package.json     ← Dipendenze root
+├── client/          ← Frontend React + Vite
+├── server/          ← Backend Express + esbuild
+├── api/             ← Endpoint diagnostici (_health, _seed, _whoami)
+├── shared/          ← Tipi condivisi e schema database
+├── migrations/      ← Migrazioni database Drizzle
+├── scripts/         ← Script utilità e governance
+├── package.json     ← Dipendenze unificate
 ├── vite.config.ts   ← Configurazione Vite
+├── vercel.json      ← Blocco deployment Vercel (solo Render)
 └── tsconfig.json    ← Configurazione TypeScript
 ```
 
@@ -218,11 +225,13 @@ PUT  /api/user/stickers/:stickerId ← Aggiorna stato figurina (SI/NO/DOPPIA)
 - `reports` - Segnalazioni
 - `matches` - Sistema matching
 
-### Connessione (REFACTORED)
-- **File**: `/server/storage/database/connection.ts` (15 righe)
+### Connessione Database
+- **File**: `/server/storage/database/connection.ts`
 - **Driver**: Drizzle ORM + node-postgres
 - **Pool**: PostgreSQL connection pool
-- **URL**: `process.env.SUPABASE_DATABASE_URL`
+- **URL**: `process.env.SUPABASE_DATABASE_URL` (PostgreSQL su Render)
+- **Schema**: Definito in `/shared/schema.ts` con timestamptz
+- **Migrazioni**: Gestite con Drizzle Kit in `/migrations/`
 
 ### Pattern Repository Implementato
 - **UserRepository**: Gestione utenti, autenticazione, admin user management
@@ -395,7 +404,36 @@ npm run dev
 
 > **IMPORTANTE**: Questo file deve essere aggiornato ad ogni modifica significativa della struttura, API o componenti. È il punto di riferimento principale per orientarsi nel progetto.
 
-**Ultimo aggiornamento**: 2025-08-16 - Refactoring storage modulare + gestione utenti admin
+## 🚀 Deployment Render
+
+### Configurazione Produzione
+- **URL Live**: https://matchboxpro.onrender.com
+- **Build Command**: `npm install && npm run build`
+- **Start Command**: `npm start`
+- **Node Version**: 18+
+
+### Variabili Ambiente
+```bash
+SUPABASE_DATABASE_URL=postgresql://user:pass@host:port/db
+JWT_SECRET=production-secret-key
+NODE_ENV=production
+NPM_CONFIG_PRODUCTION=false
+```
+
+### Endpoint Diagnostici Live
+- **Health Check**: https://matchboxpro.onrender.com/api/_health
+- **Seed Test Users**: https://matchboxpro.onrender.com/api/_seed
+- **Current User**: https://matchboxpro.onrender.com/api/_whoami
+
+### Build Process
+1. **Frontend**: Vite build → `client/dist/`
+2. **Backend**: esbuild → `dist/index.js`
+3. **Static Serving**: Express serve `client/dist/` in produzione
+4. **API Routes**: Tutti gli endpoint `/api/*` funzionanti
+
+---
+
+**Ultimo aggiornamento**: 2025-08-18 - Deploy completo Render + JWT + endpoint diagnostici
 
 ### ✅ Refactoring Storage Modulare (2025-08-16)
 - **Problema**: File `storage.ts` monolitico (624 righe) violava governance

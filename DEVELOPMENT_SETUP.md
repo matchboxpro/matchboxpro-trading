@@ -1,15 +1,21 @@
 # MatchboxPro - Guida Setup Sviluppo
 
-## 🚀 Setup per Mac Intel e Apple Silicon
+## 🚀 Setup Completo per Sviluppo e Deploy
 
-Questa guida ti aiuta a configurare MatchboxPro per lo sviluppo su Windsurf, compatibile con entrambe le architetture Mac.
+Questa guida copre il setup locale per sviluppo e le istruzioni per il deployment su Render con PostgreSQL.
 
 ### 📋 Prerequisiti
 
+**Per Sviluppo Locale:**
 - **Node.js**: v18+ (consigliato v20.16.11)
 - **npm**: v8+
 - **Git**: Per il controllo versione
 - **Windsurf**: IDE di sviluppo
+
+**Per Deployment Render:**
+- Account Render con Starter Plan ($7/mese)
+- Database PostgreSQL su Render
+- Repository GitHub collegato
 
 ### 🔧 Setup Automatico
 
@@ -109,16 +115,57 @@ Dopo l'avvio:
 
 ### 🔐 Configurazione Ambiente
 
-Copia `.env.example` in `.env` e configura:
+**Sviluppo Locale:**
 ```bash
 cp .env.example .env
-# Modifica .env con le tue credenziali
+# Configura nel .env:
+# SUPABASE_DATABASE_URL=postgresql://...
+# JWT_SECRET=your-secret-key
+# NODE_ENV=development
 ```
+
+**Produzione Render:**
+Configura le seguenti variabili ambiente su Render:
+```bash
+SUPABASE_DATABASE_URL=postgresql://...
+JWT_SECRET=your-production-secret
+NODE_ENV=production
+NPM_CONFIG_PRODUCTION=false
+```
+
+## 🚀 Deployment su Render
+
+### Setup Iniziale
+1. **Crea Web Service** su Render
+2. **Collega Repository** GitHub
+3. **Configura Build Settings:**
+   - Build Command: `npm install && npm run build`
+   - Start Command: `npm start`
+   - Node Version: 18+
+
+### Variabili Ambiente Render
+```bash
+SUPABASE_DATABASE_URL=postgresql://user:pass@host:port/db
+JWT_SECRET=your-production-jwt-secret-key
+NODE_ENV=production
+NPM_CONFIG_PRODUCTION=false
+```
+
+### Endpoint Diagnostici Live
+- **Health Check**: https://matchboxpro.onrender.com/api/_health
+- **App Live**: https://matchboxpro.onrender.com
+- **Seed Test Users**: https://matchboxpro.onrender.com/api/_seed
 
 ### 🆘 Supporto
 
-Se incontri problemi:
+**Problemi Sviluppo:**
 1. Esegui `npm run setup`
-2. Verifica la versione Node.js con `node --version`
-3. Controlla i log del server per errori specifici
-4. Consulta `PROJECT_STRUCTURE.md` per dettagli architettura
+2. Verifica Node.js: `node --version`
+3. Controlla log server per errori
+4. Consulta `PROJECT_STRUCTURE.md`
+
+**Problemi Deploy Render:**
+1. Verifica Build Command: `npm install && npm run build`
+2. Verifica Start Command: `npm start`
+3. Controlla variabili ambiente
+4. Monitora log deployment su Render dashboard

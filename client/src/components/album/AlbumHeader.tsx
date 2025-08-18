@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Search, Settings, BookOpen } from "lucide-react";
+import { ArrowLeft, Search, Settings, BookOpen, Menu } from "lucide-react";
 
 interface AlbumHeaderProps {
   album: any;
@@ -20,14 +20,34 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
   onFilterChange,
   onBack
 }) => {
+  const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  
   const totalStickers = stickers.length;
-  const ownedStickers = (userStickers || []).filter((us: any) => us.status === "yes" || us.status === "double").length;
+  const ownedStickers = (userStickers || []).filter((us: any) => us.status === "yes").length;
   const missingStickers = totalStickers - ownedStickers;
   const doubleStickers = (userStickers || []).filter((us: any) => us.status === "double").length;
 
+  // Chiudi menu quando si clicca fuori
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+
+    if (showMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showMenu]);
+
   const getFilterCount = (filterType: string) => {
     switch (filterType) {
-      case "mine": return ownedStickers;
+      case "mine": return (userStickers || []).filter((us: any) => us.status === "yes" || us.status === "double").length;
       case "missing": return missingStickers;
       case "double": return doubleStickers;
       default: return totalStickers;
@@ -37,7 +57,7 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
   return (
     <div className="bg-[#05637b] text-white relative w-full">
       {/* Header azzurro con logo - identico alle altre pagine */}
-      <div className="bg-brand-azzurro border-b border-brand-azzurro p-2">
+      <div className="bg-brand-azzurro border-b border-brand-azzurro p-2 relative">
         <div className="flex items-center justify-center">
           <img 
             src="/matchbox-logo.png" 
@@ -45,16 +65,56 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
             className="h-12 w-auto"
           />
         </div>
+        
+        {/* Menu hamburger in alto a destra */}
+        <div className="absolute top-2 right-2" ref={menuRef}>
+          <Button
+            onClick={() => setShowMenu(!showMenu)}
+            className="bg-transparent hover:bg-[#05637b]/20 p-2 h-auto"
+          >
+            <Menu className="w-5 h-5 text-white" />
+          </Button>
+          
+          {/* Dropdown menu */}
+          {showMenu && (
+            <div className="absolute top-full right-0 mt-2 bg-gradient-to-br from-[#fff4d6] to-white rounded-xl shadow-xl border-2 border-[#f4a623] min-w-[200px] z-50 overflow-hidden">
+              {/* Header del menu */}
+              <div className="bg-[#05637b] text-white px-4 py-2 text-center">
+                <span className="font-bold text-sm">Statistiche Album</span>
+              </div>
+              
+              {/* Contenuto statistiche */}
+              <div className="p-4 space-y-3">
+                <div className="flex justify-between items-center py-2 px-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                  <span className="text-[#052b3e] font-semibold text-sm">Mie:</span>
+                  <span className="text-green-600 font-bold text-lg">{ownedStickers}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 px-3 bg-red-50 rounded-lg border-l-4 border-red-500">
+                  <span className="text-[#052b3e] font-semibold text-sm">Mancanti:</span>
+                  <span className="text-red-600 font-bold text-lg">{missingStickers}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 px-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                  <span className="text-[#052b3e] font-semibold text-sm">Doppie:</span>
+                  <span className="text-blue-600 font-bold text-lg">{doubleStickers}</span>
+                </div>
+              </div>
+              
+              {/* Footer con percentuale */}
+              <div className="bg-[#f4a623] text-[#052b3e] px-4 py-2 text-center">
+                <span className="font-bold text-sm">
+                  Completamento: {Math.round((ownedStickers / totalStickers) * 100)}%
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Titolo e statistiche centrati */}
-      <div className="text-center px-4 py-3">
-        <h1 className="text-lg font-bold text-white mb-1">
+      <div className="text-center px-4 -mt-1 pb-3">
+        <h1 className="text-lg font-bold text-white">
           {album?.name}
         </h1>
-        <div className="text-white/80 text-xs">
-          {ownedStickers}/{totalStickers} figurine ({Math.round((ownedStickers / totalStickers) * 100)}%)
-        </div>
       </div>
 
       {/* Filtri orizzontali */}

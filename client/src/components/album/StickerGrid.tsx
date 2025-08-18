@@ -73,11 +73,11 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                 className="flex-1 mx-3 text-white font-medium text-left min-w-0 cursor-pointer"
                 onClick={() => onStickerClick(sticker)}
               >
-                <div className="text-sm truncate">
+                <div className="text-xs truncate">
                   {sticker.name}
                 </div>
                 {sticker.team && (
-                  <div className="text-xs text-white/70 truncate">
+                  <div className="text-[10px] text-[#05637b] truncate leading-tight">
                     {sticker.team}
                   </div>
                 )}

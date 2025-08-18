@@ -69,6 +69,9 @@ MatchboxPro è una piattaforma moderna per collezionisti di figurine Panini che 
 - **UI mobile ottimizzata** con layout fisso e scroll verticale
 - **Header uniformi** su tutte le pagine con logo MatchBox
 - **Modale info figurine** in sola lettura
+- **Menu statistiche** con conteggio figurine possedute/mancanti/doppie
+- **PWA fullscreen** con status bar personalizzata
+- **Testi compatti** per migliore leggibilità mobile
 - **Algoritmo matching** 1:1 per scambi ottimali
 - **Chat persistente** con altri collezionisti
 - **Dashboard** con statistiche personali
@@ -269,6 +272,6 @@ Progetto privato - Tutti i diritti riservati
 
 ---
 
-**Ultimo aggiornamento**: 2025-08-18 - Ottimizzazione UI mobile + layout uniforme + header standardizzati
+**Ultimo aggiornamento**: 2025-08-19 - Menu statistiche figurine + PWA fullscreen + ottimizzazioni UI
 
 Made with ❤️ by MatchboxPro Team

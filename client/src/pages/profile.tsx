@@ -94,7 +94,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-bianco pb-20">
+    <div className="h-screen bg-brand-bianco overflow-y-auto pb-20">
       <div className="bg-brand-azzurro border-b border-brand-azzurro p-2">
         <div className="flex items-center justify-center">
           <img 

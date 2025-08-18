@@ -1,13 +1,64 @@
 import "dotenv/config";
 import express, { type Request, Response, NextFunction } from "express";
+import morgan from "morgan";
+import rateLimit from "express-rate-limit";
+import { LRUCache } from "lru-cache";
+import crypto from "crypto";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
 app.set("trust proxy", 1);
+
+const isProd = process.env.NODE_ENV === "production";
+
+// Morgan logging: in produzione logga solo errori (>=400)
+app.use(morgan(isProd ? "tiny" : "dev", {
+  skip: (_req, res) => isProd ? res.statusCode < 400 : false
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Rate limit gentile SOLO su /api/user/stickers
+app.use("/api/user/stickers", rateLimit({
+  windowMs: 10_000, // 10s
+  max: 30,          // 30 richieste/10s per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { ok: false, reason: "rate_limited" }
+}));
+
+// Dedup ravvicinato (idempotenza base)
+const dedupCache = new LRUCache({ max: 5000, ttl: 3000 }); // 3s
+
+function dedupKey(req: Request) {
+  const userId =
+    ((req as any).user?.id) ||
+    (req.headers["x-user-id"]) ||
+    ((req as any).cookies?.user_id) || "anon";
+  const bodyStr = JSON.stringify(req.body ?? {});
+  const hash = crypto.createHash("sha1").update(bodyStr).digest("hex");
+  return `${userId}:${hash}`;
+}
+
+// Middleware dedup PRIMA della logica attuale di PUT /api/user/stickers
+app.put("/api/user/stickers/:stickerId", (req, res, next) => {
+  try {
+    const key = dedupKey(req);
+    if (dedupCache.has(key)) {
+      res.set("Cache-Control", "no-store, max-age=0");
+      return res.status(202).json({ ok: true, dedup: true });
+    }
+    dedupCache.set(key, true);
+    res.set("Cache-Control", "no-store, max-age=0");
+    return next(); // continua verso l'handler esistente
+  } catch {
+    return next(); // non bloccare il flusso se qualcosa va storto
+  }
+});
+
+// Custom logging middleware (ridotto per produzione)
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -22,16 +73,19 @@ app.use((req, res, next) => {
   res.on("finish", () => {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
+      // In produzione logga solo errori (>=400) o richieste lente (>2s)
+      if (!isProd || res.statusCode >= 400 || duration > 2000) {
+        let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+        if (capturedJsonResponse && res.statusCode >= 400) {
+          logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+        }
 
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
+        if (logLine.length > 80) {
+          logLine = logLine.slice(0, 79) + "…";
+        }
 
-      log(logLine);
+        log(logLine);
+      }
     }
   });
 

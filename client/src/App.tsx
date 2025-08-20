@@ -48,12 +48,22 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
       if (location !== "/login" && hasSeenIntro) {
         setLocation("/login");
       }
+      // Se non autenticato e non ha visto intro, ma non è su /intro, vai a intro
+      if (!hasSeenIntro && location !== "/intro") {
+        setLocation("/intro");
+      }
     } else if (user) {
       // Se autenticato e deve mostrare intro (solo riapertura app, non navigazione)
       if (shouldShowIntroOnAppStart && location !== "/intro") {
         sessionStorage.removeItem('showIntroOnReturn');
         setLocation("/intro");
-      } else if (location === "/login" || (location === "/intro" && hasSeenIntro && !shouldShowIntroOnAppStart)) {
+      } else if (location === "/login") {
+        // Redirect dopo login successful - vai alla dashboard
+        setLocation("/");
+      } else if (location === "/intro" && hasSeenIntro && !shouldShowIntroOnAppStart) {
+        setLocation("/");
+      } else if (location !== "/" && location !== "/dashboard" && location !== "/album" && location !== "/match" && location !== "/profile" && !location.startsWith("/chat") && location !== "/intro" && location !== "/admin") {
+        // Se l'utente è su una route non valida (404), reindirizza alla dashboard
         setLocation("/");
       }
     }
@@ -101,6 +111,11 @@ function AppContent() {
         
         {/* Protected routes */}
         <Route path="/">
+          <AuthGuard>
+            <Dashboard />
+          </AuthGuard>
+        </Route>
+        <Route path="/dashboard">
           <AuthGuard>
             <Dashboard />
           </AuthGuard>

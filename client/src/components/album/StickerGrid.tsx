@@ -53,9 +53,9 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "yes": return "bg-green-100 border-green-300 text-green-800";
-      case "double": return "bg-blue-100 border-blue-300 text-blue-800";
-      default: return "bg-gray-50 border-gray-200 text-gray-600";
+      case "yes": return "bg-[#05637b] border-[#05637b]";
+      case "double": return "bg-[#05637b] border-[#05637b]";
+      default: return "bg-[#05637b] border-[#05637b]";
     }
   };
 
@@ -75,12 +75,20 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
           return (
             <div
               key={sticker.id}
-              className="bg-[#05637b] rounded-xl p-3 flex items-center justify-between shadow-lg w-full min-w-0 max-w-none touch-manipulation"
-              style={{ minHeight: '60px' }}
+              className="bg-[#05637b] rounded-xl p-3 flex items-center justify-between shadow-lg w-full min-w-0 max-w-none touch-manipulation hover:bg-[#05637b]"
+              style={{ 
+                minHeight: '60px',
+                WebkitTapHighlightColor: 'transparent',
+                touchAction: 'manipulation'
+              }}
             >
               {/* Numero figurina - clickable */}
               <div 
-                className="bg-[#f4a623] text-black font-bold text-sm px-2 py-2 rounded-lg min-w-[40px] text-center flex-shrink-0 cursor-pointer"
+                className="bg-[#f4a623] text-black font-bold text-sm px-2 py-2 rounded-lg min-w-[40px] text-center flex-shrink-0 cursor-pointer hover:bg-[#f4a623]"
+                style={{
+                  WebkitTapHighlightColor: 'transparent',
+                  touchAction: 'manipulation'
+                }}
                 onClick={() => onStickerClick(sticker)}
               >
                 {sticker.number.toString().padStart(3, '0')}
@@ -88,7 +96,11 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
 
               {/* Nome figurina - clickable */}
               <div 
-                className="flex-1 mx-3 text-white font-medium text-left min-w-0 cursor-pointer"
+                className="flex-1 mx-3 text-white font-medium text-left min-w-0 cursor-pointer hover:text-white"
+                style={{
+                  WebkitTapHighlightColor: 'transparent',
+                  touchAction: 'manipulation'
+                }}
                 onClick={() => onStickerClick(sticker)}
               >
                 <div className="text-xs truncate">
@@ -104,11 +116,12 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
               {/* Bottoni azione */}
               <div className="flex gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()} style={{ minWidth: '140px' }}>
                 <Button
+                  variant={null}
                   size="sm"
-                  className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center ${
+                  className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center transition-none ${
                     status === "yes"
-                      ? "bg-green-500 hover:bg-green-600 text-white" 
-                      : "bg-white/20 hover:bg-green-500 text-white"
+                      ? "bg-green-500 text-white" 
+                      : "bg-white/20 text-white"
                   }`}
                   style={{ 
                     touchAction: 'manipulation',
@@ -123,11 +136,12 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                   <Check className="w-4 h-4" />
                 </Button>
                 <Button
+                  variant={null}
                   size="sm"
-                  className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center ${
+                  className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center transition-none ${
                     status === "no" 
-                      ? "bg-red-500 hover:bg-red-600 text-white" 
-                      : "bg-white/20 hover:bg-red-500 text-white"
+                      ? "bg-red-500 text-white" 
+                      : "bg-white/20 text-white"
                   }`}
                   style={{ 
                     touchAction: 'manipulation',
@@ -142,12 +156,13 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                   <X className="w-4 h-4" />
                 </Button>
                 <Button
+                  variant={null}
                   size="sm"
-                  className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center ${
+                  className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center transition-none ${
                     status === "double" 
-                      ? "bg-[#f4a623] hover:bg-[#f4a623]/90 text-black" 
+                      ? "bg-[#f4a623] text-black" 
                       : status === "yes"
-                      ? "bg-white/20 hover:bg-[#f4a623] hover:text-black text-white"
+                      ? "bg-white/20 text-white"
                       : "bg-white/10 text-white/50 cursor-not-allowed"
                   }`}
                   style={{ 
@@ -158,11 +173,15 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    if (status === "yes") {
-                      handleUpdateSticker(sticker.id, "double");
-                    } else if (status === "double") {
+                    // DOPPIA può essere attivato solo se la figurina è già "yes" o "double"
+                    if (status === "double") {
+                      // Se è già doppia, torna a sì (mantiene il possesso)
                       handleUpdateSticker(sticker.id, "yes");
+                    } else if (status === "yes") {
+                      // Se è sì, diventa doppia (aggiunge il doppione)
+                      handleUpdateSticker(sticker.id, "double");
                     }
+                    // Se status è "no", il pulsante è disabilitato
                   }}
                 >
                   <Copy className="w-4 h-4" />

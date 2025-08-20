@@ -2,13 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
     <title>MATCHBOX - Scambia le tue figurine Panini</title>
     <meta name="description" content="MATCHBOX - App per lo scambio di figurine Panini tra collezionisti" />
     
     <!-- PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#05637b" />
     <meta name="apple-touch-fullscreen" content="yes" />
@@ -28,6 +28,8 @@
         overflow: hidden; /* Prevent scrolling that triggers browser UI */
         position: fixed;
         width: 100%;
+        top: 0;
+        left: 0;
         /* Safe area support for iPhone notch */
         padding-top: env(safe-area-inset-top);
         padding-bottom: env(safe-area-inset-bottom);
@@ -39,6 +41,9 @@
         /* Force hide address bar on mobile */
         -webkit-transform: translate3d(0, 0, 0);
         transform: translate3d(0, 0, 0);
+        /* Additional mobile fixes */
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
       }
       
       #root {
@@ -46,7 +51,10 @@
         height: 100dvh;
         background-color: #05637b;
         overflow: hidden;
-        position: relative;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
       }
       
       /* Prevent any scrolling on the main container */

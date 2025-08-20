@@ -22,7 +22,6 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
   const [localStates, setLocalStates] = useState<Record<string, string>>({});
 
   const getUserStickerStatus = (stickerId: string) => {
-    // Usa stato locale se presente, altrimenti stato server
     if (localStates[stickerId]) {
       return localStates[stickerId];
     }
@@ -31,14 +30,16 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
   };
 
   const handleUpdateSticker = useCallback((stickerId: string, newStatus: "yes" | "no" | "double") => {
-    // Aggiorna immediatamente lo stato locale per feedback visivo
+    // Aggiornamento immediato dello stato locale per feedback visivo istantaneo
     setLocalStates(prev => ({
       ...prev,
       [stickerId]: newStatus
     }));
-
-    // Usa la callback passata dal parent
-    onUpdateSticker(stickerId, newStatus);
+    
+    // Chiamata API asincrona senza bloccare l'UI
+    requestAnimationFrame(() => {
+      onUpdateSticker(stickerId, newStatus);
+    });
   }, [onUpdateSticker]);
 
   const filteredStickers = stickers.filter((sticker: any) => {
@@ -75,19 +76,64 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
           return (
             <div
               key={sticker.id}
-              className="bg-[#05637b] rounded-xl p-3 flex items-center justify-between shadow-lg w-full min-w-0 max-w-none touch-manipulation hover:bg-[#05637b]"
               style={{ 
                 minHeight: '60px',
                 WebkitTapHighlightColor: 'transparent',
-                touchAction: 'manipulation'
+                touchAction: 'manipulation',
+                backgroundColor: '#05637b',
+                borderRadius: '12px',
+                padding: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                width: '100%',
+                minWidth: '0',
+                maxWidth: 'none'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#05637b';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#05637b';
+              }}
+              onTouchStart={(e) => {
+                e.currentTarget.style.backgroundColor = '#05637b';
+              }}
+              onTouchEnd={(e) => {
+                e.currentTarget.style.backgroundColor = '#05637b';
               }}
             >
               {/* Numero figurina - clickable */}
               <div 
-                className="bg-[#f4a623] text-black font-bold text-sm px-2 py-2 rounded-lg min-w-[40px] text-center flex-shrink-0 cursor-pointer hover:bg-[#f4a623]"
                 style={{
                   WebkitTapHighlightColor: 'transparent',
-                  touchAction: 'manipulation'
+                  touchAction: 'manipulation',
+                  backgroundColor: '#f4a623',
+                  color: 'black',
+                  fontWeight: 'bold',
+                  fontSize: '14px',
+                  paddingLeft: '8px',
+                  paddingRight: '8px',
+                  paddingTop: '8px',
+                  paddingBottom: '8px',
+                  borderRadius: '8px',
+                  minWidth: '40px',
+                  textAlign: 'center',
+                  flexShrink: '0',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#f4a623';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#f4a623';
+                }}
+                onTouchStart={(e) => {
+                  e.currentTarget.style.backgroundColor = '#f4a623';
+                }}
+                onTouchEnd={(e) => {
+                  e.currentTarget.style.backgroundColor = '#f4a623';
                 }}
                 onClick={() => onStickerClick(sticker)}
               >
@@ -96,18 +142,37 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
 
               {/* Nome figurina - clickable */}
               <div 
-                className="flex-1 mx-3 text-white font-medium text-left min-w-0 cursor-pointer hover:text-white"
                 style={{
                   WebkitTapHighlightColor: 'transparent',
-                  touchAction: 'manipulation'
+                  touchAction: 'manipulation',
+                  color: 'white',
+                  flex: '1',
+                  marginLeft: '12px',
+                  marginRight: '12px',
+                  fontWeight: '500',
+                  textAlign: 'left',
+                  minWidth: '0',
+                  cursor: 'pointer'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = 'white';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'white';
+                }}
+                onTouchStart={(e) => {
+                  e.currentTarget.style.color = 'white';
+                }}
+                onTouchEnd={(e) => {
+                  e.currentTarget.style.color = 'white';
                 }}
                 onClick={() => onStickerClick(sticker)}
               >
-                <div className="text-xs truncate">
+                <div style={{ fontSize: '12px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {sticker.name}
                 </div>
                 {sticker.team && (
-                  <div className="text-[10px] text-[#05637b] truncate leading-tight">
+                  <div style={{ fontSize: '10px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', lineHeight: '1.2', color: '#05637b' }}>
                     {sticker.team}
                   </div>
                 )}
@@ -116,18 +181,25 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
               {/* Bottoni azione */}
               <div className="flex gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()} style={{ minWidth: '140px' }}>
                 <Button
-                  variant={null}
                   size="sm"
-                  className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center transition-none ${
-                    status === "yes"
-                      ? "bg-green-500 text-white" 
-                      : "bg-white/20 text-white"
+                  className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center ${
+                    status === "yes" || status === "double"
+                      ? "bg-green-500 hover:bg-green-600 text-white" 
+                      : "bg-white/20 hover:bg-green-500 text-white"
                   }`}
                   style={{ 
                     touchAction: 'manipulation',
-                    WebkitTapHighlightColor: 'transparent'
+                    WebkitTapHighlightColor: 'transparent',
+                    transition: 'none',
+                    transform: 'translateZ(0)',
+                    willChange: 'background-color'
                   }}
-                  onClick={(e) => {
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleUpdateSticker(sticker.id, "yes");
+                  }}
+                  onTouchStart={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     handleUpdateSticker(sticker.id, "yes");
@@ -136,18 +208,25 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                   <Check className="w-4 h-4" />
                 </Button>
                 <Button
-                  variant={null}
                   size="sm"
-                  className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center transition-none ${
+                  className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center ${
                     status === "no" 
-                      ? "bg-red-500 text-white" 
-                      : "bg-white/20 text-white"
+                      ? "bg-red-500 hover:bg-red-600 text-white" 
+                      : "bg-white/20 hover:bg-red-500 text-white"
                   }`}
                   style={{ 
                     touchAction: 'manipulation',
-                    WebkitTapHighlightColor: 'transparent'
+                    WebkitTapHighlightColor: 'transparent',
+                    transition: 'none',
+                    transform: 'translateZ(0)',
+                    willChange: 'background-color'
                   }}
-                  onClick={(e) => {
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleUpdateSticker(sticker.id, "no");
+                  }}
+                  onTouchStart={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     handleUpdateSticker(sticker.id, "no");
@@ -156,32 +235,41 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                   <X className="w-4 h-4" />
                 </Button>
                 <Button
-                  variant={null}
                   size="sm"
-                  className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center transition-none ${
+                  className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center ${
                     status === "double" 
-                      ? "bg-[#f4a623] text-black" 
-                      : status === "yes"
-                      ? "bg-white/20 text-white"
-                      : "bg-white/10 text-white/50 cursor-not-allowed"
+                      ? "bg-[#f4a623] hover:bg-[#f4a623]/90 text-black" 
+                      : (status === "yes" || status === "double")
+                      ? "bg-white/20 hover:bg-[#f4a623] hover:text-black text-white"
+                      : "bg-white/10 text-white/30 cursor-not-allowed opacity-30"
                   }`}
                   style={{ 
                     touchAction: 'manipulation',
-                    WebkitTapHighlightColor: 'transparent'
+                    WebkitTapHighlightColor: 'transparent',
+                    transition: 'none',
+                    transform: 'translateZ(0)',
+                    willChange: 'background-color'
                   }}
                   disabled={status !== "yes" && status !== "double"}
-                  onClick={(e) => {
+                  onMouseDown={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    // DOPPIA può essere attivato solo se la figurina è già "yes" o "double"
-                    if (status === "double") {
-                      // Se è già doppia, torna a sì (mantiene il possesso)
-                      handleUpdateSticker(sticker.id, "yes");
-                    } else if (status === "yes") {
-                      // Se è sì, diventa doppia (aggiunge il doppione)
+                    if (status === "no") return;
+                    if (status === "yes") {
                       handleUpdateSticker(sticker.id, "double");
+                    } else if (status === "double") {
+                      handleUpdateSticker(sticker.id, "yes");
                     }
-                    // Se status è "no", il pulsante è disabilitato
+                  }}
+                  onTouchStart={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (status === "no") return;
+                    if (status === "yes") {
+                      handleUpdateSticker(sticker.id, "double");
+                    } else if (status === "double") {
+                      handleUpdateSticker(sticker.id, "yes");
+                    }
                   }}
                 >
                   <Copy className="w-4 h-4" />

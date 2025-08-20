@@ -1,22 +1,84 @@
 # Changelog MatchboxPro
 
-## [2025-08-20] - Ottimizzazioni Performance + Fix Intro
+## [Unreleased]
 
-### ⚡ Ottimizzazioni Performance
+### Added
+- Complete optimization of SI/NO/DOPPIA sticker buttons with instant visual feedback
+- Mobile performance improvements with hardware acceleration and touch optimization
+- PWA fullscreen mode enhancements for better app-like experience
+- Real-time statistics synchronization for album sticker counts
+- Advanced profile page management with unified UI design
+- Password visibility toggle functionality with independent controls for each field
+- Persistent toast confirmation system for critical actions
+- Profile modal exclusive opening behavior (only one modal at a time)
+
+### Fixed
+- Critical fix for DOPPIA button logic - now correctly disabled when status is "no"
+- SI button now remains green when status is "double" (business logic requirement)
+- Zero-lag button response on mobile devices through optimized event handling
+- Album statistics modal now correctly includes "double" status stickers in "Mie" count
+- PWA address bar hiding and zoom prevention for true fullscreen experience
+- Profile page password confirmation now uses persistent toast instead of disappearing confirm()
+- Removed placeholder text from password fields for cleaner UI
+
+### Changed
+- Improved button visual states with proper color coding (green/red/yellow)
+- Enhanced touch responsiveness with onMouseDown and onTouchStart events
+- Optimized CSS with transform3d and will-change for better performance
+- Updated sticker grid layout for better mobile usability
+- Unified profile page design with consistent azzurro theme and white text
+- Removed "Album Attivo" box from profile page for cleaner layout
+- Updated all profile buttons to follow consistent color scheme
+- Added bottom navigation bar to profile page
+- Enhanced password fields with "minimo 6 caratteri" informative text
+- Improved input field readability with white background and black text
+
+### Technical
+- Implemented requestAnimationFrame for smooth UI updates
+- Added CSS hardware acceleration with translateZ(0)
+- Enhanced event handling with preventDefault and stopPropagation
+- Improved PWA manifest configuration for better mobile integration
+- Added Eye/EyeOff icons from Lucide React for password visibility
+- Implemented toast-based confirmation system for better UX
+- Enhanced modal state management for exclusive opening behaviors
+
+## [2025-08-20] - Ottimizzazione Completa Pulsanti SI/NO/DOPPIA + Performance Mobile
+
+### 🎯 **OTTIMIZZAZIONE PULSANTI STICKERS**
+- **Logica corretta SI/NO/DOPPIA**: Implementata regola di business corretta
+  - DOPPIA attivabile solo quando SI è attivo (status "yes" o "double")
+  - Verde rimane sempre attivo quando DOPPIA è attiva
+  - NO disabilita completamente tutti gli altri pulsanti
+- **Performance mobile ottimizzata**: Eliminato completamente il lag sui click
+  - Eventi `onMouseDown` + `onTouchStart` per feedback immediato
+  - Aggiornamento stato locale istantaneo con `setLocalStates`
+  - API calls asincrone non bloccanti con `requestAnimationFrame`
+- **CSS Hardware Acceleration**: Ottimizzazioni GPU per rendering fluido
+  - `transform: translateZ(0)` e `will-change: background-color`
+  - `transition: 'none'` per eliminare ritardi animazioni
+  - `touchAction: 'manipulation'` per touch ottimizzato
+
+### 📱 **PWA FULLSCREEN MOBILE**
+- **Manifest fullscreen**: Cambiato da "standalone" a "fullscreen"
+- **Meta tags iOS/Android**: Nascondere completamente barre browser
+- **CSS viewport**: Forzare altezza 100vh e nascondere scrollbar
+- **JavaScript mobile**: Auto-hide address bar e prevenzione zoom
+- **Safe area support**: Compatibilità con notch e gesture area
+
+### ⚡ **PERFORMANCE OTTIMIZZAZIONI**
 - **Startup ridotto**: Animazione intro da 2.5s a 2s (-20% tempo caricamento)
 - **Caching intelligente**: React Query staleTime 30s, gcTime 5min per ridurre richieste
 - **Polling ottimizzato**: Chat messages da 3s a 5s per ridurre carico server
 - **Timeout eliminati**: Rimossi delay inutili in pwaUtils e orientationchange
 - **Debug cleanup**: Eliminati console.log di produzione per performance
 
-### 🔧 Fix Critico Pagina Intro
-- **Problema risolto**: Intro non appare più durante navigazione normale
-- **Logica perfezionata**: Intro solo al primo avvio o riapertura app completa
-- **Listener rimosso**: Eliminato visibilitychange che causava intro accidentale
-- **Validazione preventiva**: Controllo immediato per accesso intro appropriato
-- **Flag cleanup**: Pulizia automatica sessionStorage dopo uso
+### 🔧 **FIX CRITICI**
+- **Problema intro**: Intro non appare più durante navigazione normale
+- **Logica DOPPIA**: Tripla protezione per prevenire click non validi
+- **Visualizzazione verde**: Verde rimane attivo quando DOPPIA è selezionata
+- **Touch responsiveness**: Zero lag su tutti i dispositivi mobile
 
-### 🚀 Miglioramenti Codice
+### 🚀 **MIGLIORAMENTI CODICE**
 - **useCallback**: Aggiunto per ottimizzare re-render componenti
 - **Import corretti**: Risolti errori TypeScript mancanti
 - **RefetchInterval**: Rimossi polling eccessivi (admin page)

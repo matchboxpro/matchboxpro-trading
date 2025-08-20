@@ -260,7 +260,7 @@ Stato figurine utente per album specifico.
 ```
 
 ### `PUT /api/user/stickers/:stickerId`
-Aggiornamento stato figurina utente.
+Aggiornamento stato figurina utente con logica di business ottimizzata.
 
 **Request Body:**
 ```json
@@ -268,6 +268,16 @@ Aggiornamento stato figurina utente.
   "status": "yes|no|double"
 }
 ```
+
+**Logica Stati:**
+- **"yes"**: Figurina posseduta (attiva pulsante DOPPIA)
+- **"no"**: Figurina mancante (disabilita tutti gli altri pulsanti)  
+- **"double"**: Stato esteso di "yes" (mantiene verde attivo + giallo attivo)
+
+**Performance:**
+- Rate limiting: 30 richieste/10s
+- Request deduplication: 3s TTL anti-spam
+- Aggiornamento ottimistico UI per feedback immediato
 
 ## 🤝 Sistema Matching
 

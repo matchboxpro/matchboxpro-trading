@@ -8,13 +8,21 @@
     
     <!-- PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#05637b" />
     <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="format-detection" content="telephone=no" />
     <meta name="msapplication-tap-highlight" content="no" />
     <meta name="apple-mobile-web-app-title" content="MATCHBOX" />
+    
+    <!-- Fullscreen Meta Tags -->
+    <meta name="msapplication-TileColor" content="#05637b" />
+    <meta name="msapplication-config" content="none" />
+    <meta name="application-name" content="MATCHBOX" />
+    
+    <!-- Manifest Link -->
+    <link rel="manifest" href="/manifest.json" />
     
     <!-- Status Bar Styling -->
     <style>
@@ -88,6 +96,18 @@
           overflow: hidden;
           position: fixed;
           width: 100%;
+        }
+      }
+      
+      /* Hide address bar on mobile browsers */
+      @media screen and (max-width: 768px) {
+        html {
+          height: -webkit-fill-available;
+        }
+        
+        body {
+          min-height: 100vh;
+          min-height: -webkit-fill-available;
         }
       }
       

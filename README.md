@@ -60,13 +60,31 @@ MatchboxPro è una piattaforma moderna per collezionisti di figurine Panini che 
 - **Request deduplication** (3s TTL anti-spam)
 - **Production logging** (solo errori ≥400)
 
-## Funzionalità Principali
+## 🎯 Funzionalità Principali
 
-### Sistema di Gestione Figurine
-- **Collezione Completa**: Gestione di album di figurine con sistema di tracking avanzato
-- **Stati Figurine**: Tracciamento dettagliato (Posseduta/Mancante/Doppione) con interfaccia intuitiva
+### 🔧 Logica Stickers Ottimizzata
+
+Il sistema di gestione figurine implementa una logica di business sofisticata:
+
+- **SI (Verde)**: Figurina posseduta - abilita pulsante DOPPIA
+- **NO (Rosso)**: Figurina mancante - disabilita tutti gli altri pulsanti
+- **DOPPIA (Giallo)**: Stato esteso di SI - mantiene il verde attivo
+- **Performance Ottimizzata**: Feedback visivo immediato con zero lag su mobile
 - **Ricerca Avanzata**: Filtri per stato, nome figurina e categoria per trovare rapidamente le figurine
 - **Sincronizzazione Real-time**: Aggiornamenti istantanei dello stato delle figurine su tutti i dispositivi
+
+### 👤 Gestione Profilo Avanzata
+
+La pagina profilo offre un'esperienza utente ottimizzata:
+
+- **Design Unificato**: Tutti i pulsanti seguono il tema azzurro con testo bianco
+- **Modali Esclusivi**: Solo un modale (Account/Password) aperto alla volta
+- **Gestione Password Sicura**: 
+  - Icone occhio per visualizzare/nascondere password
+  - Controlli indipendenti per ogni campo
+  - Testo informativo "minimo 6 caratteri"
+  - Toast di conferma persistente per cambi password
+- **UI Ottimizzata**: Campi input con sfondo bianco e testo nero per leggibilità
 
 ### Sistema di Matching e Scambi
 - **Algoritmo di Matching**: Sistema intelligente per trovare collezionisti compatibili nella tua zona
@@ -84,7 +102,11 @@ MatchboxPro è una piattaforma moderna per collezionisti di figurine Panini che 
 - **PWA Nativa**: Installabile come app nativa su dispositivi mobile
 - **Fullscreen Experience**: Interfaccia fullscreen senza barre del browser
 - **Touch Optimized**: Controlli ottimizzati per dispositivi touch (44x44px minimum)
-- **Performance Ottimizzate**: Startup 20% più veloce, caching intelligente
+- **Performance Ottimizzate**: 
+  - Feedback immediato sui pulsanti (zero lag)
+  - Hardware acceleration CSS per rendering GPU
+  - Eventi touch ottimizzati (onMouseDown + onTouchStart)
+  - API calls non bloccanti con requestAnimationFrame
 - **Intro Intelligente**: Pagina intro solo al primo avvio o riapertura app
 
 ## 🚀 Quick Start
@@ -275,6 +297,6 @@ Progetto privato - Tutti i diritti riservati
 
 ---
 
-**Ultimo aggiornamento**: 2025-08-20 - Sistema attivazione album + UI miglioramenti + validazione nickname
+**Ultimo aggiornamento**: 2025-08-20 - Ottimizzazione pulsanti SI/NO/DOPPIA + Performance mobile + PWA fullscreen
 
 Made with ❤️ by MatchboxPro Team

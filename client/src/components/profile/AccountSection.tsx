@@ -75,12 +75,12 @@ export function AccountSection({
   };
 
   return (
-    <Card className="bg-white/90 backdrop-blur-sm border-[#05637b]/20">
+    <Card className="bg-[#05637b] border-0 shadow-lg">
       <CardContent className="p-4">
         <Button
           variant="ghost"
           onClick={() => setShowAccountSection(!showAccountSection)}
-          className="w-full flex items-center justify-between p-0 h-auto text-[#05637b] hover:bg-transparent"
+          className="w-full flex items-center justify-between p-0 h-auto text-white hover:bg-white/10"
         >
           <span className="text-lg font-semibold">Account</span>
           {showAccountSection ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
@@ -89,32 +89,32 @@ export function AccountSection({
         {showAccountSection && (
           <form onSubmit={handleAccountSubmit} className="mt-4 space-y-4">
             <div>
-              <Label htmlFor="nickname" className="text-[#05637b] font-medium">Nickname</Label>
+              <Label htmlFor="nickname" className="text-white font-medium">Nickname</Label>
               <Input
                 id="nickname"
                 value={accountData.nickname}
-                onChange={(e) => setAccountData(prev => ({ ...prev, nickname: e.target.value.toUpperCase() }))}
-                className="border-[#05637b]/30 focus:border-[#05637b]"
+                onChange={(e) => setAccountData((prev: any) => ({ ...prev, nickname: e.target.value.toUpperCase() }))}
+                className="border-gray-300 focus:border-[#05637b] bg-white text-black placeholder:text-gray-500"
                 placeholder="Inserisci nickname (max 8 caratteri)"
                 maxLength={8}
               />
-              <p className="text-xs text-[#05637b]/60 mt-1">Solo lettere maiuscole e numeri, massimo 8 caratteri</p>
+              <p className="text-xs text-white/60 mt-1">Solo lettere maiuscole e numeri, massimo 8 caratteri</p>
             </div>
 
             <div>
-              <Label htmlFor="cap" className="text-[#05637b] font-medium">CAP</Label>
+              <Label htmlFor="cap" className="text-white font-medium">CAP</Label>
               <Input
                 id="cap"
                 value={accountData.cap}
-                onChange={(e) => setAccountData(prev => ({ ...prev, cap: e.target.value }))}
-                className="border-[#05637b]/30 focus:border-[#05637b]"
+                onChange={(e) => setAccountData((prev: any) => ({ ...prev, cap: e.target.value }))}
+                className="border-gray-300 focus:border-[#05637b] bg-white text-black placeholder:text-gray-500"
                 placeholder="Inserisci CAP"
               />
             </div>
 
             <Button 
               type="submit" 
-              className="w-full bg-[#05637b] hover:bg-[#05637b]/90 text-white"
+              className="w-full bg-white/20 hover:bg-white/30 text-white border border-white"
               disabled={updateProfileMutation.isPending}
             >
               {updateProfileMutation.isPending ? "Salvando..." : "Salva Modifiche"}

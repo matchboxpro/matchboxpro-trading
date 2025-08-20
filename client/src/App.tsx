@@ -38,22 +38,19 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
     const shouldShowIntro = !hasSeenIntro || sessionStorage.getItem('showIntroOnReturn');
     
     if (!user) {
-      // Se non autenticato, vai sempre al login (anche se sei su "/")
+      // Se non autenticato, vai sempre al login
       if (location !== "/login") {
         setLocation("/login");
       }
     } else if (user) {
       // Se autenticato, gestisci intro e redirect
-      if (location === "/login") {
+      if (location === "/login" || location === "/") {
         if (shouldShowIntro) {
           sessionStorage.removeItem('showIntroOnReturn');
           setLocation("/intro");
-        } else {
+        } else if (location === "/login") {
           setLocation("/");
         }
-      } else if (location === "/" && shouldShowIntro) {
-        sessionStorage.removeItem('showIntroOnReturn');
-        setLocation("/intro");
       }
     }
   }, [user, isLoading, location, setLocation]);

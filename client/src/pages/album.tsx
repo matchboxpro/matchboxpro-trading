@@ -77,15 +77,43 @@ export default function Album() {
       });
       return response.json();
     },
-    onSuccess: () => {
-      // Aggiorna solo dopo successo per evitare lampeggiamenti
-      queryClient.invalidateQueries({ queryKey: ["/api/user/stickers", selectedAlbum] });
+    onMutate: async ({ stickerId, status }) => {
+      // Aggiornamento ottimistico immediato per UI istantanea
+      await queryClient.cancelQueries({ queryKey: ["/api/user/stickers", selectedAlbum] });
+      
+      const previousData = queryClient.getQueryData(["/api/user/stickers", selectedAlbum]);
+      
+      queryClient.setQueryData(["/api/user/stickers", selectedAlbum], (old: any) => {
+        if (!old) return old;
+        
+        const existingIndex = old.findIndex((us: any) => us.stickerId === stickerId);
+        if (existingIndex >= 0) {
+          const newData = [...old];
+          newData[existingIndex] = { ...newData[existingIndex], status };
+          return newData;
+        } else {
+          return [...old, { stickerId, status, userId: user?.id }];
+        }
+      });
+      
+      return { previousData };
     },
-    onError: (error: any) => {
+    onError: (error: any, variables, context) => {
+      // Rollback immediato in caso di errore
+      if (context?.previousData) {
+        queryClient.setQueryData(["/api/user/stickers", selectedAlbum], context.previousData);
+      }
       toast({
         title: "Errore",
         description: error.message || "Errore nell'aggiornamento",
         variant: "destructive",
+      });
+    },
+    onSettled: () => {
+      // Sincronizzazione finale con server (senza re-render se tutto ok)
+      queryClient.invalidateQueries({ 
+        queryKey: ["/api/user/stickers", selectedAlbum],
+        refetchType: 'none' // Evita re-fetch se i dati sono già aggiornati
       });
     },
   });

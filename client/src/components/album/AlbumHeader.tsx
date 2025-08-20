@@ -67,12 +67,17 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
         </div>
         
         {/* Menu hamburger in alto a destra */}
-        <div className="absolute top-2 right-2" ref={menuRef}>
+        <div className="absolute top-2 right-2 z-50" ref={menuRef}>
           <Button
             onClick={() => setShowMenu(!showMenu)}
-            className="bg-transparent hover:bg-[#05637b]/20 p-2 h-auto"
+            onTouchStart={() => setShowMenu(!showMenu)}
+            className="bg-transparent hover:bg-[#05637b]/20 p-3 h-auto relative z-50 min-w-[44px] min-h-[44px] flex items-center justify-center"
+            style={{ 
+              touchAction: 'manipulation',
+              WebkitTapHighlightColor: 'transparent'
+            }}
           >
-            <Menu className="w-5 h-5 text-white" />
+            <Menu className="w-6 h-6 text-white" />
           </Button>
           
           {/* Dropdown menu */}

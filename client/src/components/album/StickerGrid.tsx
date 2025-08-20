@@ -87,11 +87,15 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
               <div className="flex gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                 <Button
                   size="sm"
-                  className={`w-10 h-10 rounded-lg ${
+                  className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center ${
                     status === "yes"
                       ? "bg-green-500 hover:bg-green-600 text-white" 
                       : "bg-white/20 hover:bg-green-500 text-white"
                   }`}
+                  style={{ 
+                    touchAction: 'manipulation',
+                    WebkitTapHighlightColor: 'transparent'
+                  }}
                   onClick={() => {
                     if (status === "yes") {
                       onUpdateSticker(sticker.id, "no");
@@ -99,29 +103,49 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                       onUpdateSticker(sticker.id, "yes");
                     }
                   }}
+                  onTouchStart={(e) => {
+                    e.stopPropagation();
+                    if (status === "yes") {
+                      onUpdateSticker(sticker.id, "no");
+                    } else {
+                      onUpdateSticker(sticker.id, "yes");
+                    }
+                  }}
                 >
-                  <Check className="w-3 h-3" />
+                  <Check className="w-4 h-4" />
                 </Button>
                 <Button
                   size="sm"
-                  className={`w-10 h-10 rounded-lg ${
+                  className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center ${
                     status === "no" 
                       ? "bg-red-500 hover:bg-red-600 text-white" 
                       : "bg-white/20 hover:bg-red-500 text-white"
                   }`}
+                  style={{ 
+                    touchAction: 'manipulation',
+                    WebkitTapHighlightColor: 'transparent'
+                  }}
                   onClick={() => onUpdateSticker(sticker.id, "no")}
+                  onTouchStart={(e) => {
+                    e.stopPropagation();
+                    onUpdateSticker(sticker.id, "no");
+                  }}
                 >
-                  <X className="w-3 h-3" />
+                  <X className="w-4 h-4" />
                 </Button>
                 <Button
                   size="sm"
-                  className={`w-10 h-10 rounded-lg ${
+                  className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center ${
                     status === "double" 
                       ? "bg-[#f4a623] hover:bg-[#f4a623]/90 text-black" 
                       : status === "yes"
                       ? "bg-white/20 hover:bg-[#f4a623] hover:text-black text-white"
                       : "bg-white/10 text-white/50 cursor-not-allowed"
                   }`}
+                  style={{ 
+                    touchAction: 'manipulation',
+                    WebkitTapHighlightColor: 'transparent'
+                  }}
                   disabled={status !== "yes" && status !== "double"}
                   onClick={() => {
                     if (status === "yes") {
@@ -130,8 +154,16 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                       onUpdateSticker(sticker.id, "yes");
                     }
                   }}
+                  onTouchStart={(e) => {
+                    e.stopPropagation();
+                    if (status === "yes") {
+                      onUpdateSticker(sticker.id, "double");
+                    } else if (status === "double") {
+                      onUpdateSticker(sticker.id, "yes");
+                    }
+                  }}
                 >
-                  <Copy className="w-3 h-3" />
+                  <Copy className="w-4 h-4" />
                 </Button>
               </div>
             </div>

@@ -44,13 +44,11 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
       }
     } else if (user) {
       // Se autenticato, gestisci intro e redirect
-      if (location === "/login" || location === "/") {
-        if (shouldShowIntro) {
-          sessionStorage.removeItem('showIntroOnReturn');
-          setLocation("/intro");
-        } else if (location === "/login") {
-          setLocation("/");
-        }
+      if (shouldShowIntro && (location === "/login" || location === "/" || location === "/dashboard")) {
+        sessionStorage.removeItem('showIntroOnReturn');
+        setLocation("/intro");
+      } else if (location === "/login") {
+        setLocation("/");
       }
     }
   }, [user, isLoading, location, setLocation]);

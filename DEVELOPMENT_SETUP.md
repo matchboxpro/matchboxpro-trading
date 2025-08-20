@@ -135,6 +135,18 @@ NPM_CONFIG_PRODUCTION=false
 
 ## 🚀 Deployment su Render
 
+### 🔄 Workflow di Sviluppo
+
+1. **Modifica codice** in locale
+2. **Test** con `npm run dev`
+3. **Aggiorna file informativi** se necessario
+4. **Attendere richiesta esplicita** per commit
+5. **Commit** solo su richiesta utente
+6. **Push** su GitHub
+7. **Deploy automatico** su Render
+
+⚠️ **IMPORTANTE**: I commit su GitHub vengono eseguiti solo su esplicita richiesta dell'utente.
+
 ### Setup Iniziale
 1. **Crea Web Service** su Render
 2. **Collega Repository** GitHub

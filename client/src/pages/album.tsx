@@ -196,7 +196,14 @@ export default function Album() {
         />
       </div>
 
-      <div className="flex-1 overflow-y-auto overflow-x-hidden">
+      <div 
+        className="flex-1 overflow-y-auto overflow-x-hidden" 
+        style={{ 
+          WebkitOverflowScrolling: 'touch',
+          touchAction: 'pan-y',
+          overscrollBehavior: 'contain'
+        }}
+      >
         <StickerGrid
           stickers={stickers as any[]}
           userStickers={userStickers as any[]}

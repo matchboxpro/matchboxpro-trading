@@ -25,7 +25,12 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-brand-bianco pb-20">
+    <div className="min-h-screen bg-brand-bianco pb-20" 
+         style={{ 
+           WebkitOverflowScrolling: 'touch',
+           touchAction: 'pan-y',
+           overscrollBehavior: 'contain'
+         }}>
       <div className="bg-brand-azzurro border-b border-brand-azzurro p-2">
         <div className="flex items-center justify-center">
           <img 
@@ -37,7 +42,7 @@ export default function Dashboard() {
       </div>
 
       {/* Stats Cards */}
-      <div className="p-4 grid grid-cols-3 gap-4">
+      <div className="p-4 grid grid-cols-3 gap-4 max-w-none w-full">
         <Card className="bg-brand-azzurro text-brand-bianco border-0 shadow-lg">
           <CardContent className="p-4">
             <div className="text-2xl font-bold text-brand-giallo">{stats.collected}</div>

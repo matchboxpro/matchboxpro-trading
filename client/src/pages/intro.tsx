@@ -17,10 +17,21 @@ export default function Intro() {
       setAnimationComplete(true);
     }, 3900);
 
-    // Reindirizza alla dashboard dopo 4 secondi
+    // Reindirizza al login dopo 4 secondi se non autenticato
     const redirectTimer = setTimeout(() => {
       localStorage.setItem('hasSeenIntro', 'true');
-      setLocation('/dashboard');
+      // Controlla se l'utente è autenticato
+      fetch('/api/auth/me', { credentials: 'include' })
+        .then(res => {
+          if (res.ok) {
+            setLocation('/');
+          } else {
+            setLocation('/login');
+          }
+        })
+        .catch(() => {
+          setLocation('/login');
+        });
     }, 4000);
 
     return () => {

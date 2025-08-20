@@ -52,13 +52,13 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
 
   return (
     <div className="bg-[#fff4d6] px-2 py-2 w-full">
-      <div className="space-y-2 w-full">
+      <div className="space-y-2 w-full max-w-none">
         {filteredStickers.map((sticker: any) => {
           const status = getUserStickerStatus(sticker.id);
           return (
             <div
               key={sticker.id}
-              className="bg-[#05637b] rounded-xl p-3 flex items-center justify-between shadow-lg w-full min-w-0"
+              className="bg-[#05637b] rounded-xl p-3 flex items-center justify-between shadow-lg w-full min-w-0 max-w-none"
             >
               {/* Numero figurina - clickable */}
               <div 

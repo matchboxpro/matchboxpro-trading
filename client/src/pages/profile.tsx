@@ -94,7 +94,12 @@ export default function Profile() {
   }
 
   return (
-    <div className="h-screen bg-brand-bianco overflow-y-auto pb-20">
+    <div className="h-screen bg-brand-bianco overflow-y-auto pb-20" 
+         style={{ 
+           WebkitOverflowScrolling: 'touch',
+           touchAction: 'pan-y',
+           overscrollBehavior: 'contain'
+         }}>
       <div className="bg-brand-azzurro border-b border-brand-azzurro p-2">
         <div className="flex items-center justify-center">
           <img 
@@ -105,7 +110,7 @@ export default function Profile() {
         </div>
       </div>
 
-      <div className="p-4 space-y-6">
+      <div className="p-4 space-y-6 max-w-none w-full">
         {/* Profile Header */}
         <Card className="bg-brand-azzurro border-0 shadow-lg">
           <CardContent className="pt-6 text-center">
@@ -134,7 +139,7 @@ export default function Profile() {
                   type="text"
                   value={formData.nickname}
                   onChange={(e) => setFormData(prev => ({ ...prev, nickname: e.target.value }))}
-                  className="mt-2"
+                  className="mt-2 text-black"
                 />
               </div>
 
@@ -144,7 +149,7 @@ export default function Profile() {
                   type="text"
                   value={formData.cap}
                   onChange={(e) => setFormData(prev => ({ ...prev, cap: e.target.value }))}
-                  className="mt-2"
+                  className="mt-2 text-black"
                   maxLength={5}
                 />
               </div>
@@ -171,7 +176,7 @@ export default function Profile() {
                   value={formData.albumSelezionato}
                   onValueChange={(value) => setFormData(prev => ({ ...prev, albumSelezionato: value }))}
                 >
-                  <SelectTrigger className="mt-2">
+                  <SelectTrigger className="mt-2 text-black">
                     <SelectValue placeholder="Seleziona un album" />
                   </SelectTrigger>
                   <SelectContent>

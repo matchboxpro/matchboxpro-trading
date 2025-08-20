@@ -74,7 +74,12 @@ export default function Match() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-bianco pb-20">
+    <div className="min-h-screen bg-brand-bianco pb-20" 
+         style={{ 
+           WebkitOverflowScrolling: 'touch',
+           touchAction: 'pan-y',
+           overscrollBehavior: 'contain'
+         }}>
       <div className="bg-brand-azzurro border-b border-brand-azzurro p-2">
         <div className="flex items-center justify-center">
           <img 
@@ -86,7 +91,7 @@ export default function Match() {
       </div>
 
       {/* Filter Options */}
-      <Card className="m-4">
+      <Card className="m-4 max-w-none w-auto">
         <CardContent className="p-4">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-medium text-brand-bianco">Raggio di ricerca</span>

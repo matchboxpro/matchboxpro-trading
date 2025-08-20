@@ -37,17 +37,23 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
     const hasSeenIntro = localStorage.getItem('hasSeenIntro');
     const shouldShowIntro = !hasSeenIntro || sessionStorage.getItem('showIntroOnReturn');
     
+    // Se è il primo avvio assoluto (mai visto intro), mostra intro prima del login
+    if (!hasSeenIntro && location !== "/intro") {
+      setLocation("/intro");
+      return;
+    }
+    
     if (!user) {
-      // Se non autenticato, vai sempre al login
-      if (location !== "/login") {
+      // Se non autenticato e ha già visto intro, vai al login
+      if (location !== "/login" && hasSeenIntro) {
         setLocation("/login");
       }
     } else if (user) {
-      // Se autenticato, gestisci intro e redirect
-      if (shouldShowIntro && (location === "/login" || location === "/" || location === "/dashboard")) {
+      // Se autenticato e deve mostrare intro (riapertura app)
+      if (sessionStorage.getItem('showIntroOnReturn') && location !== "/intro") {
         sessionStorage.removeItem('showIntroOnReturn');
         setLocation("/intro");
-      } else if (location === "/login") {
+      } else if (location === "/login" || (location === "/intro" && hasSeenIntro)) {
         setLocation("/");
       }
     }

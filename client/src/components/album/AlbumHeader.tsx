@@ -70,7 +70,11 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
         <div className="absolute top-2 right-2 z-50" ref={menuRef}>
           <Button
             onClick={() => setShowMenu(!showMenu)}
-            onTouchStart={() => setShowMenu(!showMenu)}
+            onTouchStart={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowMenu(!showMenu);
+            }}
             className="bg-transparent hover:bg-[#05637b]/20 p-3 h-auto relative z-50 min-w-[44px] min-h-[44px] flex items-center justify-center"
             style={{ 
               touchAction: 'manipulation',

@@ -27,6 +27,16 @@ export default function Album() {
     }
   }, [location]);
 
+  // Listen for force reset event
+  useEffect(() => {
+    const handleForceReset = () => {
+      setSelectedAlbum(null);
+    };
+    
+    window.addEventListener('forceAlbumReset', handleForceReset);
+    return () => window.removeEventListener('forceAlbumReset', handleForceReset);
+  }, []);
+
   const { data: user } = useQuery({
     queryKey: ["/api/auth/me"],
     queryFn: () => fetch('/api/auth/me', { credentials: 'include' }).then(res => res.json()),

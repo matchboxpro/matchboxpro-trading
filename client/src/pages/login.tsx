@@ -78,10 +78,17 @@ export default function Login() {
               <Label className="text-brand-bianco">Nickname</Label>
               <Input
                 type="text"
-                placeholder="Il tuo nickname"
+                placeholder="MAX 8 CARATTERI - SOLO LETTERE E NUMERI"
                 value={formData.nickname}
-                onChange={(e) => setFormData(prev => ({ ...prev, nickname: e.target.value }))}
+                onChange={(e) => {
+                  const value = e.target.value
+                    .toUpperCase()
+                    .replace(/[^A-Z0-9]/g, '')
+                    .slice(0, 8);
+                  setFormData(prev => ({ ...prev, nickname: value }));
+                }}
                 className="mt-2 bg-white text-[#052b3e] placeholder:text-gray-500 border-0 focus:ring-2 focus:ring-[#f8b400]"
+                maxLength={8}
                 required
               />
             </div>

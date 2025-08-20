@@ -1,4 +1,4 @@
-# MatchboxPro 🃏
+ # MatchboxPro 🃏
 
 **Web Application per lo scambio di figurine Panini tra utenti**
 
@@ -64,7 +64,9 @@ MatchboxPro è una piattaforma moderna per collezionisti di figurine Panini che 
 
 ### 👥 Per Utenti
 - **Registrazione/Login** con nickname e password
-- **Gestione profilo** (CAP, raggio ricerca, album attivo)
+- **Gestione profilo** (CAP, album attivo) con sezione Account espandibile
+- **Validazione nickname** (maiuscolo, max 8 caratteri, solo lettere/numeri)
+- **Sistema attivazione album** con pulsanti ON/OFF persistenti
 - **Collezione figurine** con 3 stati (SI/NO/DOPPIA)
 - **UI mobile ottimizzata** con layout fisso e scroll verticale
 - **Header uniformi** su tutte le pagine con logo MatchBox
@@ -72,7 +74,7 @@ MatchboxPro è una piattaforma moderna per collezionisti di figurine Panini che 
 - **Menu statistiche** con conteggio figurine possedute/mancanti/doppie
 - **PWA fullscreen** con status bar personalizzata
 - **Testi compatti** per migliore leggibilità mobile
-- **Pagina intro animata** con logo e transizioni fluide
+- **Pagina intro animata** con logo e transizioni fluide (3 secondi)
 - **ESLint integrato** per code quality e best practices
 - **Algoritmo matching** 1:1 per scambi ottimali
 - **Chat persistente** con altri collezionisti
@@ -274,6 +276,6 @@ Progetto privato - Tutti i diritti riservati
 
 ---
 
-**Ultimo aggiornamento**: 2025-08-19 - Pagina intro animata + ESLint integrato + ottimizzazioni complete
+**Ultimo aggiornamento**: 2025-08-20 - Sistema attivazione album + UI miglioramenti + validazione nickname
 
 Made with ❤️ by MatchboxPro Team

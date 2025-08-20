@@ -28,22 +28,24 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
   const missingStickers = totalStickers - ownedStickers;
   const doubleStickers = (userStickers || []).filter((us: any) => us.status === "double").length;
 
-  // Chiudi menu quando si clicca fuori
+  // Chiudi menu quando si clicca fuori - DISABILITATO per mobile
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setShowMenu(false);
+        // Solo su desktop (non touch device)
+        if (!('ontouchstart' in window)) {
+          setShowMenu(false);
+        }
       }
     };
 
-    if (showMenu) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
     };
-  }, [showMenu]);
+  }, []);
 
   const getFilterCount = (filterType: string) => {
     switch (filterType) {
@@ -69,7 +71,10 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
         {/* Menu hamburger in alto a destra */}
         <div className="absolute top-2 right-2 z-50" ref={menuRef}>
           <Button
-            onClick={() => setShowMenu(!showMenu)}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              setShowMenu(!showMenu);
+            }}
             onTouchStart={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -78,7 +83,8 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
             className="bg-transparent hover:bg-[#05637b]/20 p-3 h-auto relative z-50 min-w-[44px] min-h-[44px] flex items-center justify-center"
             style={{ 
               touchAction: 'manipulation',
-              WebkitTapHighlightColor: 'transparent'
+              WebkitTapHighlightColor: 'transparent',
+              userSelect: 'none'
             }}
           >
             <Menu className="w-6 h-6 text-white" />
@@ -86,7 +92,12 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
           
           {/* Dropdown menu */}
           {showMenu && (
-            <div className="absolute top-full right-0 mt-2 bg-gradient-to-br from-[#fff4d6] to-white rounded-xl shadow-xl border-2 border-[#f4a623] min-w-[200px] z-50 overflow-hidden">
+            <div 
+              className="absolute top-full right-0 mt-2 bg-gradient-to-br from-[#fff4d6] to-white rounded-xl shadow-xl border-2 border-[#f4a623] min-w-[200px] z-50 overflow-hidden"
+              onTouchStart={(e) => e.stopPropagation()}
+              onMouseDown={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
+            >
               {/* Header del menu */}
               <div className="bg-[#05637b] text-white px-4 py-2 text-center">
                 <span className="font-bold text-sm">Statistiche Album</span>

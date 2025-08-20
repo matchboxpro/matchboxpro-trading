@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,9 +19,32 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
   onStickerClick,
   onUpdateSticker
 }) => {
+  const [localStates, setLocalStates] = useState<Record<string, string>>({});
+
   const getUserStickerStatus = (stickerId: string) => {
+    // Usa stato locale se presente, altrimenti stato server
+    if (localStates[stickerId]) {
+      return localStates[stickerId];
+    }
     const userSticker = (userStickers || []).find((us: any) => us.stickerId === stickerId);
     return userSticker?.status || "no";
+  };
+
+  const handleUpdateSticker = (stickerId: string, newStatus: "yes" | "no" | "double") => {
+    // Aggiorna immediatamente lo stato locale per feedback istantaneo
+    setLocalStates(prev => ({ ...prev, [stickerId]: newStatus }));
+    
+    // Chiama la funzione di update del server
+    onUpdateSticker(stickerId, newStatus);
+    
+    // Rimuovi lo stato locale dopo un breve delay per permettere al server di rispondere
+    setTimeout(() => {
+      setLocalStates(prev => {
+        const newStates = { ...prev };
+        delete newStates[stickerId];
+        return newStates;
+      });
+    }, 100);
   };
 
   const filteredStickers = stickers.filter((sticker: any) => {
@@ -98,17 +121,17 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                   }}
                   onClick={() => {
                     if (status === "yes") {
-                      onUpdateSticker(sticker.id, "no");
+                      handleUpdateSticker(sticker.id, "no");
                     } else {
-                      onUpdateSticker(sticker.id, "yes");
+                      handleUpdateSticker(sticker.id, "yes");
                     }
                   }}
                   onTouchStart={(e) => {
                     e.stopPropagation();
                     if (status === "yes") {
-                      onUpdateSticker(sticker.id, "no");
+                      handleUpdateSticker(sticker.id, "no");
                     } else {
-                      onUpdateSticker(sticker.id, "yes");
+                      handleUpdateSticker(sticker.id, "yes");
                     }
                   }}
                 >
@@ -125,10 +148,10 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                     touchAction: 'manipulation',
                     WebkitTapHighlightColor: 'transparent'
                   }}
-                  onClick={() => onUpdateSticker(sticker.id, "no")}
+                  onClick={() => handleUpdateSticker(sticker.id, "no")}
                   onTouchStart={(e) => {
                     e.stopPropagation();
-                    onUpdateSticker(sticker.id, "no");
+                    handleUpdateSticker(sticker.id, "no");
                   }}
                 >
                   <X className="w-4 h-4" />
@@ -149,17 +172,17 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                   disabled={status !== "yes" && status !== "double"}
                   onClick={() => {
                     if (status === "yes") {
-                      onUpdateSticker(sticker.id, "double");
+                      handleUpdateSticker(sticker.id, "double");
                     } else if (status === "double") {
-                      onUpdateSticker(sticker.id, "yes");
+                      handleUpdateSticker(sticker.id, "yes");
                     }
                   }}
                   onTouchStart={(e) => {
                     e.stopPropagation();
                     if (status === "yes") {
-                      onUpdateSticker(sticker.id, "double");
+                      handleUpdateSticker(sticker.id, "double");
                     } else if (status === "double") {
-                      onUpdateSticker(sticker.id, "yes");
+                      handleUpdateSticker(sticker.id, "yes");
                     }
                   }}
                 >

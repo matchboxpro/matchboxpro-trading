@@ -29,6 +29,11 @@
         /* Safe area support for iPhone notch */
         padding-top: env(safe-area-inset-top);
         padding-bottom: env(safe-area-inset-bottom);
+        /* Force fullscreen on PWA */
+        -webkit-app-region: no-drag;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
       }
       
       #root {
@@ -50,6 +55,26 @@
           height: 100vh;
           height: 100dvh;
           overflow: hidden;
+          position: fixed;
+          width: 100%;
+        }
+        
+        /* Hide browser chrome completely */
+        body {
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          appearance: none;
+        }
+      }
+      
+      /* Additional PWA fullscreen rules */
+      @media (display-mode: fullscreen) {
+        html, body {
+          height: 100vh;
+          height: 100dvh;
+          overflow: hidden;
+          position: fixed;
+          width: 100%;
         }
       }
       

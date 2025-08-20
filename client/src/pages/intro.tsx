@@ -12,12 +12,12 @@ export default function Intro() {
       setShowLogo(true);
     }, 300);
 
-    // Segna animazione come completata dopo 3.9 secondi (300ms delay + 3600ms transition)
+    // Segna animazione come completata dopo 2.9 secondi (300ms delay + 2600ms transition)
     const animationTimer = setTimeout(() => {
       setAnimationComplete(true);
-    }, 3900);
+    }, 2900);
 
-    // Reindirizza al login dopo 4 secondi se non autenticato
+    // Reindirizza al login dopo 3 secondi se non autenticato
     const redirectTimer = setTimeout(() => {
       localStorage.setItem('hasSeenIntro', 'true');
       // Controlla se l'utente è autenticato
@@ -32,7 +32,7 @@ export default function Intro() {
         .catch(() => {
           setLocation('/login');
         });
-    }, 4000);
+    }, 3000);
 
     return () => {
       clearTimeout(showTimer);
@@ -51,10 +51,10 @@ export default function Intro() {
         } ${
           showLogo 
             ? 'opacity-100 scale-100 rotate-0' 
-            : 'opacity-0 scale-75 -rotate-12'
+            : 'opacity-0 scale-75 -rotate-[5.04deg]'
         }`}
         style={{
-          transitionDuration: animationComplete ? '0ms' : '3600ms'
+          transitionDuration: animationComplete ? '0ms' : '2600ms'
         }}
       >
         <img 

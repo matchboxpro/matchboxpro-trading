@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
-import { Crown } from "lucide-react";
+import { Crown, ChevronDown, ChevronUp } from "lucide-react";
 import { MobileHeader } from "@/components/ui/mobile-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,19 +27,24 @@ export default function Profile() {
     queryFn: () => fetch('/api/albums', { credentials: 'include' }).then(res => res.json()),
   });
 
-  const [formData, setFormData] = useState({
+  const [showAccountSection, setShowAccountSection] = useState(false);
+  const [accountData, setAccountData] = useState({
     nickname: "",
     cap: "",
-    raggioKm: 10,
+    password: "",
+  });
+  const [formData, setFormData] = useState({
     albumSelezionato: "",
   });
 
   useEffect(() => {
     if (user) {
-      setFormData({
+      setAccountData({
         nickname: user?.nickname || "",
         cap: user?.cap || "",
-        raggioKm: user?.raggioKm || 10,
+        password: "",
+      });
+      setFormData({
         albumSelezionato: user?.albumSelezionato || "",
       });
     }
@@ -94,7 +99,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="h-screen bg-brand-bianco overflow-y-auto pb-20" 
+    <div className="min-h-screen bg-brand-bianco overflow-y-auto pb-20" 
          style={{ 
            WebkitOverflowScrolling: 'touch',
            touchAction: 'pan-y',
@@ -111,21 +116,86 @@ export default function Profile() {
       </div>
 
       <div className="p-4 space-y-6 max-w-none w-full">
-        {/* Profile Header */}
+        {/* Account Section */}
         <Card className="bg-brand-azzurro border-0 shadow-lg">
-          <CardContent className="pt-6 text-center">
-            <div className="w-20 h-20 bg-brand-giallo rounded-full mx-auto mb-3 flex items-center justify-center shadow-md">
-              <span className="text-brand-nero text-2xl font-bold">
-                {user?.nickname?.[0]?.toUpperCase() || "U"}
-              </span>
-            </div>
-            <h2 className="text-xl font-bold text-brand-bianco">{user?.nickname}</h2>
-            <p className="text-brand-bianco/80">
-              Collezionista dal {new Date(user?.startTrial || Date.now()).toLocaleDateString("it-IT", {
-                month: "short",
-                year: "numeric"
-              })}
-            </p>
+          <CardContent className="p-4">
+            <Button
+              className="w-full bg-brand-azzurro hover:bg-brand-azzurro/90 text-brand-bianco font-semibold border border-brand-bianco"
+              onClick={() => setShowAccountSection(!showAccountSection)}
+            >
+              Account
+            </Button>
+            
+            {showAccountSection && (
+              <div className="mt-4 space-y-4 border-t border-brand-bianco/20 pt-4">
+                <div>
+                  <Label className="text-brand-bianco">Nickname</Label>
+                  <Input
+                    type="text"
+                    value={accountData.nickname}
+                    onChange={(e) => {
+                      const value = e.target.value
+                        .toUpperCase()
+                        .replace(/[^A-Z0-9]/g, '')
+                        .slice(0, 8);
+                      setAccountData(prev => ({ ...prev, nickname: value }));
+                    }}
+                    className="mt-2 text-black"
+                    placeholder="MAX 8 CARATTERI"
+                    maxLength={8}
+                  />
+                </div>
+                
+                <div>
+                  <Label className="text-brand-bianco">CAP</Label>
+                  <Input
+                    type="text"
+                    value={accountData.cap}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/\D/g, '').slice(0, 5);
+                      setAccountData(prev => ({ ...prev, cap: value }));
+                    }}
+                    className="mt-2 text-black"
+                    placeholder="12345"
+                    maxLength={5}
+                  />
+                </div>
+                
+                <div>
+                  <Label className="text-brand-bianco">Password</Label>
+                  <Input
+                    type="password"
+                    value={accountData.password}
+                    onChange={(e) => setAccountData(prev => ({ ...prev, password: e.target.value }))}
+                    className="mt-2 text-black"
+                    placeholder="Nuova password (opzionale)"
+                  />
+                </div>
+                
+                <Button
+                  className="w-full bg-brand-giallo hover:bg-brand-giallo/90 text-brand-nero font-semibold"
+                  onClick={() => {
+                    // Controllo se c'è una nuova password
+                    if (accountData.password && accountData.password.trim() !== "") {
+                      const confirmChange = window.confirm("Sei sicuro di voler cambiare la password?");
+                      if (!confirmChange) {
+                        return;
+                      }
+                    }
+                    
+                    // Merge account data with form data for submission
+                    const dataToSubmit: any = { ...accountData, ...formData };
+                    if (!accountData.password) {
+                      delete dataToSubmit.password;
+                    }
+                    updateProfileMutation.mutate(dataToSubmit);
+                  }}
+                  disabled={updateProfileMutation.isPending}
+                >
+                  {updateProfileMutation.isPending ? "Salvando..." : "Salva Account"}
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -133,43 +203,6 @@ export default function Profile() {
         <Card>
           <CardContent className="pt-6">
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <Label>Nickname</Label>
-                <Input
-                  type="text"
-                  value={formData.nickname}
-                  onChange={(e) => setFormData(prev => ({ ...prev, nickname: e.target.value }))}
-                  className="mt-2 text-black"
-                />
-              </div>
-
-              <div>
-                <Label>CAP</Label>
-                <Input
-                  type="text"
-                  value={formData.cap}
-                  onChange={(e) => setFormData(prev => ({ ...prev, cap: e.target.value }))}
-                  className="mt-2 text-black"
-                  maxLength={5}
-                />
-              </div>
-
-              <div>
-                <Label>Raggio di ricerca: {formData.raggioKm} km</Label>
-                <Slider
-                  value={[formData.raggioKm]}
-                  onValueChange={(value) => setFormData(prev => ({ ...prev, raggioKm: value[0] }))}
-                  max={50}
-                  min={1}
-                  step={1}
-                  className="mt-2"
-                />
-                <div className="flex justify-between text-xs text-brand-bianco/60 mt-1">
-                  <span>1 km</span>
-                  <span>50 km</span>
-                </div>
-              </div>
-
               <div>
                 <Label>Album Attivo</Label>
                 <Select
@@ -216,13 +249,16 @@ export default function Profile() {
         </Card>
 
         {/* Logout Button */}
-        <Button
-          variant="outline"
-          className="w-full"
-          onClick={handleLogout}
-        >
-          Esci
-        </Button>
+        <Card className="bg-brand-azzurro border-0 shadow-lg">
+          <CardContent className="p-4">
+            <Button
+              className="w-full bg-brand-azzurro hover:bg-brand-azzurro/90 text-brand-giallo font-semibold border border-brand-bianco"
+              onClick={handleLogout}
+            >
+              Esci
+            </Button>
+          </CardContent>
+        </Card>
       </div>
       
       {/* Admin Button - Discreto a fondo pagina */}

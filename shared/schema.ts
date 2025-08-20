@@ -5,7 +5,7 @@ import { z } from "zod";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
-  nickname: varchar("nickname", { length: 50 }).notNull().unique(),
+  nickname: varchar("nickname", { length: 8 }).notNull().unique(),
   password: text("password").notNull(),
   cap: varchar("cap", { length: 5 }).notNull(),
   raggioKm: integer("raggio_km").notNull().default(10),
@@ -79,7 +79,7 @@ export const insertUserSchema = createInsertSchema(users).omit({
   startTrial: true,
   createdAt: true,
 }).extend({
-  nickname: z.string().min(3).max(50).regex(/^[a-zA-Z0-9_]+$/, "Solo lettere, numeri e underscore"),
+  nickname: z.string().min(1).max(8).regex(/^[A-Z0-9]+$/, "Solo lettere maiuscole e numeri, max 8 caratteri"),
   cap: z.string().length(5).regex(/^\d{5}$/, "Il CAP deve essere di 5 cifre"),
   password: z.string().min(6, "La password deve essere di almeno 6 caratteri"),
 });

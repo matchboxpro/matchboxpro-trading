@@ -25,7 +25,7 @@ export default function Chat() {
     queryKey: ["/api/matches", matchId, "messages"],
     queryFn: () => fetch(`/api/matches/${matchId}/messages`, { credentials: 'include' }).then(res => res.json()),
     enabled: !!matchId,
-    refetchInterval: 3000, // Poll for new messages every 3 seconds
+    refetchInterval: 5000, // Poll for new messages every 5 seconds
   });
 
   const sendMessageMutation = useMutation({

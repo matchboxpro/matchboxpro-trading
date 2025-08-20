@@ -8,7 +8,6 @@ export const useStickerMutations = (albumId: string) => {
   // Mutation per salvare figurine
   const saveStickers = useMutation({
     mutationFn: async (stickersData: any[]) => {
-      console.log('Saving stickers:', stickersData, 'to album:', albumId);
       const response = await fetch(`/api/albums/${albumId}/stickers/bulk`, {
         method: 'POST',
         headers: {
@@ -26,7 +25,6 @@ export const useStickerMutations = (albumId: string) => {
       }
       
       const result = await response.json();
-      console.log('Save result:', result);
       return result;
     },
     onSuccess: () => {
@@ -101,7 +99,6 @@ export const useStickerMutations = (albumId: string) => {
   // Mutation per eliminare tutte le figurine
   const deleteStickers = useMutation({
     mutationFn: async () => {
-      console.log('Deleting all stickers from album:', albumId);
       const response = await fetch(`/api/albums/${albumId}/stickers`, {
         method: 'DELETE',
         headers: {

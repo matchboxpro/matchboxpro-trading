@@ -49,9 +49,9 @@ export const queryClient = new QueryClient({
       refetchInterval: false,
       refetchOnWindowFocus: true, // Ricarica quando finestra torna in focus
       refetchOnReconnect: false,
-      staleTime: 0, // Nessuna cache - sempre fresh da Supabase
-      gcTime: 0, // Nessun garbage collection - forza reload
-      refetchOnMount: "always", // Ricarica sempre al mount
+      staleTime: 30000, // 30 secondi cache per ridurre richieste
+      gcTime: 5 * 60 * 1000, // 5 minuti garbage collection
+      refetchOnMount: true,
       retry: 1,
     },
     mutations: {

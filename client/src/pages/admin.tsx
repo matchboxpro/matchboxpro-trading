@@ -35,11 +35,11 @@ export default function Admin() {
   });
 
   const { data: albums = [], isLoading, error, isError } = useQuery({
-    queryKey: ["albums", refreshTrigger], // Fixed: use string key instead of URL path
+    queryKey: ["albums", refreshTrigger],
     queryFn: () => fetch('/api/albums').then(res => res.json()),
-    staleTime: 0, // Sempre considera i dati stale
-    refetchOnWindowFocus: true, // Refetch quando la finestra torna in focus
-    refetchInterval: 5000, // Refetch ogni 5 secondi per sicurezza
+    staleTime: 0,
+    refetchOnWindowFocus: true,
+    refetchInterval: false,
   }) as { data: any[], isLoading: boolean, error: any, isError: boolean };
 
   // Albums loaded successfully

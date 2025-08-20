@@ -35,7 +35,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
     
     // Controlla se deve mostrare l'intro
     const hasSeenIntro = localStorage.getItem('hasSeenIntro');
-    const shouldShowIntro = !hasSeenIntro || sessionStorage.getItem('showIntroOnReturn');
+    const shouldShowIntroOnAppStart = sessionStorage.getItem('showIntroOnReturn');
     
     // Se è il primo avvio assoluto (mai visto intro), mostra intro prima del login
     if (!hasSeenIntro && location !== "/intro") {
@@ -49,11 +49,11 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
         setLocation("/login");
       }
     } else if (user) {
-      // Se autenticato e deve mostrare intro (riapertura app)
-      if (sessionStorage.getItem('showIntroOnReturn') && location !== "/intro") {
+      // Se autenticato e deve mostrare intro (solo riapertura app, non navigazione)
+      if (shouldShowIntroOnAppStart && location !== "/intro") {
         sessionStorage.removeItem('showIntroOnReturn');
         setLocation("/intro");
-      } else if (location === "/login" || (location === "/intro" && hasSeenIntro)) {
+      } else if (location === "/login" || (location === "/intro" && hasSeenIntro && !shouldShowIntroOnAppStart)) {
         setLocation("/");
       }
     }
@@ -139,23 +139,17 @@ function App() {
   useEffect(() => {
     initializePWA();
     
-    // Segna per mostrare intro quando l'app viene riaperta
+    // Segna per mostrare intro solo quando l'app viene completamente chiusa/riaperta
     const handleBeforeUnload = () => {
+      // Solo se l'utente sta davvero chiudendo l'app (non navigando)
       sessionStorage.setItem('showIntroOnReturn', 'true');
     };
     
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
-        sessionStorage.setItem('showIntroOnReturn', 'true');
-      }
-    };
-    
+    // Rimuovi il listener visibilitychange per evitare intro durante navigazione
     window.addEventListener('beforeunload', handleBeforeUnload);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
     
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 

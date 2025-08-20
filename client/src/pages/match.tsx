@@ -74,7 +74,7 @@ export default function Match() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-bianco pb-20" 
+    <div className="h-screen bg-brand-bianco overflow-hidden fixed inset-0 w-full flex flex-col" 
          style={{ 
            WebkitOverflowScrolling: 'touch',
            touchAction: 'pan-y',
@@ -91,25 +91,26 @@ export default function Match() {
       </div>
 
       {/* Filter Options */}
-      <Card className="m-4 max-w-none w-auto">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium text-brand-bianco">Raggio di ricerca</span>
-            <span className="text-sm text-brand-bianco">{searchRadius[0]} km</span>
-          </div>
-          <Slider
-            value={searchRadius}
-            onValueChange={setSearchRadius}
-            max={50}
-            min={1}
-            step={1}
-            className="w-full"
-          />
-        </CardContent>
-      </Card>
+      <div className="p-4 space-y-6 max-w-none w-full flex-1 overflow-y-auto pb-20" style={{ WebkitOverflowScrolling: 'touch' }}>
+        <Card className="bg-brand-azzurro border-0 shadow-lg">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-sm font-medium text-brand-bianco">Raggio di ricerca</span>
+              <span className="text-sm text-brand-bianco">{searchRadius[0]} km</span>
+            </div>
+            <Slider
+              value={searchRadius}
+              onValueChange={setSearchRadius}
+              max={50}
+              min={1}
+              step={1}
+              className="w-full"
+            />
+          </CardContent>
+        </Card>
 
-      {/* Match Results */}
-      <div className="p-4 space-y-4">
+        {/* Match Results */}
+        <div className="space-y-4">
         {potentialMatches.length === 0 ? (
           <Card>
             <CardContent className="p-6 text-center">
@@ -171,6 +172,7 @@ export default function Match() {
             </Card>
           ))
         )}
+        </div>
       </div>
       
       {/* Admin Button - Discreto a fondo pagina */}

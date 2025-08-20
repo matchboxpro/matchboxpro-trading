@@ -60,33 +60,32 @@ MatchboxPro è una piattaforma moderna per collezionisti di figurine Panini che 
 - **Request deduplication** (3s TTL anti-spam)
 - **Production logging** (solo errori ≥400)
 
-## 📋 Funzionalità
+## Funzionalità Principali
 
-### 👥 Per Utenti
-- **Registrazione/Login** con nickname e password
-- **Gestione profilo** (CAP, album attivo) con sezione Account espandibile
-- **Validazione nickname** (maiuscolo, max 8 caratteri, solo lettere/numeri)
-- **Sistema attivazione album** con pulsanti ON/OFF persistenti
-- **Collezione figurine** con 3 stati (SI/NO/DOPPIA)
-- **UI mobile ottimizzata** con layout fisso e scroll verticale
-- **Header uniformi** su tutte le pagine con logo MatchBox
-- **Modale info figurine** in sola lettura
-- **Menu statistiche** con conteggio figurine possedute/mancanti/doppie
-- **PWA fullscreen** con status bar personalizzata
-- **Testi compatti** per migliore leggibilità mobile
-- **Pagina intro animata** con logo e transizioni fluide (3 secondi)
-- **ESLint integrato** per code quality e best practices
-- **Algoritmo matching** 1:1 per scambi ottimali
-- **Chat persistente** con altri collezionisti
-- **Dashboard** con statistiche personali
+### Sistema di Gestione Figurine
+- **Collezione Completa**: Gestione di album di figurine con sistema di tracking avanzato
+- **Stati Figurine**: Tracciamento dettagliato (Posseduta/Mancante/Doppione) con interfaccia intuitiva
+- **Ricerca Avanzata**: Filtri per stato, nome figurina e categoria per trovare rapidamente le figurine
+- **Sincronizzazione Real-time**: Aggiornamenti istantanei dello stato delle figurine su tutti i dispositivi
 
-### 🏛️ Per Admin
-- **Gestione album** (creazione, modifica, eliminazione)
-- **Import figurine** bulk o singole
-- **Gestione utenti** (attivazione/disattivazione)
-- **Monitoraggio segnalazioni** automatiche
-- **Statistiche sistema** in tempo reale
-- **Export dati** CSV/JSON
+### Sistema di Matching e Scambi
+- **Algoritmo di Matching**: Sistema intelligente per trovare collezionisti compatibili nella tua zona
+- **Ricerca Geografica**: Trova altri collezionisti in base alla distanza (raggio personalizzabile)
+- **Chat Integrata**: Sistema di messaggistica per coordinare scambi e incontri
+- **Gestione Scambi**: Tracciamento completo delle proposte e degli scambi completati
+
+### Gestione Profilo e Account
+- **Profilo Personalizzabile**: Gestione completa dei dati personali e preferenze
+- **Sistema di Attivazione Album**: Controllo granulare su quali album sono attivi per il matching
+- **Validazione Avanzata**: Controlli di sicurezza per nickname e dati sensibili
+- **Cambio Password Sicuro**: Sistema di aggiornamento password con validazione robusta
+
+### Esperienza Mobile Ottimizzata 
+- **PWA Nativa**: Installabile come app nativa su dispositivi mobile
+- **Fullscreen Experience**: Interfaccia fullscreen senza barre del browser
+- **Touch Optimized**: Controlli ottimizzati per dispositivi touch (44x44px minimum)
+- **Performance Ottimizzate**: Startup 20% più veloce, caching intelligente
+- **Intro Intelligente**: Pagina intro solo al primo avvio o riapertura app
 
 ## 🚀 Quick Start
 

@@ -7,35 +7,51 @@ export default function Intro() {
   const [animationComplete, setAnimationComplete] = useState(false);
 
   useEffect(() => {
-    // Mostra il logo con un piccolo delay per l'animazione
-    const showTimer = setTimeout(() => {
-      setShowLogo(true);
-    }, 300);
+    // Verifica che siamo davvero nella pagina intro per motivi validi
+    const hasSeenIntro = localStorage.getItem('hasSeenIntro');
+    const shouldShowIntroOnAppStart = sessionStorage.getItem('showIntroOnReturn');
+    
+    // Se non dovremmo essere qui (navigazione accidentale), esci subito
+    if (hasSeenIntro && !shouldShowIntroOnAppStart) {
+      fetch('/api/auth/me', { credentials: 'include' })
+        .then(res => res.ok ? setLocation('/dashboard') : setLocation('/login'))
+        .catch(() => setLocation('/login'));
+      return;
+    }
 
-    // Segna animazione come completata dopo 2.9 secondi (300ms delay + 2600ms transition)
+    // Mostra il logo immediatamente
+    setShowLogo(true);
+
+    // Segna animazione come completata dopo 1.5 secondi
     const animationTimer = setTimeout(() => {
       setAnimationComplete(true);
-    }, 2900);
+    }, 1500);
 
-    // Reindirizza al login dopo 3 secondi se non autenticato
+    // Reindirizza dopo 2 secondi
     const redirectTimer = setTimeout(() => {
       localStorage.setItem('hasSeenIntro', 'true');
+      sessionStorage.removeItem('showIntroOnReturn'); // Pulisci il flag
+      
       // Controlla se l'utente è autenticato
       fetch('/api/auth/me', { credentials: 'include' })
         .then(res => {
           if (res.ok) {
-            setLocation('/');
-          } else {
-            setLocation('/login');
+            return res.json();
           }
+          throw new Error('Not authenticated');
+        })
+        .then(user => {
+          // Se autenticato, vai alla dashboard
+          setLocation('/dashboard');
         })
         .catch(() => {
+          // Se non autenticato, vai al login
           setLocation('/login');
         });
-    }, 3000);
+
+    }, 2000);
 
     return () => {
-      clearTimeout(showTimer);
       clearTimeout(animationTimer);
       clearTimeout(redirectTimer);
     };

@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
-import { Crown, ChevronDown, ChevronUp } from "lucide-react";
+import { Crown } from "lucide-react";
 import { MobileHeader } from "@/components/ui/mobile-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { AccountSection } from "@/components/profile/AccountSection";
+import { PasswordSection } from "@/components/profile/PasswordSection";
 
 export default function Profile() {
   const [, setLocation] = useLocation();
@@ -28,10 +27,16 @@ export default function Profile() {
   });
 
   const [showAccountSection, setShowAccountSection] = useState(false);
+  const [showPasswordSection, setShowPasswordSection] = useState(false);
   const [accountData, setAccountData] = useState({
     nickname: "",
     cap: "",
     password: "",
+  });
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
   });
   const [formData, setFormData] = useState({
     albumSelezionato: "",
@@ -52,7 +57,7 @@ export default function Profile() {
 
   const updateProfileMutation = useMutation({
     mutationFn: async (data: any) => {
-      const response = await apiRequest("PUT", "/api/users/profile", data);
+      const response = await apiRequest("PUT", "/api/user/profile", data);
       return response.json();
     },
     onSuccess: () => {
@@ -99,7 +104,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-bianco overflow-y-auto pb-20" 
+    <div className="h-screen bg-brand-bianco overflow-hidden fixed inset-0 w-full flex flex-col" 
          style={{ 
            WebkitOverflowScrolling: 'touch',
            touchAction: 'pan-y',
@@ -115,96 +120,30 @@ export default function Profile() {
         </div>
       </div>
 
-      <div className="p-4 space-y-6 max-w-none w-full">
+      <div className="p-4 space-y-6 max-w-none w-full flex-1 overflow-y-auto pb-20" style={{ WebkitOverflowScrolling: 'touch' }}>
         {/* Account Section */}
-        <Card className="bg-brand-azzurro border-0 shadow-lg">
-          <CardContent className="p-4">
-            <Button
-              className="w-full bg-brand-azzurro hover:bg-brand-azzurro/90 text-brand-bianco font-semibold border border-brand-bianco"
-              onClick={() => setShowAccountSection(!showAccountSection)}
-            >
-              Account
-            </Button>
-            
-            {showAccountSection && (
-              <div className="mt-4 space-y-4 border-t border-brand-bianco/20 pt-4">
-                <div>
-                  <Label className="text-brand-bianco">Nickname</Label>
-                  <Input
-                    type="text"
-                    value={accountData.nickname}
-                    onChange={(e) => {
-                      const value = e.target.value
-                        .toUpperCase()
-                        .replace(/[^A-Z0-9]/g, '')
-                        .slice(0, 8);
-                      setAccountData(prev => ({ ...prev, nickname: value }));
-                    }}
-                    className="mt-2 text-black"
-                    placeholder="MAX 8 CARATTERI"
-                    maxLength={8}
-                  />
-                </div>
-                
-                <div>
-                  <Label className="text-brand-bianco">CAP</Label>
-                  <Input
-                    type="text"
-                    value={accountData.cap}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/\D/g, '').slice(0, 5);
-                      setAccountData(prev => ({ ...prev, cap: value }));
-                    }}
-                    className="mt-2 text-black"
-                    placeholder="12345"
-                    maxLength={5}
-                  />
-                </div>
-                
-                <div>
-                  <Label className="text-brand-bianco">Password</Label>
-                  <Input
-                    type="password"
-                    value={accountData.password}
-                    onChange={(e) => setAccountData(prev => ({ ...prev, password: e.target.value }))}
-                    className="mt-2 text-black"
-                    placeholder="Nuova password (opzionale)"
-                  />
-                </div>
-                
-                <Button
-                  className="w-full bg-brand-giallo hover:bg-brand-giallo/90 text-brand-nero font-semibold"
-                  onClick={() => {
-                    // Controllo se c'è una nuova password
-                    if (accountData.password && accountData.password.trim() !== "") {
-                      const confirmChange = window.confirm("Sei sicuro di voler cambiare la password?");
-                      if (!confirmChange) {
-                        return;
-                      }
-                    }
-                    
-                    // Merge account data with form data for submission
-                    const dataToSubmit: any = { ...accountData, ...formData };
-                    if (!accountData.password) {
-                      delete dataToSubmit.password;
-                    }
-                    updateProfileMutation.mutate(dataToSubmit);
-                  }}
-                  disabled={updateProfileMutation.isPending}
-                >
-                  {updateProfileMutation.isPending ? "Salvando..." : "Salva Account"}
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <AccountSection 
+          user={user}
+          showAccountSection={showAccountSection}
+          setShowAccountSection={setShowAccountSection}
+          accountData={accountData}
+          setAccountData={setAccountData}
+        />
+
+        {/* Password Section */}
+        <PasswordSection 
+          showPasswordSection={showPasswordSection}
+          setShowPasswordSection={setShowPasswordSection}
+          passwordData={passwordData}
+          setPasswordData={setPasswordData}
+        />
 
         {/* Settings Form */}
         <Card>
           <CardContent className="pt-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <Label>Album Attivo</Label>
+                <label className="text-[#05637b] font-medium">Album Attivo</label>
                 <Select
                   value={formData.albumSelezionato}
                   onValueChange={(value) => setFormData(prev => ({ ...prev, albumSelezionato: value }))}
@@ -224,7 +163,7 @@ export default function Profile() {
 
               <Button
                 type="submit"
-                className="w-full bg-brand-bianco hover:bg-brand-bianco/90 text-brand-nero"
+                className="w-full bg-[#05637b] hover:bg-[#05637b]/90 text-white"
                 disabled={updateProfileMutation.isPending}
               >
                 {updateProfileMutation.isPending ? "Salvando..." : "Salva Modifiche"}
@@ -234,7 +173,7 @@ export default function Profile() {
         </Card>
 
         {/* Premium Status */}
-        <Card className="bg-gradient-to-r from-brand-giallo to-brand-giallo/80 text-brand-nero border-0">
+        <Card className="bg-gradient-to-r from-[#f4a623] to-[#f4a623]/80 text-black border-0">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -249,10 +188,10 @@ export default function Profile() {
         </Card>
 
         {/* Logout Button */}
-        <Card className="bg-brand-azzurro border-0 shadow-lg">
+        <Card className="bg-[#05637b] border-0 shadow-lg">
           <CardContent className="p-4">
             <Button
-              className="w-full bg-brand-azzurro hover:bg-brand-azzurro/90 text-brand-giallo font-semibold border border-brand-bianco"
+              className="w-full bg-[#05637b] hover:bg-[#05637b]/90 text-[#f4a623] font-semibold border border-white"
               onClick={handleLogout}
             >
               Esci

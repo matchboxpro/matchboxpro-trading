@@ -25,7 +25,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-brand-bianco pb-20" 
+    <div className="h-screen bg-brand-bianco overflow-hidden fixed inset-0 w-full flex flex-col" 
          style={{ 
            WebkitOverflowScrolling: 'touch',
            touchAction: 'pan-y',
@@ -42,7 +42,7 @@ export default function Dashboard() {
       </div>
 
       {/* Stats Cards */}
-      <div className="p-4 grid grid-cols-3 gap-4 max-w-none w-full">
+      <div className="p-4 grid grid-cols-3 gap-4 max-w-none w-full flex-shrink-0">
         <Card className="bg-brand-azzurro text-brand-bianco border-0 shadow-lg">
           <CardContent className="p-4">
             <div className="text-2xl font-bold text-brand-giallo">{stats.collected}</div>
@@ -64,7 +64,7 @@ export default function Dashboard() {
       </div>
 
       {/* Recent Matches */}
-      <div className="p-4">
+      <div className="p-4 flex-1 overflow-y-auto pb-20" style={{ WebkitOverflowScrolling: 'touch' }}>
         <h2 className="text-lg font-semibold text-brand-nero mb-4">Ultimi Match</h2>
         
         {matches.length === 0 ? (

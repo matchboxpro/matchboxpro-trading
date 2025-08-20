@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,22 +30,16 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
     return userSticker?.status || "no";
   };
 
-  const handleUpdateSticker = (stickerId: string, newStatus: "yes" | "no" | "double") => {
-    // Aggiorna immediatamente lo stato locale per feedback istantaneo
-    setLocalStates(prev => ({ ...prev, [stickerId]: newStatus }));
-    
-    // Chiama la funzione di update del server
+  const handleUpdateSticker = useCallback((stickerId: string, newStatus: "yes" | "no" | "double") => {
+    // Aggiorna immediatamente lo stato locale per feedback visivo
+    setLocalStates(prev => ({
+      ...prev,
+      [stickerId]: newStatus
+    }));
+
+    // Usa la callback passata dal parent
     onUpdateSticker(stickerId, newStatus);
-    
-    // Rimuovi lo stato locale dopo un breve delay per permettere al server di rispondere
-    setTimeout(() => {
-      setLocalStates(prev => {
-        const newStates = { ...prev };
-        delete newStates[stickerId];
-        return newStates;
-      });
-    }, 100);
-  };
+  }, [onUpdateSticker]);
 
   const filteredStickers = stickers.filter((sticker: any) => {
     const status = getUserStickerStatus(sticker.id);
@@ -74,14 +68,15 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
   };
 
   return (
-    <div className="bg-[#fff4d6] px-2 py-2 w-full">
+    <div className="bg-[#fff4d6] px-2 py-2 w-full min-h-0">
       <div className="space-y-2 w-full max-w-none">
         {filteredStickers.map((sticker: any) => {
           const status = getUserStickerStatus(sticker.id);
           return (
             <div
               key={sticker.id}
-              className="bg-[#05637b] rounded-xl p-3 flex items-center justify-between shadow-lg w-full min-w-0 max-w-none"
+              className="bg-[#05637b] rounded-xl p-3 flex items-center justify-between shadow-lg w-full min-w-0 max-w-none touch-manipulation"
+              style={{ minHeight: '60px' }}
             >
               {/* Numero figurina - clickable */}
               <div 
@@ -107,7 +102,7 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
               </div>
 
               {/* Bottoni azione */}
-              <div className="flex gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+              <div className="flex gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()} style={{ minWidth: '140px' }}>
                 <Button
                   size="sm"
                   className={`min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center ${
@@ -119,20 +114,10 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                     touchAction: 'manipulation',
                     WebkitTapHighlightColor: 'transparent'
                   }}
-                  onClick={() => {
-                    if (status === "yes") {
-                      handleUpdateSticker(sticker.id, "no");
-                    } else {
-                      handleUpdateSticker(sticker.id, "yes");
-                    }
-                  }}
-                  onTouchStart={(e) => {
+                  onClick={(e) => {
+                    e.preventDefault();
                     e.stopPropagation();
-                    if (status === "yes") {
-                      handleUpdateSticker(sticker.id, "no");
-                    } else {
-                      handleUpdateSticker(sticker.id, "yes");
-                    }
+                    handleUpdateSticker(sticker.id, "yes");
                   }}
                 >
                   <Check className="w-4 h-4" />
@@ -148,8 +133,8 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                     touchAction: 'manipulation',
                     WebkitTapHighlightColor: 'transparent'
                   }}
-                  onClick={() => handleUpdateSticker(sticker.id, "no")}
-                  onTouchStart={(e) => {
+                  onClick={(e) => {
+                    e.preventDefault();
                     e.stopPropagation();
                     handleUpdateSticker(sticker.id, "no");
                   }}
@@ -170,14 +155,8 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                     WebkitTapHighlightColor: 'transparent'
                   }}
                   disabled={status !== "yes" && status !== "double"}
-                  onClick={() => {
-                    if (status === "yes") {
-                      handleUpdateSticker(sticker.id, "double");
-                    } else if (status === "double") {
-                      handleUpdateSticker(sticker.id, "yes");
-                    }
-                  }}
-                  onTouchStart={(e) => {
+                  onClick={(e) => {
+                    e.preventDefault();
                     e.stopPropagation();
                     if (status === "yes") {
                       handleUpdateSticker(sticker.id, "double");

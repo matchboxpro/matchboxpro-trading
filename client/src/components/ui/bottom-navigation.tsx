@@ -33,10 +33,7 @@ export function BottomNavigation({ onNavigate }: BottomNavigationProps) {
         </button>
         <button
           onClick={() => {
-            console.log("Album button clicked, current location:", location);
-            // Forza sempre il reset quando si clicca su Album
             onNavigate("/album");
-            // Forza il reset tramite evento personalizzato
             window.dispatchEvent(new CustomEvent('forceAlbumReset'));
           }}
           className={`flex flex-col items-center py-2 ${

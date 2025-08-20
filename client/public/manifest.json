@@ -3,7 +3,7 @@
   "short_name": "MATCHBOX",
   "description": "App per lo scambio di figurine Panini tra collezionisti",
   "start_url": "/",
-  "display": "standalone",
+  "display": "fullscreen",
   "background_color": "#05637b",
   "theme_color": "#05637b",
   "orientation": "portrait",

@@ -40,7 +40,7 @@ export default function Album() {
   const { data: user } = useQuery({
     queryKey: ["/api/auth/me"],
     queryFn: () => fetch('/api/auth/me', { credentials: 'include' }).then(res => res.json()),
-    staleTime: 5 * 60 * 1000, // 5 minuti cache
+    staleTime: 0,
   });
 
   // Get all albums from admin con cache aggressiva
@@ -54,8 +54,8 @@ export default function Album() {
     queryKey: ["/api/user/stickers", selectedAlbum],
     queryFn: () => fetch(`/api/user/stickers/${selectedAlbum}`, { credentials: 'include' }).then(res => res.json()),
     enabled: !!selectedAlbum,
-    staleTime: 0, // Cache disabilitata per aggiornamenti real-time
-    refetchOnWindowFocus: false, // Evita refetch automatici
+    staleTime: 0,
+    refetchOnWindowFocus: false,
   });
 
   const { data: stickers = [] } = useQuery({
@@ -182,7 +182,7 @@ export default function Album() {
   // If no album selected, show album selection
   if (!selectedAlbum) {
     return (
-      <div className="h-screen bg-[#fff4d6] flex flex-col overflow-hidden fixed inset-0">
+      <div className="h-screen bg-[#fff4d6] flex flex-col overflow-hidden fixed inset-0 w-full">
         <AlbumSelector
           albums={albums as any[]}
           onAlbumSelect={setSelectedAlbum}
@@ -194,7 +194,7 @@ export default function Album() {
   const selectedAlbumData = (albums as any[]).find((a: any) => a.id === selectedAlbum);
 
   return (
-    <div className="h-screen bg-[#05637b] flex flex-col overflow-hidden fixed inset-0">
+    <div className="h-screen bg-[#05637b] flex flex-col overflow-hidden fixed inset-0 w-full">
       <div className="flex-shrink-0">
         <AlbumHeader
           album={selectedAlbumData}
@@ -207,11 +207,12 @@ export default function Album() {
       </div>
 
       <div 
-        className="flex-1 overflow-y-auto overflow-x-hidden" 
+        className="flex-1 overflow-y-auto overflow-x-hidden w-full" 
         style={{ 
           WebkitOverflowScrolling: 'touch',
           touchAction: 'pan-y',
-          overscrollBehavior: 'contain'
+          overscrollBehavior: 'contain',
+          maxWidth: '100vw'
         }}
       >
         <StickerGrid

@@ -44,7 +44,8 @@ export default function Album() {
     queryKey: ["/api/user/stickers", selectedAlbum],
     queryFn: () => fetch(`/api/user/stickers/${selectedAlbum}`, { credentials: 'include' }).then(res => res.json()),
     enabled: !!selectedAlbum,
-    staleTime: 2 * 60 * 1000, // 2 minuti cache
+    staleTime: 0, // Cache disabilitata per aggiornamenti real-time
+    refetchOnWindowFocus: false, // Evita refetch automatici
   });
 
   const { data: stickers = [] } = useQuery({
@@ -76,43 +77,16 @@ export default function Album() {
       });
       return response.json();
     },
-    onMutate: async ({ stickerId, status }) => {
-      // Ottimizzazione: aggiornamento ottimistico per UI istantanea
-      await queryClient.cancelQueries({ queryKey: ["/api/user/stickers", selectedAlbum] });
-      
-      const previousData = queryClient.getQueryData(["/api/user/stickers", selectedAlbum]);
-      
-      queryClient.setQueryData(["/api/user/stickers", selectedAlbum], (old: any) => {
-        if (!old) return old;
-        
-        const existingIndex = old.findIndex((us: any) => us.stickerId === stickerId);
-        if (existingIndex >= 0) {
-          // Aggiorna esistente
-          const newData = [...old];
-          newData[existingIndex] = { ...newData[existingIndex], status };
-          return newData;
-        } else {
-          // Aggiungi nuovo
-          return [...old, { stickerId, status, userId: user?.id }];
-        }
-      });
-      
-      return { previousData };
+    onSuccess: () => {
+      // Aggiorna solo dopo successo per evitare lampeggiamenti
+      queryClient.invalidateQueries({ queryKey: ["/api/user/stickers", selectedAlbum] });
     },
-    onError: (error: any, variables, context) => {
-      // Rollback in caso di errore
-      if (context?.previousData) {
-        queryClient.setQueryData(["/api/user/stickers", selectedAlbum], context.previousData);
-      }
+    onError: (error: any) => {
       toast({
         title: "Errore",
         description: error.message || "Errore nell'aggiornamento",
         variant: "destructive",
       });
-    },
-    onSettled: () => {
-      // Sincronizza con il server
-      queryClient.invalidateQueries({ queryKey: ["/api/user/stickers", selectedAlbum] });
     },
   });
 

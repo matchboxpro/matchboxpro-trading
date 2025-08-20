@@ -88,14 +88,12 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                 <Button
                   size="sm"
                   className={`w-10 h-10 rounded-lg ${
-                    status === "yes" || status === "double"
+                    status === "yes"
                       ? "bg-green-500 hover:bg-green-600 text-white" 
                       : "bg-white/20 hover:bg-green-500 text-white"
                   }`}
                   onClick={() => {
                     if (status === "yes") {
-                      onUpdateSticker(sticker.id, "no");
-                    } else if (status === "double") {
                       onUpdateSticker(sticker.id, "no");
                     } else {
                       onUpdateSticker(sticker.id, "yes");

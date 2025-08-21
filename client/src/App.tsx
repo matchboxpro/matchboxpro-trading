@@ -91,7 +91,7 @@ function AppContent() {
     }}>
       <div className="h-full overflow-y-auto" style={{
         paddingBottom: showBottomNav ? '60px' : '0',
-        height: 'calc(100% - env(safe-area-inset-top) - env(safe-area-inset-bottom))'
+        height: '100%'
       }}>
         <Switch>
         <Route path="/login" component={Login} />

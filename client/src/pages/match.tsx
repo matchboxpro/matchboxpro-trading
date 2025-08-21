@@ -51,7 +51,7 @@ export default function Match() {
   if (!user?.albumSelezionato) {
     return (
       <div className="min-h-screen bg-brand-bianco pb-20">
-        <div className="bg-brand-azzurro border-b border-brand-azzurro pt-6 pb-4 px-2">
+        <div className="bg-brand-azzurro border-b border-brand-azzurro pt-12 pb-8 px-2">
           <div className="flex items-center justify-center">
             <img 
               src="/matchbox-logo.png" 
@@ -80,7 +80,7 @@ export default function Match() {
            touchAction: 'pan-y',
            overscrollBehavior: 'contain'
          }}>
-      <div className="bg-brand-azzurro border-b border-brand-azzurro pt-6 pb-4 px-2">
+      <div className="bg-brand-azzurro border-b border-brand-azzurro pt-12 pb-8 px-2">
         <div className="flex items-center justify-center">
           <img 
             src="/matchbox-logo.png" 

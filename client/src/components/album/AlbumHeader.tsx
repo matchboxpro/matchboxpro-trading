@@ -59,7 +59,7 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
   return (
     <div className="bg-[#05637b] text-white relative w-full">
       {/* Header azzurro con logo - identico alle altre pagine */}
-      <div className="bg-brand-azzurro border-b border-brand-azzurro p-2 relative">
+      <div className="bg-brand-azzurro border-b border-brand-azzurro pt-6 pb-4 px-2 relative">
         <div className="flex items-center justify-center">
           <img 
             src="/matchbox-logo.png" 

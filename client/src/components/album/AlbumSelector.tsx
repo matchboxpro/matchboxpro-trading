@@ -41,7 +41,7 @@ export const AlbumSelector: React.FC<AlbumSelectorProps> = ({
   return (
     <div className="h-screen flex flex-col">
       {/* Header azzurro con logo - fixed */}
-      <div className="bg-brand-azzurro border-b border-brand-azzurro p-2">
+      <div className="bg-brand-azzurro border-b border-brand-azzurro pt-6 pb-4 px-2">
         <div className="flex items-center justify-center">
           <img 
             src="/matchbox-logo.png" 

@@ -9,7 +9,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { initializePWA } from "@/utils/pwaUtils";
 
 import Login from "@/pages/login";
-import Intro from "@/pages/intro";
 import Dashboard from "@/pages/dashboard";
 import Album from "@/pages/album";
 import Match from "@/pages/match";
@@ -33,36 +32,16 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (isLoading) return;
     
-    // Controlla se deve mostrare l'intro
-    const hasSeenIntro = localStorage.getItem('hasSeenIntro');
-    const shouldShowIntroOnAppStart = sessionStorage.getItem('showIntroOnReturn');
-    
-    // Se è il primo avvio assoluto (mai visto intro), mostra intro prima del login
-    if (!hasSeenIntro && location !== "/intro") {
-      setLocation("/intro");
-      return;
-    }
-    
     if (!user) {
-      // Se non autenticato e ha già visto intro, vai al login
-      if (location !== "/login" && hasSeenIntro) {
+      // Se non autenticato, vai al login
+      if (location !== "/login") {
         setLocation("/login");
       }
-      // Se non autenticato e non ha visto intro, ma non è su /intro, vai a intro
-      if (!hasSeenIntro && location !== "/intro") {
-        setLocation("/intro");
-      }
     } else if (user) {
-      // Se autenticato e deve mostrare intro (solo riapertura app, non navigazione)
-      if (shouldShowIntroOnAppStart && location !== "/intro") {
-        sessionStorage.removeItem('showIntroOnReturn');
-        setLocation("/intro");
-      } else if (location === "/login") {
+      if (location === "/login") {
         // Redirect dopo login successful - vai alla dashboard
         setLocation("/");
-      } else if (location === "/intro" && hasSeenIntro && !shouldShowIntroOnAppStart) {
-        setLocation("/");
-      } else if (location !== "/" && location !== "/dashboard" && location !== "/album" && location !== "/match" && location !== "/profile" && !location.startsWith("/chat") && location !== "/intro" && location !== "/admin") {
+      } else if (location !== "/" && location !== "/dashboard" && location !== "/album" && location !== "/match" && location !== "/profile" && !location.startsWith("/chat") && location !== "/admin") {
         // Se l'utente è su una route non valida (404), reindirizza alla dashboard
         setLocation("/");
       }
@@ -99,21 +78,21 @@ function AppContent() {
     );
   }
 
-  // Don't show bottom nav on login, intro or admin pages
-  const showBottomNav = location !== "/login" && location !== "/intro" && !location.startsWith("/admin") && isMobile;
+  // Don't show bottom nav on login or admin pages
+  const showBottomNav = location !== "/login" && !location.startsWith("/admin") && isMobile;
 
   return (
-    <div className="relative h-screen bg-[#fff4d6] overflow-hidden" style={{
+    <div className="relative bg-[#fff4d6] overflow-hidden" style={{
       paddingTop: 'env(safe-area-inset-top)',
-      paddingBottom: showBottomNav ? 'calc(env(safe-area-inset-bottom) + 60px)' : 'env(safe-area-inset-bottom)',
-      paddingLeft: 'env(safe-area-inset-left)',
-      paddingRight: 'env(safe-area-inset-right)',
+      paddingBottom: 'env(safe-area-inset-bottom)',
       height: '100dvh',
       boxSizing: 'border-box'
     }}>
-      <Switch>
+      <div className="h-full" style={{
+        paddingBottom: showBottomNav ? '60px' : '0'
+      }}>
+        <Switch>
         <Route path="/login" component={Login} />
-        <Route path="/intro" component={Intro} />
         <Route path="/admin" component={Admin} />
         
         {/* Protected routes */}
@@ -150,7 +129,8 @@ function AppContent() {
         
         {/* Fallback to 404 */}
         <Route component={NotFound} />
-      </Switch>
+        </Switch>
+      </div>
       
       {showBottomNav && <BottomNavigation onNavigate={setLocation} />}
     </div>
@@ -160,19 +140,6 @@ function AppContent() {
 function App() {
   useEffect(() => {
     initializePWA();
-    
-    // Segna per mostrare intro solo quando l'app viene completamente chiusa/riaperta
-    const handleBeforeUnload = () => {
-      // Solo se l'utente sta davvero chiudendo l'app (non navigando)
-      sessionStorage.setItem('showIntroOnReturn', 'true');
-    };
-    
-    // Rimuovi il listener visibilitychange per evitare intro durante navigazione
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
   }, []);
 
   return (

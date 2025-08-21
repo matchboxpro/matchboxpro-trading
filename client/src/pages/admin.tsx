@@ -109,6 +109,25 @@ export default function Admin() {
     },
   });
 
+  const reorderAlbumsMutation = useMutation({
+    mutationFn: async (albums: any[]) => {
+      await apiRequest("PUT", "/api/admin/albums/reorder", { albums });
+    },
+    onSuccess: () => {
+      toast({
+        title: "Ordine aggiornato",
+        description: "L'ordine degli album è stato salvato",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Errore",
+        description: error.message || "Errore nel salvare l'ordine degli album",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleCreateAlbum = (e: React.FormEvent) => {
     e.preventDefault();
     if (!albumForm.name.trim()) {
@@ -172,6 +191,9 @@ export default function Admin() {
               }}
               onDeleteAlbum={(album) => {
                 setDeleteAlbumDialog({show: true, album});
+              }}
+              onReorderAlbums={(reorderedAlbums) => {
+                reorderAlbumsMutation.mutate(reorderedAlbums);
               }}
             />
           )}

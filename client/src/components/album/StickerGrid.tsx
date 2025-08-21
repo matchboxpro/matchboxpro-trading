@@ -69,20 +69,20 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
   };
 
   return (
-    <div className="bg-[#fff4d6] px-2 py-2 w-full min-h-0">
-      <div className="space-y-2 w-full max-w-none">
+    <div className="bg-[#fff4d6] px-2 py-1 w-full min-h-0">
+      <div className="space-y-0.5 w-full max-w-none">
         {filteredStickers.map((sticker: any) => {
           const status = getUserStickerStatus(sticker.id);
           return (
             <div
               key={sticker.id}
               style={{ 
-                minHeight: '60px',
+                minHeight: '34px',
                 WebkitTapHighlightColor: 'transparent',
                 touchAction: 'manipulation',
                 backgroundColor: '#05637b',
                 borderRadius: '12px',
-                padding: '12px',
+                padding: '8px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',

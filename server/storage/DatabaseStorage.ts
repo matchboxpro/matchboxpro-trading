@@ -50,7 +50,7 @@ export class DatabaseStorage implements IStorage {
 
   // Albums
   async getAlbums(): Promise<Album[]> {
-    return this.albumRepo.getAlbums();
+    return this.albumRepo.getAlbumsOrdered();
   }
 
   async getAlbum(id: string): Promise<Album | undefined> {
@@ -67,6 +67,10 @@ export class DatabaseStorage implements IStorage {
 
   async deleteAlbum(id: string): Promise<void> {
     return this.albumRepo.deleteAlbum(id);
+  }
+
+  async updateAlbumsOrder(albumsOrder: { id: string; displayOrder: number }[]): Promise<void> {
+    return this.albumRepo.updateAlbumsOrder(albumsOrder);
   }
 
   // Stickers

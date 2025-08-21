@@ -182,6 +182,30 @@ Modifica album esistente (solo admin).
 ### `DELETE /api/albums/:id`
 Eliminazione album (solo admin).
 
+### `PUT /api/admin/albums/reorder`
+Riordinamento album tramite drag & drop (solo admin).
+
+**Request Body:**
+```json
+{
+  "albumsOrder": [
+    {
+      "id": "uuid",
+      "displayOrder": "number"
+    }
+  ]
+}
+```
+
+**Response (200):**
+```json
+{
+  "message": "Album order updated successfully"
+}
+```
+
+**Note**: L'ordine viene salvato in `album-order.json` e rispettato in tutte le API che restituiscono liste di album.
+
 ## 🃏 Gestione Figurine
 
 ### `GET /api/albums/:id/stickers`
@@ -437,7 +461,7 @@ L'API utilizza un sistema storage modulare basato su pattern Repository:
 ### Repository Disponibili
 
 - **UserRepository**: Gestione utenti e autenticazione
-- **AlbumRepository**: CRUD album
+- **AlbumRepository**: CRUD album con ordinamento personalizzato
 - **StickerRepository**: CRUD figurine e collezioni utente  
 - **MatchRepository**: Algoritmo matching e ricerca
 - **MessageRepository**: Sistema chat persistente
@@ -534,4 +558,4 @@ Informazioni utente corrente dal token JWT.
 
 ---
 
-**Ultimo aggiornamento**: 2025-08-18 - Migrazione completa a JWT, deployment Render, endpoint diagnostici
+**Ultimo aggiornamento**: 2025-08-21 - Aggiunto sistema drag & drop per riordinamento album admin

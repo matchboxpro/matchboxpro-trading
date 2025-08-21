@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, ImageIcon } from 'lucide-react';
+import { Plus, ImageIcon, GripVertical } from 'lucide-react';
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 
 interface AlbumsSectionProps {
   albums: any[];
@@ -11,6 +12,7 @@ interface AlbumsSectionProps {
   onManageStickers: (album: any) => void;
   onEditAlbum: (album: any) => void;
   onDeleteAlbum: (album: any) => void;
+  onReorderAlbums?: (albums: any[]) => void;
 }
 
 export const AlbumsSection: React.FC<AlbumsSectionProps> = ({
@@ -20,8 +22,30 @@ export const AlbumsSection: React.FC<AlbumsSectionProps> = ({
   onNewAlbum,
   onManageStickers,
   onEditAlbum,
-  onDeleteAlbum
+  onDeleteAlbum,
+  onReorderAlbums
 }) => {
+  const [localAlbums, setLocalAlbums] = useState(albums);
+
+  // Aggiorna gli album locali quando cambiano quelli esterni
+  React.useEffect(() => {
+    setLocalAlbums(albums);
+  }, [albums]);
+
+  const handleDragEnd = (result: DropResult) => {
+    if (!result.destination) return;
+    
+    const items = Array.from(localAlbums);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    
+    setLocalAlbums(items);
+    
+    // Chiama la callback per salvare il nuovo ordine
+    if (onReorderAlbums) {
+      onReorderAlbums(items);
+    }
+  };
   return (
     <div className="space-y-6">
       {/* Header with New Album Button */}
@@ -57,47 +81,80 @@ export const AlbumsSection: React.FC<AlbumsSectionProps> = ({
           </div>
         )}
 
-        {!isLoading && !error && albums.map((album: any) => (
-          <Card key={album.id} className="bg-white border border-[#05637b] shadow-lg hover:shadow-xl transition-shadow">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex-1">
-                  <h3 className="text-lg font-bold text-[#052b3e]">{album.name}</h3>
-                  <p className="text-[#052b3e] font-medium text-sm">
-                    <span className="text-lg font-bold">{album.stickerCount || 0}</span> figurine totali
-                  </p>
+        {!isLoading && !error && (
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="albums">
+              {(provided) => (
+                <div
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  className="space-y-4"
+                >
+                  {localAlbums.map((album: any, index: number) => (
+                    <Draggable key={album.id} draggableId={album.id} index={index}>
+                      {(provided, snapshot) => (
+                        <Card 
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          className={`bg-white border border-[#05637b] shadow-lg hover:shadow-xl transition-shadow ${
+                            snapshot.isDragging ? 'shadow-2xl scale-105' : ''
+                          }`}
+                        >
+                          <CardContent className="p-4">
+                            <div className="flex items-center justify-between gap-4">
+                              <div className="flex items-center gap-3">
+                                <div 
+                                  {...provided.dragHandleProps}
+                                  className="cursor-grab active:cursor-grabbing p-1 hover:bg-gray-100 rounded"
+                                >
+                                  <GripVertical className="w-5 h-5 text-[#05637b]" />
+                                </div>
+                                <div className="flex-1">
+                                  <h3 className="text-lg font-bold text-[#052b3e]">{album.name}</h3>
+                                  <p className="text-[#052b3e] font-medium text-sm">
+                                    <span className="text-lg font-bold">{album.stickerCount || 0}</span> figurine totali
+                                  </p>
+                                </div>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <Button 
+                                  size="sm" 
+                                  className="bg-[#05637b] hover:bg-[#05637b]/90 text-white font-medium px-6"
+                                  onClick={() => onManageStickers(album)}
+                                >
+                                  Gestisci
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={() => onEditAlbum(album)}
+                                  className="border-[#05637b] text-[#05637b] hover:bg-[#05637b] hover:text-white font-medium px-6"
+                                >
+                                  Modifica
+                                </Button>
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={() => onDeleteAlbum(album)}
+                                  className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-medium px-6"
+                                >
+                                  Elimina
+                                </Button>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Button 
-                    size="sm" 
-                    className="bg-[#05637b] hover:bg-[#05637b]/90 text-white font-medium px-6"
-                    onClick={() => onManageStickers(album)}
-                  >
-                    Gestisci
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => onEditAlbum(album)}
-                    className="border-[#05637b] text-[#05637b] hover:bg-[#05637b] hover:text-white font-medium px-6"
-                  >
-                    Modifica
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => onDeleteAlbum(album)}
-                    className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white font-medium px-6"
-                  >
-                    Elimina
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              )}
+            </Droppable>
+          </DragDropContext>
+        )}
         
-        {!isLoading && !error && albums.length === 0 && (
+        {!isLoading && !error && localAlbums.length === 0 && (
           <Card className="bg-white border border-[#05637b] shadow-lg">
             <CardContent className="p-8 text-center">
               <ImageIcon className="w-16 h-16 text-[#05637b]/30 mx-auto mb-4" />

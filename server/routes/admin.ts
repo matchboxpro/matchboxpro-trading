@@ -107,4 +107,27 @@ export function registerAdminRoutes(app: Express, requireAdmin: any) {
       res.status(500).json({ message: "Errore nella creazione della segnalazione" });
     }
   });
+
+  // Album reordering endpoint
+  app.put("/api/admin/albums/reorder", async (req, res) => {
+    try {
+      const { albums: albumsOrder } = req.body;
+      
+      if (!Array.isArray(albumsOrder)) {
+        return res.status(400).json({ message: "Invalid albums order data" });
+      }
+      
+      // Crea l'array con id e displayOrder
+      const orderData = albumsOrder.map((album, index) => ({
+        id: album.id,
+        displayOrder: index
+      }));
+      
+      await storage.updateAlbumsOrder(orderData);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error updating albums order:", error);
+      res.status(500).json({ message: "Errore nell'aggiornamento dell'ordine degli album" });
+    }
+  });
 }

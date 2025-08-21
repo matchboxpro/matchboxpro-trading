@@ -3,6 +3,10 @@
 ## [Unreleased]
 
 ### Added
+- **Admin Album Reordering**: Drag & drop functionality to reorder albums in admin panel
+- **Persistent Album Order**: Custom album order saved to file system and respected across app
+- **Visual Drag Indicators**: Grip icons and visual feedback during album reordering
+- **Sticker Grid Optimization**: Reduced box height by 25% and minimized spacing for better density
 - Complete optimization of SI/NO/DOPPIA sticker buttons with instant visual feedback
 - Mobile performance improvements with hardware acceleration and touch optimization
 - PWA fullscreen mode enhancements for better app-like experience
@@ -13,6 +17,9 @@
 - Profile modal exclusive opening behavior (only one modal at a time)
 
 ### Fixed
+- **Album Order Synchronization**: App now displays albums in exact order set by admin
+- **Server Port Configuration**: Fixed port conflicts for consistent localhost:3001 access
+- **API Endpoint Registration**: Resolved 404 errors for admin album reordering endpoint
 - Critical fix for DOPPIA button logic - now correctly disabled when status is "no"
 - SI button now remains green when status is "double" (business logic requirement)
 - Zero-lag button response on mobile devices through optimized event handling
@@ -22,6 +29,10 @@
 - Removed placeholder text from password fields for cleaner UI
 
 ### Changed
+- **Compact Sticker Layout**: Reduced sticker box height by 25% for better screen utilization
+- **Minimized Spacing**: Reduced gaps between sticker boxes from 4px to 2px
+- **Admin UX Enhancement**: Added drag & drop with @hello-pangea/dnd library
+- **File-based Persistence**: Album order stored in album-order.json for reliability
 - Improved button visual states with proper color coding (green/red/yellow)
 - Enhanced touch responsiveness with onMouseDown and onTouchStart events
 - Optimized CSS with transform3d and will-change for better performance
@@ -34,6 +45,11 @@
 - Improved input field readability with white background and black text
 
 ### Technical
+- **Album Repository Enhancement**: Added getAlbumsOrdered() method for custom ordering
+- **Admin API Endpoint**: PUT /api/admin/albums/reorder for saving album order
+- **File System Integration**: Persistent storage using fs module for album order
+- **React DnD Integration**: @hello-pangea/dnd for smooth drag & drop experience
+- **Code Cleanup**: Removed debug logging and temporary files for production readiness
 - Implemented requestAnimationFrame for smooth UI updates
 - Added CSS hardware acceleration with translateZ(0)
 - Enhanced event handling with preventDefault and stopPropagation
@@ -41,6 +57,57 @@
 - Added Eye/EyeOff icons from Lucide React for password visibility
 - Implemented toast-based confirmation system for better UX
 - Enhanced modal state management for exclusive opening behaviors
+
+## [2025-08-21] - Admin Album Reordering + UI Optimizations
+
+### 🎯 **ADMIN ALBUM MANAGEMENT**
+- **Drag & Drop Reordering**: Implementato sistema completo per riordinare album nell'admin
+  - Libreria @hello-pangea/dnd per esperienza drag & drop fluida
+  - Icone grip per indicare elementi trascinabili
+  - Effetti visivi durante il trascinamento (shadow, scale)
+  - Salvataggio automatico dell'ordine tramite API
+- **Persistent Order System**: Ordine album salvato in album-order.json
+  - Persistenza tra riavvii server
+  - Sincronizzazione automatica tra admin e app utente
+  - Fallback sicuro per album non ancora ordinati
+- **API Integration**: Endpoint PUT /api/admin/albums/reorder
+  - Validazione input con controllo array
+  - Gestione errori completa
+  - Toast notifications per feedback utente
+
+### 📱 **UI OPTIMIZATIONS**
+- **Compact Sticker Grid**: Ridotta altezza box figurine del 25%
+  - Da 45px a 34px per migliore utilizzo schermo
+  - Spazio tra box ridotto da 4px a 2px (space-y-1 → space-y-0.5)
+  - Layout più denso mantenendo leggibilità
+- **Visual Feedback**: Migliorata UX durante drag & drop
+  - Cursor grab/grabbing per indicare interattività
+  - Hover effects su grip icons
+  - Transizioni fluide durante riordinamento
+
+### 🔧 **TECHNICAL IMPROVEMENTS**
+- **Album Repository Enhancement**: Nuovo metodo getAlbumsOrdered()
+  - Caricamento ordine da file system
+  - Riordinamento automatico secondo preferenze admin
+  - Gestione album nuovi non ancora ordinati
+- **Server Configuration**: Risolti conflitti porta
+  - Server configurato per porta 3001 in development
+  - Eliminati conflitti con servizi esistenti
+  - Registrazione corretta endpoint admin
+- **Code Quality**: Pulizia completa codice
+  - Rimosso logging debug da produzione
+  - Eliminati file temporanei e obsoleti
+  - Ottimizzata gestione errori
+
+### 🚀 **DEPLOYMENT READY**
+- **Production Clean**: Codice ottimizzato per produzione
+  - Zero debug logs in output finale
+  - File system integration robusta
+  - Gestione errori completa per edge cases
+- **Backward Compatibility**: Funzionalità esistenti preservate
+  - Layout originale mantenuto
+  - Nessuna breaking change per utenti finali
+  - Migrazioni automatiche per ordine album
 
 ## [2025-08-20] - Ottimizzazione Completa Pulsanti SI/NO/DOPPIA + Performance Mobile
 

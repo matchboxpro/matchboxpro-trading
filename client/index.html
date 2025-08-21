@@ -109,11 +109,9 @@
         }
       }
       
-      /* Status bar area styling */
-      @supports (padding-top: env(safe-area-inset-top)) {
-        body {
-          padding-top: env(safe-area-inset-top);
-        }
+      /* Remove any padding from body - will be handled by App component */
+      body {
+        padding: 0 !important;
       }
     </style>
   </head>

@@ -82,14 +82,16 @@ function AppContent() {
   const showBottomNav = location !== "/login" && !location.startsWith("/admin") && isMobile;
 
   return (
-    <div className="relative bg-[#fff4d6] overflow-hidden" style={{
+    <div className="relative bg-[#fff4d6]" style={{
+      height: '100dvh',
       paddingTop: 'env(safe-area-inset-top)',
       paddingBottom: 'env(safe-area-inset-bottom)',
-      height: '100dvh',
-      boxSizing: 'border-box'
+      boxSizing: 'border-box',
+      overflow: 'hidden'
     }}>
-      <div className="h-full" style={{
-        paddingBottom: showBottomNav ? '60px' : '0'
+      <div className="h-full overflow-y-auto" style={{
+        paddingBottom: showBottomNav ? '60px' : '0',
+        height: 'calc(100% - env(safe-area-inset-top) - env(safe-area-inset-bottom))'
       }}>
         <Switch>
         <Route path="/login" component={Login} />

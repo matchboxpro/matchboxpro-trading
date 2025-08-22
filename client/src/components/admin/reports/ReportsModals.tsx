@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { X } from "lucide-react";
+import { useState } from "react";
 
 interface ReportsModalsProps {
   showDetailModal: boolean;
@@ -21,6 +22,7 @@ export function ReportsModals({
   setShowReplitModal,
   replitText
 }: ReportsModalsProps) {
+  const [promptCopied, setPromptCopied] = useState(false);
   const getStatusColor = (status: string) => {
     switch (status) {
       case "nuovo": return "bg-blue-100 text-blue-800 border-blue-200";
@@ -143,6 +145,15 @@ Pronto per il debug sistematico di questo problema.`;
                 </div>
               )}
 
+              <div>
+                <label className="text-sm font-medium text-[#052b3e]/70">Log Completo</label>
+                <Textarea
+                  value={generateCascadePrompt(selectedReport)}
+                  readOnly
+                  className="min-h-[300px] font-mono text-sm bg-gray-50 border-gray-300 text-[#052b3e] mt-2"
+                />
+              </div>
+
               {selectedReport.page && (
                 <div>
                   <label className="text-sm font-medium text-[#052b3e]/70">Pagina</label>
@@ -162,10 +173,17 @@ Pronto per il debug sistematico di questo problema.`;
                   onClick={() => {
                     const cascadePrompt = generateCascadePrompt(selectedReport);
                     navigator.clipboard.writeText(cascadePrompt);
+                    setPromptCopied(true);
+                    setTimeout(() => setPromptCopied(false), 2000);
                   }}
-                  className="bg-[#f8b400] hover:bg-[#f8b400]/90 text-[#052b3e] font-semibold"
+                  className="bg-[#f8b400] hover:bg-[#f8b400]/90 text-[#052b3e] font-semibold relative"
                 >
-                  Crea Prompt Cascade
+                  {promptCopied ? "✅ Copiato!" : "Crea Prompt Cascade"}
+                  {promptCopied && (
+                    <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-green-600 text-white text-xs px-2 py-1 rounded shadow-lg">
+                      Prompt copiato negli appunti
+                    </span>
+                  )}
                 </Button>
                 <Button
                   variant="outline"

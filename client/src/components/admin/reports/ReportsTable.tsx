@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface ReportsTableProps {
   reports: any[];
@@ -16,6 +17,7 @@ interface ReportsTableProps {
   onUpdateStatus: (id: string, status: string) => void;
   onUpdatePriority: (id: string, priority: string) => void;
   onDeleteSelected: () => void;
+  onBulkStatusChange?: (status: string) => void;
 }
 
 export function ReportsTable({
@@ -29,6 +31,7 @@ export function ReportsTable({
   onUpdateStatus,
   onUpdatePriority,
   onDeleteSelected,
+  onBulkStatusChange
 }: ReportsTableProps) {
   console.log('ReportsTable - Received reports:', reports.length);
   console.log('ReportsTable - First 3 reports:', reports.slice(0, 3).map(r => ({ 
@@ -102,6 +105,16 @@ export function ReportsTable({
             >
               Deseleziona
             </Button>
+            <Select onValueChange={(status) => onBulkStatusChange && onBulkStatusChange(status)}>
+              <SelectTrigger className="w-48 border-[#05637b] text-[#05637b] hover:bg-[#05637b]/10">
+                <SelectValue placeholder="Cambia Stato" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="nuovo">Nuovo</SelectItem>
+                <SelectItem value="aperto">Aperto</SelectItem>
+                <SelectItem value="inviato">Inviato</SelectItem>
+              </SelectContent>
+            </Select>
             <Button
               variant="outline"
               size="sm"
@@ -163,8 +176,8 @@ export function ReportsTable({
                     </Badge>
                   </TableCell>
                   <TableCell className="max-w-xs">
-                    <div className="space-y-1">
-                      <div className="text-sm text-[#052b3e] truncate font-medium" title={report.description}>
+                    <div className="space-y-1 cursor-pointer" onClick={() => onViewDetails(report)}>
+                      <div className="text-sm text-[#052b3e] truncate font-medium hover:text-[#05637b] hover:underline" title={report.description}>
                         {report.description.replace('Network Error: Failed to fetch', 'Errore di Rete: Impossibile recuperare dati')
                           .replace('JavaScript Error: Uncaught TypeError:', 'Errore JavaScript: Tipo non valido:')
                           .replace('JavaScript Error: Uncaught ReferenceError:', 'Errore JavaScript: Riferimento non trovato:')
@@ -172,7 +185,7 @@ export function ReportsTable({
                           .replace('JavaScript Error: Uncaught Error:', 'Errore JavaScript Non Gestito:')}
                       </div>
                       {report.error_details && (
-                        <div className="text-xs text-[#052b3e]/60 truncate" title={report.error_details}>
+                        <div className="text-xs text-[#052b3e]/60 truncate hover:text-[#05637b]" title={report.error_details}>
                           {report.error_details}
                         </div>
                       )}
@@ -194,9 +207,9 @@ export function ReportsTable({
                       {report.status}
                     </Badge>
                   </TableCell>
-                  <TableCell>
-                    <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium border ${getPriorityColor(report.priority)}`}>
-                      {report.priority === 'alta' ? '🔴❗ Alta' : report.priority === 'media' ? '🟡 Media' : report.priority}
+                  <TableCell className="text-center">
+                    <span className="inline-flex items-center justify-center w-6 h-6 mx-auto">
+                      {report.priority === 'alta' ? '🔴' : report.priority === 'media' ? '🟡' : '🟢'}
                     </span>
                   </TableCell>
                   <TableCell>

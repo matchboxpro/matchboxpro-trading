@@ -178,6 +178,10 @@ export class DatabaseStorage implements IStorage {
     return this.reportRepo.updateReport(id, updates);
   }
 
+  async bulkUpdateReportStatus(reportIds: string[], status: string): Promise<number> {
+    return this.reportRepo.bulkUpdateReportStatus(reportIds, status);
+  }
+
   async deleteReports(reportIds: string[]): Promise<void> {
     return this.reportRepo.deleteReports(reportIds);
   }

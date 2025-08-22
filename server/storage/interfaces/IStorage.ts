@@ -63,6 +63,7 @@ export interface IStorage {
   }>;
   createReport(report: InsertReport): Promise<Report>;
   updateReport(id: string, updates: { status?: string; priority?: string }): Promise<Report>;
+  bulkUpdateReportStatus(reportIds: string[], status: string): Promise<number>;
   
   // Stats
   getAdminStats(): Promise<{

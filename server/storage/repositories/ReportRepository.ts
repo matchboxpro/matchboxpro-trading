@@ -173,11 +173,44 @@ export class ReportRepository {
   }
 
   async updateReport(id: string, updates: { status?: string; priority?: string }): Promise<Report> {
+    console.log('ReportRepository - updateReport called with:', { id, updates, idType: typeof id });
+    
     const result = await db.update(reports)
       .set(updates)
       .where(eq(reports.id, id))
       .returning();
+    
     return result[0];
+  }
+
+  async bulkUpdateReportStatus(reportIds: string[], status: string): Promise<number> {
+    console.log('ReportRepository - Bulk updating status:', { reportIds, status });
+    
+    try {
+      // Use individual updates instead of inArray to avoid UUID conversion issues
+      let updatedCount = 0;
+      
+      for (const reportId of reportIds) {
+        console.log(`Updating report ${reportId} to status ${status}`);
+        const result = await db.update(reports)
+          .set({ status })
+          .where(eq(reports.id, reportId))
+          .returning({ id: reports.id });
+        
+        if (result.length > 0) {
+          updatedCount++;
+          console.log(`Successfully updated report ${reportId}`);
+        } else {
+          console.log(`No report found with ID ${reportId}`);
+        }
+      }
+      
+      console.log('ReportRepository - Total updated reports:', updatedCount);
+      return updatedCount;
+    } catch (error) {
+      console.error('ReportRepository - Error in bulkUpdateReportStatus:', error);
+      throw error;
+    }
   }
 
   async deleteReports(reportIds: string[]): Promise<void> {

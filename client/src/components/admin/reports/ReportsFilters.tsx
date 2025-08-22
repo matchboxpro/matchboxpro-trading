@@ -37,8 +37,8 @@ export function ReportsFilters({
         <SelectContent className="bg-white border-gray-300">
           <SelectItem value="all" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Tutti gli stati</SelectItem>
           <SelectItem value="nuovo" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Nuovo</SelectItem>
-          <SelectItem value="risolto" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Risolto</SelectItem>
-          <SelectItem value="chiuso" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Chiuso</SelectItem>
+          <SelectItem value="aperto" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Aperto</SelectItem>
+          <SelectItem value="inviato" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Inviato</SelectItem>
         </SelectContent>
       </Select>
 
@@ -49,7 +49,7 @@ export function ReportsFilters({
         <SelectContent className="bg-white border-gray-300">
           <SelectItem value="all" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10 data-[highlighted]:bg-[#05637b]/10 data-[highlighted]:text-[#052b3e]">Tutte le priorità</SelectItem>
           <SelectItem value="media" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10 data-[highlighted]:bg-[#05637b]/10 data-[highlighted]:text-[#052b3e]">🟡 Media</SelectItem>
-          <SelectItem value="alta" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10 data-[highlighted]:bg-[#05637b]/10 data-[highlighted]:text-[#052b3e]">🔴❗ Alta</SelectItem>
+          <SelectItem value="alta" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10 data-[highlighted]:bg-[#05637b]/10 data-[highlighted]:text-[#052b3e]">🔴 Alta</SelectItem>
         </SelectContent>
       </Select>
 

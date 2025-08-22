@@ -63,6 +63,30 @@ export function registerAdminRoutes(app: Express, requireAdmin: any) {
     }
   });
 
+  // IMPORTANTE: bulk-status DEVE essere PRIMA di :id per evitare conflitti di route
+  app.put("/api/admin/reports/bulk-status", async (req, res) => {
+    try {
+      const { reportIds, status } = req.body;
+      
+      if (!Array.isArray(reportIds) || reportIds.length === 0) {
+        return res.status(400).json({ message: "IDs segnalazioni non validi" });
+      }
+      
+      if (!status || !['nuovo', 'aperto', 'inviato'].includes(status)) {
+        return res.status(400).json({ message: "Stato non valido" });
+      }
+      
+      console.log(`Bulk status update: ${reportIds.length} reports to status "${status}"`);
+      console.log('Report IDs received:', reportIds);
+      
+      const updatedCount = await storage.bulkUpdateReportStatus(reportIds, status);
+      res.json({ success: true, updatedCount });
+    } catch (error) {
+      console.error("Error bulk updating report status:", error);
+      res.status(500).json({ message: "Errore nell'aggiornamento dello stato delle segnalazioni" });
+    }
+  });
+
   app.put("/api/admin/reports/:id", async (req, res) => {
     try {
       const { id } = req.params;

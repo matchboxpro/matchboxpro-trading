@@ -58,7 +58,7 @@ export function AppShell({ children, showBottomNav = true }: AppShellProps) {
 
       {/* Bottom Navigation with safe area */}
       {shouldShowBottomNav && (
-        <div className="bottom-nav-fixed bg-brand-azzurro border-t border-brand-azzurro max-w-md mx-auto">
+        <div className="bottom-nav-fixed">
           <BottomNavigation onNavigate={setLocation} />
         </div>
       )}

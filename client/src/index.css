@@ -172,6 +172,27 @@
   .nav-height {
     height: var(--nav-h);
   }
+  
+  /* Header Mobile Safe Area Fix */
+  .header-mobile-safe {
+    padding-top: calc(var(--sat) + 20px) !important;
+  }
+  
+  /* Bottom Navigation Mobile Fix */
+  .bottom-nav-fixed {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 50 !important;
+    padding-bottom: var(--sab) !important;
+    height: calc(var(--nav-h) + var(--sab)) !important;
+  }
+  
+  /* Content with bottom navigation spacing */
+  .content-with-bottom-nav {
+    padding-bottom: calc(var(--nav-h) + var(--sab)) !important;
+  }
 }
 
 /* Mobile-first ottimizzato */

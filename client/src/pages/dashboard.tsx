@@ -55,7 +55,7 @@ export default function Dashboard() {
       </div>
 
       {/* Recent Matches */}
-      <div className="p-4 flex-1 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
+      <div className="p-4 flex-1 overflow-y-auto content-with-bottom-nav" style={{ WebkitOverflowScrolling: 'touch' }}>
         <h2 className="text-lg font-semibold text-brand-nero mb-4">Ultimi Match</h2>
         
         {matches.length === 0 ? (

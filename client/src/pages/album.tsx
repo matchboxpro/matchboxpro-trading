@@ -207,7 +207,7 @@ export default function Album() {
       </div>
 
       <div 
-        className="flex-1 overflow-y-auto overflow-x-hidden w-full" 
+        className="flex-1 overflow-y-auto overflow-x-hidden w-full content-with-bottom-nav" 
         style={{ 
           WebkitOverflowScrolling: 'touch',
           touchAction: 'pan-y',

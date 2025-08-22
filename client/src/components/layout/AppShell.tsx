@@ -28,9 +28,8 @@ export function AppShell({ children, showBottomNav = true }: AppShellProps) {
     >
       {/* Header with safe area */}
       <div 
-        className="bg-brand-azzurro border-b border-brand-azzurro flex-shrink-0"
+        className="bg-brand-azzurro border-b border-brand-azzurro flex-shrink-0 header-mobile-safe"
         style={{
-          paddingTop: 'calc(var(--sat) + 12px)', // Safe area + extra padding
           paddingBottom: '8px'
         }}
       >
@@ -59,13 +58,7 @@ export function AppShell({ children, showBottomNav = true }: AppShellProps) {
 
       {/* Bottom Navigation with safe area */}
       {shouldShowBottomNav && (
-        <div 
-          className="fixed left-0 right-0 bottom-0 bg-brand-azzurro border-t border-brand-azzurro max-w-md mx-auto"
-          style={{
-            paddingBottom: 'var(--sab)',
-            height: 'calc(var(--nav-h) + var(--sab))'
-          }}
-        >
+        <div className="bottom-nav-fixed bg-brand-azzurro border-t border-brand-azzurro max-w-md mx-auto">
           <BottomNavigation onNavigate={setLocation} />
         </div>
       )}

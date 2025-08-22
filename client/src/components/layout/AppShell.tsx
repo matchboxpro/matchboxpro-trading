@@ -18,6 +18,9 @@ export function AppShell({ children, showBottomNav = true }: AppShellProps) {
     !location.startsWith("/admin") && 
     isMobile;
 
+  // Don't show header logo on album pages (they have their own)
+  const shouldShowHeaderLogo = !location.startsWith("/album");
+
   return (
     <div 
       className="relative bg-[#fff4d6] w-full"
@@ -33,13 +36,15 @@ export function AppShell({ children, showBottomNav = true }: AppShellProps) {
           paddingBottom: '8px'
         }}
       >
-        <div className="flex items-center justify-center px-2">
-          <img 
-            src="/matchbox-logo.png" 
-            alt="MATCHBOX" 
-            className="h-12 w-auto"
-          />
-        </div>
+        {shouldShowHeaderLogo && (
+          <div className="flex items-center justify-center px-2">
+            <img 
+              src="/matchbox-logo.png" 
+              alt="MATCHBOX" 
+              className="h-12 w-auto"
+            />
+          </div>
+        )}
       </div>
 
       {/* Main content area */}

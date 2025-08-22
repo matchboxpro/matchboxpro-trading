@@ -11,10 +11,8 @@ export function BottomNavigation({ onNavigate }: BottomNavigationProps) {
   const isActive = (path: string) => location === path;
 
   return (
-    <nav className="fixed left-0 right-0 bg-brand-azzurro border-t border-brand-azzurro max-w-md mx-auto" style={{
-      bottom: 'env(safe-area-inset-bottom)'
-    }}>
-      <div className="grid grid-cols-4 py-2">
+    <nav className="nav-height w-full">
+      <div className="grid grid-cols-4 h-full items-center">
         <button
           onClick={() => onNavigate("/")}
           className={`flex flex-col items-center py-2 ${

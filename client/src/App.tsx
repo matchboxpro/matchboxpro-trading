@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
-import { BottomNavigation } from "@/components/ui/bottom-navigation";
+import { AppShell } from "@/components/layout/AppShell";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { initializePWA } from "@/utils/pwaUtils";
 
@@ -78,25 +78,20 @@ function AppContent() {
     );
   }
 
-  // Don't show bottom nav on login or admin pages
-  const showBottomNav = location !== "/login" && !location.startsWith("/admin") && isMobile;
-
-  return (
-    <div className="relative bg-[#fff4d6]" style={{
-      height: '100dvh',
-      paddingTop: 'env(safe-area-inset-top)',
-      paddingBottom: 'env(safe-area-inset-bottom)',
-      boxSizing: 'border-box',
-      overflow: 'hidden'
-    }}>
-      <div className="h-full overflow-y-auto" style={{
-        paddingBottom: showBottomNav ? '60px' : '0',
-        height: '100%'
-      }}>
-        <Switch>
+  // Login and admin pages don't use AppShell
+  if (location === "/login" || location.startsWith("/admin")) {
+    return (
+      <Switch>
         <Route path="/login" component={Login} />
         <Route path="/admin" component={Admin} />
-        
+      </Switch>
+    );
+  }
+
+  // All other pages use AppShell
+  return (
+    <AppShell>
+      <Switch>
         {/* Protected routes */}
         <Route path="/">
           <AuthGuard>
@@ -131,11 +126,8 @@ function AppContent() {
         
         {/* Fallback to 404 */}
         <Route component={NotFound} />
-        </Switch>
-      </div>
-      
-      {showBottomNav && <BottomNavigation onNavigate={setLocation} />}
-    </div>
+      </Switch>
+    </AppShell>
   );
 }
 

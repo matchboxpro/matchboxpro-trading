@@ -50,16 +50,7 @@ export default function Match() {
 
   if (!user?.albumSelezionato) {
     return (
-      <div className="min-h-screen bg-brand-bianco pb-20">
-        <div className="bg-brand-azzurro border-b border-brand-azzurro pt-12 pb-8 px-2">
-          <div className="flex items-center justify-center">
-            <img 
-              src="/matchbox-logo.png" 
-              alt="MATCHBOX" 
-              className="h-12 w-auto"
-            />
-          </div>
-        </div>
+      <div className="h-full bg-brand-bianco flex flex-col">
         <div className="p-4 text-center">
           <p className="text-brand-bianco/80 mb-4">Seleziona un album attivo per trovare match</p>
           <Button 
@@ -74,24 +65,14 @@ export default function Match() {
   }
 
   return (
-    <div className="h-screen bg-brand-bianco overflow-hidden fixed inset-0 w-full flex flex-col" 
+    <div className="h-full bg-brand-bianco overflow-y-auto flex flex-col" 
          style={{ 
            WebkitOverflowScrolling: 'touch',
            touchAction: 'pan-y',
            overscrollBehavior: 'contain'
          }}>
-      <div className="bg-brand-azzurro border-b border-brand-azzurro pt-12 pb-8 px-2">
-        <div className="flex items-center justify-center">
-          <img 
-            src="/matchbox-logo.png" 
-            alt="MATCHBOX" 
-            className="h-12 w-auto"
-          />
-        </div>
-      </div>
-
       {/* Filter Options */}
-      <div className="p-4 space-y-6 max-w-none w-full flex-1 overflow-y-auto pb-20" style={{ WebkitOverflowScrolling: 'touch' }}>
+      <div className="p-4 space-y-6 max-w-none w-full flex-1" style={{ WebkitOverflowScrolling: 'touch' }}>
         <Card className="bg-brand-azzurro border-0 shadow-lg">
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-3">

@@ -25,21 +25,12 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="h-screen bg-brand-bianco overflow-hidden fixed inset-0 w-full flex flex-col" 
+    <div className="h-full bg-brand-bianco overflow-y-auto flex flex-col" 
          style={{ 
            WebkitOverflowScrolling: 'touch',
            touchAction: 'pan-y',
            overscrollBehavior: 'contain'
          }}>
-      <div className="bg-brand-azzurro border-b border-brand-azzurro pt-12 pb-8 px-2">
-        <div className="flex items-center justify-center">
-          <img 
-            src="/matchbox-logo.png" 
-            alt="MATCHBOX" 
-            className="h-12 w-auto"
-          />
-        </div>
-      </div>
 
       {/* Stats Cards */}
       <div className="p-4 grid grid-cols-3 gap-4 max-w-none w-full flex-shrink-0">
@@ -64,7 +55,7 @@ export default function Dashboard() {
       </div>
 
       {/* Recent Matches */}
-      <div className="p-4 flex-1 overflow-y-auto pb-20" style={{ WebkitOverflowScrolling: 'touch' }}>
+      <div className="p-4 flex-1 overflow-y-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
         <h2 className="text-lg font-semibold text-brand-nero mb-4">Ultimi Match</h2>
         
         {matches.length === 0 ? (

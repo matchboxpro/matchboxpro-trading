@@ -182,7 +182,7 @@ export default function Album() {
   // If no album selected, show album selection
   if (!selectedAlbum) {
     return (
-      <div className="h-screen bg-[#fff4d6] flex flex-col fixed top-0 left-0 w-full overflow-hidden">
+      <div className="h-full bg-[#fff4d6] flex flex-col overflow-hidden">
         <AlbumSelector
           albums={albums}
           onAlbumSelect={setSelectedAlbum}
@@ -194,7 +194,7 @@ export default function Album() {
   const selectedAlbumData = (albums as any[]).find((a: any) => a.id === selectedAlbum);
 
   return (
-    <div className="h-screen bg-[#fff4d6] flex flex-col overflow-hidden fixed top-0 left-0 w-full">
+    <div className="h-full bg-[#fff4d6] flex flex-col overflow-hidden">
       <div className="flex-shrink-0">
         <AlbumHeader
           album={selectedAlbumData}
@@ -212,9 +212,7 @@ export default function Album() {
           WebkitOverflowScrolling: 'touch',
           touchAction: 'pan-y',
           overscrollBehavior: 'contain',
-          maxWidth: '100vw',
-          height: 'calc(100vh - 200px)', // Account for header and bottom nav
-          paddingBottom: '80px' // Space for bottom navigation
+          maxWidth: '100vw'
         }}
       >
         <StickerGrid

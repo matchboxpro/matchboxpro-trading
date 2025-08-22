@@ -10,7 +10,6 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { AccountSection } from "@/components/profile/AccountSection";
 import { PasswordSection } from "@/components/profile/PasswordSection";
-import { BottomNavigation } from "@/components/ui/bottom-navigation";
 
 export default function Profile() {
   const [, setLocation] = useLocation();
@@ -105,23 +104,13 @@ export default function Profile() {
   }
 
   return (
-    <div className="h-screen bg-brand-bianco overflow-hidden fixed inset-0 w-full flex flex-col" 
+    <div className="h-full bg-brand-bianco overflow-y-auto flex flex-col" 
          style={{ 
            WebkitOverflowScrolling: 'touch',
            touchAction: 'pan-y',
            overscrollBehavior: 'contain'
          }}>
-      <div className="bg-brand-azzurro border-b border-brand-azzurro pt-12 pb-8 px-2">
-        <div className="flex items-center justify-center">
-          <img 
-            src="/matchbox-logo.png" 
-            alt="MATCHBOX" 
-            className="h-12 w-auto"
-          />
-        </div>
-      </div>
-
-      <div className="p-4 space-y-6 max-w-none w-full flex-1 overflow-y-auto pb-20" style={{ WebkitOverflowScrolling: 'touch' }}>
+      <div className="p-4 space-y-6 max-w-none w-full flex-1" style={{ WebkitOverflowScrolling: 'touch' }}>
         {/* Account Section */}
         <AccountSection 
           user={user}
@@ -172,21 +161,6 @@ export default function Profile() {
             </Button>
           </CardContent>
         </Card>
-      </div>
-      
-      {/* Bottom Navigation */}
-      <BottomNavigation onNavigate={setLocation} />
-      
-      {/* Admin Button - Discreto a fondo pagina */}
-      <div className="fixed bottom-4 left-4">
-        <Button
-          onClick={() => window.location.href = '/admin'}
-          variant="ghost"
-          size="sm"
-          className="text-xs text-gray-400 hover:text-gray-600 opacity-50 hover:opacity-100 transition-opacity"
-        >
-          Admin
-        </Button>
       </div>
     </div>
   );

@@ -23,22 +23,69 @@ export function ReportsModals({
 }: ReportsModalsProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "open": return "bg-red-100 text-red-800 border-red-200";
-      case "in_progress": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "resolved": return "bg-green-100 text-green-800 border-green-200";
-      case "closed": return "bg-gray-100 text-gray-800 border-gray-200";
+      case "nuovo": return "bg-blue-100 text-blue-800 border-blue-200";
+      case "aperto": return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "inviato": return "bg-green-100 text-green-800 border-green-200";
       default: return "bg-gray-100 text-gray-800 border-gray-200";
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "critical": return "bg-red-100 text-red-800 border-red-200";
-      case "high": return "bg-orange-100 text-orange-800 border-orange-200";
-      case "medium": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "low": return "bg-green-100 text-green-800 border-green-200";
+      case "alta": return "bg-red-100 text-red-800 border-red-200";
+      case "media": return "bg-yellow-100 text-yellow-800 border-yellow-200";
       default: return "bg-gray-100 text-gray-800 border-gray-200";
     }
+  };
+
+  const generateCascadePrompt = (report: any) => {
+    return `# 🚨 MATCHBOX Error Report - Debug Prompt for Cascade
+
+## Context
+- **Project**: MatchboxPro (MATCHBOX) - Trading cards web app
+- **Stack**: React + TypeScript + Express + Supabase
+- **Location**: /Users/dero/Documents/MatchboxPro_Portable/matchboxpro_current
+- **Generated**: ${new Date().toLocaleString("it-IT")}
+
+## 📋 Error Report Details
+
+**Tipo di errore**: ${report.type}
+**Descrizione**: ${report.description}
+**Pagina coinvolta**: ${report.page || "N/A"}
+**Data**: ${new Date(report.created_at).toLocaleString("it-IT")}
+**Utente**: ${report.user_id || "Anonimo"}
+**Stato**: ${report.status}
+**Priorità**: ${report.priority}
+
+${report.error_details ? `**Dettagli tecnici/Stack trace**:
+\`\`\`
+${report.error_details}
+\`\`\`
+` : ""}
+**URL**: ${report.url || "N/A"}
+**User Agent**: ${report.user_agent || "N/A"}
+
+## 🎯 Richiesta per Cascade
+
+Analizza questo errore e:
+
+1. **Identifica la causa principale** del problema riportato
+2. **Suggerisci una soluzione specifica** con percorsi file e modifiche al codice
+3. **Valuta l'impatto** e la priorità della correzione
+4. **Fornisci i passaggi di implementazione** rispettando l'architettura modulare
+
+## 📁 File chiave da considerare
+- Frontend: \`/client/src/pages/\` e \`/client/src/components/\`
+- Backend: \`/server/routes.ts\` e \`/server/storage.ts\`
+- Shared: \`/shared/schema.ts\`
+
+## 🔧 Note architettura
+- Componenti modulari (max 300 righe per file)
+- React Query per data fetching
+- Database Supabase PostgreSQL
+- API Express.js con autenticazione sessione
+
+Pronto per il debug sistematico di questo problema.`;
   };
 
   return (
@@ -74,9 +121,9 @@ export function ReportsModals({
                 </div>
                 <div>
                   <label className="text-sm font-medium text-[#052b3e]/70">Priorità</label>
-                  <Badge className={`mt-1 ${getPriorityColor(selectedReport.priority)}`}>
-                    {selectedReport.priority}
-                  </Badge>
+                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium border ${getPriorityColor(selectedReport.priority)}`}>
+                    {selectedReport.priority === 'alta' ? '🔴❗ Alta' : selectedReport.priority === 'media' ? '🟡 Media' : selectedReport.priority}
+                  </span>
                 </div>
               </div>
 
@@ -110,7 +157,16 @@ export function ReportsModals({
                 </div>
               )}
 
-              <div className="flex justify-end gap-3 pt-4 border-t">
+              <div className="flex justify-between gap-3 pt-4 border-t">
+                <Button
+                  onClick={() => {
+                    const cascadePrompt = generateCascadePrompt(selectedReport);
+                    navigator.clipboard.writeText(cascadePrompt);
+                  }}
+                  className="bg-[#f8b400] hover:bg-[#f8b400]/90 text-[#052b3e] font-semibold"
+                >
+                  Crea Prompt Cascade
+                </Button>
                 <Button
                   variant="outline"
                   onClick={() => setShowDetailModal(false)}

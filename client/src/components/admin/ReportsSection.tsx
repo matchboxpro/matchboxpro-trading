@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -10,9 +10,9 @@ import { ReportsPagination } from "./reports/ReportsPagination";
 
 export function ReportsSection() {
   const [filters, setFilters] = useState({
-    status: "",
-    priority: "",
-    type: "",
+    status: "all",
+    priority: "all",
+    type: "all",
     page: 1,
     limit: 20,
   });
@@ -25,23 +25,53 @@ export function ReportsSection() {
   const queryClient = useQueryClient();
 
   // Query per segnalazioni con paginazione e filtri
-  const { data: reportsData, isLoading } = useQuery({
-    queryKey: ["/api/admin/reports", filters],
+  const { data: reportsData, isLoading, refetch } = useQuery({
+    queryKey: ["/api/admin/reports", filters.status, filters.priority, filters.type, filters.page],
     queryFn: async () => {
       const params = new URLSearchParams();
       Object.entries(filters).forEach(([key, value]) => {
-        if (value) params.set(key, String(value));
+        if (value && value !== 'all') {
+          console.log(`Adding filter: ${key} = ${value}`);
+          params.set(key, String(value));
+        }
       });
+      console.log('Final URL params:', params.toString());
       
-      const response = await fetch(`/api/admin/reports?${params}`);
+      const timestamp = Date.now();
+      const response = await fetch(`/api/admin/reports?${params}&_t=${timestamp}`, {
+        method: 'GET',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      });
       if (!response.ok) throw new Error("Errore nel caricamento segnalazioni");
-      return response.json();
+      const data = await response.json();
+      console.log('Frontend received data:', data);
+      console.log('Frontend received reports count:', data?.reports?.length || 0);
+      return data;
     },
+    staleTime: 0,
+    gcTime: 0,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false,
   });
 
   const reports = reportsData?.reports || [];
   const totalPages = reportsData?.totalPages || 1;
   const totalReports = reportsData?.total || 0;
+  
+  console.log('ReportsSection - Current filters:', filters);
+  console.log('ReportsSection - Reports from query:', reports.length);
+  console.log('ReportsSection - Total from backend:', totalReports);
+
+  // Force refetch when filters change
+  useEffect(() => {
+    console.log('Filters changed, forcing refetch:', filters);
+    queryClient.removeQueries({ queryKey: ["/api/admin/reports"] });
+    refetch();
+  }, [filters, refetch, queryClient]);
 
   // Mutation per aggiornare segnalazioni
   const updateReportMutation = useMutation({
@@ -56,6 +86,50 @@ export function ReportsSection() {
     },
     onError: () => {
       toast({ title: "Errore", description: "Errore nell'aggiornamento della segnalazione", variant: "destructive" });
+    },
+  });
+
+  // Mutation per eliminare segnalazioni
+  const deleteReportsMutation = useMutation({
+    mutationFn: async (reportIds: string[]) => {
+      try {
+        const response = await fetch('/api/admin/reports/bulk', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({ reportIds }),
+        });
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Errore nell'eliminazione: ${response.status} - ${errorText}`);
+        }
+        
+        return await response.json();
+      } catch (error) {
+        console.error('Fetch error:', error);
+        throw error;
+      }
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/reports"] });
+      queryClient.refetchQueries({ queryKey: ["/api/admin/reports"] });
+      setSelectedReports([]);
+      toast({ 
+        title: "✅ Eliminazione completata", 
+        description: `${variables.length} segnalazioni eliminate con successo`,
+        duration: 4000
+      });
+    },
+    onError: (error) => {
+      toast({ 
+        title: "❌ Errore eliminazione", 
+        description: `Impossibile eliminare le segnalazioni: ${error.message}`, 
+        variant: "destructive",
+        duration: 5000
+      });
     },
   });
 
@@ -87,6 +161,24 @@ export function ReportsSection() {
 
   const updateReportPriority = (id: string, priority: string) => {
     updateReportMutation.mutate({ id, updates: { priority } });
+  };
+
+  const deleteSelectedReports = () => {
+    if (selectedReports.length === 0) {
+      toast({ 
+        title: "⚠️ Nessuna selezione", 
+        description: "Seleziona almeno una segnalazione da eliminare",
+        variant: "destructive",
+        duration: 3000
+      });
+      return;
+    }
+    
+    // Usa window.confirm per compatibilità cross-browser
+    const confirmed = window.confirm(`Sei sicuro di voler eliminare ${selectedReports.length} segnalazioni selezionate?\n\nQuesta azione non può essere annullata.`);
+    if (confirmed) {
+      deleteReportsMutation.mutate(selectedReports);
+    }
   };
 
   const copySelectedToReplit = () => {
@@ -172,6 +264,7 @@ Ready to debug these issues systematically.`;
         onCopyToReplit={copySelectedToReplit}
       />
 
+
       {/* Tabella segnalazioni */}
       <ReportsTable
         reports={reports}
@@ -183,6 +276,7 @@ Ready to debug these issues systematically.`;
         onViewDetails={viewReportDetails}
         onUpdateStatus={updateReportStatus}
         onUpdatePriority={updateReportPriority}
+        onDeleteSelected={deleteSelectedReports}
       />
 
       {/* Paginazione */}

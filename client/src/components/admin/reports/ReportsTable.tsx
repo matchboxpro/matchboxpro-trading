@@ -15,6 +15,7 @@ interface ReportsTableProps {
   onViewDetails: (report: any) => void;
   onUpdateStatus: (id: string, status: string) => void;
   onUpdatePriority: (id: string, priority: string) => void;
+  onDeleteSelected: () => void;
 }
 
 export function ReportsTable({
@@ -26,24 +27,32 @@ export function ReportsTable({
   onClearSelection,
   onViewDetails,
   onUpdateStatus,
-  onUpdatePriority
+  onUpdatePriority,
+  onDeleteSelected,
 }: ReportsTableProps) {
+  console.log('ReportsTable - Received reports:', reports.length);
+  console.log('ReportsTable - First 3 reports:', reports.slice(0, 3).map(r => ({ 
+    id: r.id, 
+    status: r.status, 
+    priority: r.priority, 
+    type: r.type 
+  })));
+  
+  // Force re-render check
+  console.log('ReportsTable - Component re-rendered at:', new Date().toISOString());
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "open": return "bg-red-100 text-red-800 border-red-200";
-      case "in_progress": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "resolved": return "bg-green-100 text-green-800 border-green-200";
-      case "closed": return "bg-gray-100 text-gray-800 border-gray-200";
+      case "nuovo": return "bg-blue-100 text-blue-800 border-blue-200";
+      case "aperto": return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "inviato": return "bg-green-100 text-green-800 border-green-200";
       default: return "bg-gray-100 text-gray-800 border-gray-200";
     }
   };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case "critical": return "bg-red-100 text-red-800 border-red-200";
-      case "high": return "bg-orange-100 text-orange-800 border-orange-200";
-      case "medium": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "low": return "bg-green-100 text-green-800 border-green-200";
+      case "alta": return "bg-red-100 text-red-800 border-red-200";
+      case "media": return "bg-yellow-100 text-yellow-800 border-yellow-200";
       default: return "bg-gray-100 text-gray-800 border-gray-200";
     }
   };
@@ -92,6 +101,18 @@ export function ReportsTable({
               className="border-gray-300 text-[#052b3e] hover:bg-gray-50"
             >
               Deseleziona
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onDeleteSelected}
+              disabled={selectedReports.length === 0}
+              className={selectedReports.length === 0 
+                ? "border-gray-300 text-gray-400 cursor-not-allowed" 
+                : "border-red-300 text-red-600 hover:bg-red-50"
+              }
+            >
+              Elimina (selezionati)
             </Button>
             <span className="text-[#052b3e]/70 text-sm">
               {selectedReports.length} di {reports.length} selezionate
@@ -144,7 +165,11 @@ export function ReportsTable({
                   <TableCell className="max-w-xs">
                     <div className="space-y-1">
                       <div className="text-sm text-[#052b3e] truncate font-medium" title={report.description}>
-                        {report.description}
+                        {report.description.replace('Network Error: Failed to fetch', 'Errore di Rete: Impossibile recuperare dati')
+                          .replace('JavaScript Error: Uncaught TypeError:', 'Errore JavaScript: Tipo non valido:')
+                          .replace('JavaScript Error: Uncaught ReferenceError:', 'Errore JavaScript: Riferimento non trovato:')
+                          .replace('Unhandled Promise Rejection:', 'Promessa Rifiutata Non Gestita:')
+                          .replace('JavaScript Error: Uncaught Error:', 'Errore JavaScript Non Gestito:')}
                       </div>
                       {report.error_details && (
                         <div className="text-xs text-[#052b3e]/60 truncate" title={report.error_details}>
@@ -170,9 +195,9 @@ export function ReportsTable({
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge className={getPriorityColor(report.priority)}>
-                      {report.priority}
-                    </Badge>
+                    <span className={`inline-block px-2 py-1 rounded-full text-xs font-medium border ${getPriorityColor(report.priority)}`}>
+                      {report.priority === 'alta' ? '🔴❗ Alta' : report.priority === 'media' ? '🟡 Media' : report.priority}
+                    </span>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
@@ -183,14 +208,6 @@ export function ReportsTable({
                         className="h-8 w-8 p-0 text-[#05637b] hover:bg-[#05637b]/10"
                       >
                         <Eye className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => onUpdateStatus(report.id, "in_progress")}
-                        className="h-8 w-8 p-0 text-[#05637b] hover:bg-[#05637b]/10"
-                      >
-                        <Edit className="w-4 h-4" />
                       </Button>
                     </div>
                   </TableCell>

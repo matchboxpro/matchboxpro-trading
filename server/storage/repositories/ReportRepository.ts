@@ -1,4 +1,4 @@
-import { eq, desc, count } from "drizzle-orm";
+import { eq, desc, count, inArray, and } from "drizzle-orm";
 import { reports, users, type Report, type InsertReport, type User } from "@shared/schema";
 import { db } from "../database/connection";
 
@@ -66,12 +66,28 @@ export class ReportRepository {
       const limit = filters.limit || 20;
       const offset = ((filters.page || 1) - 1) * limit;
       
-      let whereConditions = [];
-      if (filters.status) whereConditions.push(eq(reports.status, filters.status));
-      if (filters.priority) whereConditions.push(eq(reports.priority, filters.priority));
-      if (filters.type) whereConditions.push(eq(reports.type, filters.type));
+      let whereConditions: any[] = [];
+      console.log('Building WHERE conditions with filters:', filters);
+      if (filters.status) {
+        console.log('Adding status filter:', filters.status);
+        whereConditions.push(eq(reports.status, filters.status));
+      }
+      if (filters.priority) {
+        console.log('Adding priority filter:', filters.priority);
+        const priorities = filters.priority.split(',');
+        if (priorities.length > 1) {
+          whereConditions.push(inArray(reports.priority, priorities));
+        } else {
+          whereConditions.push(eq(reports.priority, filters.priority));
+        }
+      }
+      if (filters.type) {
+        console.log('Adding type filter:', filters.type);
+        whereConditions.push(eq(reports.type, filters.type));
+      }
+      console.log('Total WHERE conditions:', whereConditions.length);
 
-      const result = await db
+      const baseQuery = db
         .select({
           id: reports.id,
           reporterId: reports.reporterId,
@@ -88,12 +104,32 @@ export class ReportRepository {
           reporter: users,
         })
         .from(reports)
-        .innerJoin(users, eq(reports.reporterId, users.id))
-        .orderBy(desc(reports.createdAt))
-        .limit(limit)
-        .offset(offset);
+        .innerJoin(users, eq(reports.reporterId, users.id));
 
-      const [totalResult] = await db.select({ count: count() }).from(reports);
+      const result = whereConditions.length > 0 
+        ? await baseQuery
+            .where(and(...whereConditions))
+            .orderBy(desc(reports.createdAt))
+            .limit(limit)
+            .offset(offset)
+        : await baseQuery
+            .orderBy(desc(reports.createdAt))
+            .limit(limit)
+            .offset(offset);
+
+      console.log('Query executed, result count:', result.length);
+      if (result.length > 0) {
+        console.log('First result status/priority/type:', {
+          status: result[0].status,
+          priority: result[0].priority,
+          type: result[0].type
+        });
+      }
+
+      // Count with same filters
+      const [totalResult] = whereConditions.length > 0 
+        ? await db.select({ count: count() }).from(reports).where(and(...whereConditions))
+        : await db.select({ count: count() }).from(reports);
 
       const enrichedReports = await Promise.all(
         result.map(async (report) => {
@@ -142,5 +178,9 @@ export class ReportRepository {
       .where(eq(reports.id, id))
       .returning();
     return result[0];
+  }
+
+  async deleteReports(reportIds: string[]): Promise<void> {
+    await db.delete(reports).where(inArray(reports.id, reportIds));
   }
 }

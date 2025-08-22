@@ -22,7 +22,10 @@ export function ReportsFilters({
   onCopyToReplit 
 }: ReportsFiltersProps) {
   const updateFilter = (key: string, value: string) => {
-    onFiltersChange({ ...filters, [key]: value, page: 1 });
+    console.log(`ReportsFilters - Updating filter ${key} to:`, value);
+    const newFilters = { ...filters, [key]: value, page: 1 };
+    console.log('ReportsFilters - New filters object:', newFilters);
+    onFiltersChange(newFilters);
   };
 
   return (
@@ -33,10 +36,9 @@ export function ReportsFilters({
         </SelectTrigger>
         <SelectContent className="bg-white border-gray-300">
           <SelectItem value="all" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Tutti gli stati</SelectItem>
-          <SelectItem value="open" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Aperto</SelectItem>
-          <SelectItem value="in_progress" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">In corso</SelectItem>
-          <SelectItem value="resolved" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Risolto</SelectItem>
-          <SelectItem value="closed" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Chiuso</SelectItem>
+          <SelectItem value="nuovo" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Nuovo</SelectItem>
+          <SelectItem value="risolto" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Risolto</SelectItem>
+          <SelectItem value="chiuso" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Chiuso</SelectItem>
         </SelectContent>
       </Select>
 
@@ -45,11 +47,9 @@ export function ReportsFilters({
           <SelectValue placeholder="Filtra per priorità" />
         </SelectTrigger>
         <SelectContent className="bg-white border-gray-300">
-          <SelectItem value="all" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Tutte le priorità</SelectItem>
-          <SelectItem value="low" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Bassa</SelectItem>
-          <SelectItem value="medium" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Media</SelectItem>
-          <SelectItem value="high" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Alta</SelectItem>
-          <SelectItem value="critical" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Critica</SelectItem>
+          <SelectItem value="all" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10 data-[highlighted]:bg-[#05637b]/10 data-[highlighted]:text-[#052b3e]">Tutte le priorità</SelectItem>
+          <SelectItem value="media" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10 data-[highlighted]:bg-[#05637b]/10 data-[highlighted]:text-[#052b3e]">🟡 Media</SelectItem>
+          <SelectItem value="alta" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10 data-[highlighted]:bg-[#05637b]/10 data-[highlighted]:text-[#052b3e]">🔴❗ Alta</SelectItem>
         </SelectContent>
       </Select>
 
@@ -59,11 +59,12 @@ export function ReportsFilters({
         </SelectTrigger>
         <SelectContent className="bg-white border-gray-300">
           <SelectItem value="all" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Tutti i tipi</SelectItem>
-          <SelectItem value="bug" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Bug</SelectItem>
-          <SelectItem value="feature" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Richiesta feature</SelectItem>
-          <SelectItem value="api_error" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Errore API</SelectItem>
           <SelectItem value="user" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Segnalazione utente</SelectItem>
           <SelectItem value="error" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Errore generico</SelectItem>
+          <SelectItem value="spam" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Spam</SelectItem>
+          <SelectItem value="js_error" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Errore JavaScript</SelectItem>
+          <SelectItem value="network_error" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Errore di rete</SelectItem>
+          <SelectItem value="api_error" className="text-[#052b3e] hover:bg-[#05637b]/10 focus:bg-[#05637b]/10">Errore API</SelectItem>
         </SelectContent>
       </Select>
 

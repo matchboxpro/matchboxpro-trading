@@ -64,8 +64,8 @@ export const reports = pgTable("reports", {
   reportedUserId: uuid("reported_user_id").references(() => users.id, { onDelete: "cascade" }),
   type: varchar("type", { length: 20 }).notNull(), // 'user', 'error', 'spam', 'js_error', 'network_error', 'api_error'
   description: text("description").notNull(),
-  status: varchar("status", { length: 20 }).notNull().default("nuovo"), // 'nuovo', 'in_lavorazione', 'risolto'
-  priority: varchar("priority", { length: 10 }).notNull().default("media"), // 'alta', 'media', 'bassa'
+  status: varchar("status", { length: 20 }).notNull().default("nuovo"), // 'nuovo', 'aperto', 'inviato'
+  priority: varchar("priority", { length: 10 }).notNull().default("media"), // 'alta', 'media'
   page: varchar("page", { length: 100 }), // pagina dove è avvenuto l'errore
   errorDetails: text("error_details"), // stack trace, dettagli tecnici
   userAgent: text("user_agent"), // browser info
@@ -116,8 +116,8 @@ export const insertReportSchema = createInsertSchema(reports).omit({
   createdAt: true,
 }).extend({
   type: z.enum(["user", "error", "spam", "js_error", "network_error", "api_error"]),
-  status: z.enum(["nuovo", "in_lavorazione", "risolto"]).optional(),
-  priority: z.enum(["alta", "media", "bassa"]).optional(),
+  status: z.enum(["nuovo", "aperto", "inviato"]).optional(),
+  priority: z.enum(["alta", "media"]).optional(),
 });
 
 // Types

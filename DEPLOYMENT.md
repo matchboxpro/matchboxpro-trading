@@ -1,214 +1,84 @@
-# MatchboxPro - Guida Deployment Render
+# MatchboxPro - Deployment Render
 
-## 🚀 Deployment Completo su Render
+## 🚀 Deploy su Render
 
-MatchboxPro è configurato per il deployment su **Render Starter Plan** ($7/mese) con PostgreSQL integrato.
+Configurato per **Render Starter Plan** ($7/mese) + PostgreSQL.
 
 ### 📋 Prerequisiti
 
-- Account Render con Starter Plan attivo
-- Repository GitHub collegato
-- Database PostgreSQL su Render configurato
+Account Render Starter + GitHub repo + PostgreSQL DB
 
-## 🔧 Configurazione Render
+## 🔧 Configurazione
 
-### 1. Web Service Setup
+### Web Service
 
-**Build Settings:**
-```bash
-Build Command: npm install && npm run build
-Start Command: npm start
-Node Version: 18+
-```
+**Build**: `npm install && npm run build`  
+**Start**: `npm start`  
+**Node**: 18+  
+**Auto-Deploy**: Push su `main`
 
-**Auto-Deploy:** Abilitato su push al branch `main`
+### Environment Variables
 
-### 2. Variabili Ambiente
+`SUPABASE_DATABASE_URL` (PostgreSQL connection)  
+`JWT_SECRET` (production key)  
+`NODE_ENV=production`  
+`NPM_CONFIG_PRODUCTION=false` (installa devDependencies)
 
-Configura le seguenti variabili nel dashboard Render:
+### Database Schema
 
-```bash
-# Database Connection
-SUPABASE_DATABASE_URL=postgresql://user:password@host:port/database
+Tabelle: `users`, `albums`, `stickers`, `user_stickers`, `matches`, `messages`, `reports` (vedi `/shared/schema.ts`)
 
-# JWT Authentication
-JWT_SECRET=your-production-jwt-secret-key-here
+## 🏗️ Build Process
 
-# Environment
-NODE_ENV=production
-NPM_CONFIG_PRODUCTION=false
-```
-
-⚠️ **IMPORTANTE**: `NPM_CONFIG_PRODUCTION=false` è necessario per installare devDependencies durante il build.
-
-### 3. Database PostgreSQL
-
-Il database deve essere configurato con le tabelle definite in `/shared/schema.ts`:
-
-- `users` - Utenti sistema
-- `albums` - Album figurine  
-- `stickers` - Figurine individuali
-- `user_stickers` - Collezioni utente
-- `matches` - Sistema matching
-- `messages` - Chat persistente
-- `reports` - Segnalazioni automatiche
-
-## 🏗️ Processo di Build
-
-### Build Unificato
-
-Il progetto utilizza un build process unificato:
-
-1. **Frontend Build**: Vite compila React → `client/dist/`
-2. **Backend Build**: esbuild compila Express → `dist/index.js`
-3. **Static Serving**: Express serve `client/dist/` in produzione
-
-### Script npm
+**Build Unificato**: Vite (React → `client/dist/`) + esbuild (Express → `dist/index.js`) + static serving
 
 ```json
 {
-  "scripts": {
-    "build": "npm run build:client && npm run build:server",
-    "build:client": "cd client && vite build",
-    "build:server": "esbuild server/index.ts --bundle --platform=node --outfile=dist/index.js --external:pg-native",
-    "start": "node dist/index.js"
-  }
+  "build": "npm run build:client && npm run build:server",
+  "start": "node dist/index.js"
 }
 ```
 
-## 🩺 Endpoint Diagnostici
+## 🩺 Diagnostics
 
-### Health Check
-```
-GET https://matchboxpro.onrender.com/api/_health
-```
+**Health Check**: `GET /api/_health` (status, DB_OK, JWT_SECRET, environment)  
+**Seed Users**: `GET /api/_seed` (crea utenti test se DB vuoto)  
+**User Info**: `GET /api/_whoami` (info da JWT token)
 
-**Response:**
-```json
-{
-  "status": "ok",
-  "timestamp": "2025-08-18T20:37:37.000Z",
-  "commit": "caf0631",
-  "branch": "main",
-  "DB_OK": true,
-  "HAS_JWT_SECRET": true,
-  "environment": "production"
-}
-```
+## 🔐 Security
 
-### Seed Test Users
-```
-GET https://matchboxpro.onrender.com/api/_seed
-```
-Crea utenti di test per sviluppo (solo se database vuoto).
-
-### Current User Info
-```
-GET https://matchboxpro.onrender.com/api/_whoami
-```
-Restituisce informazioni utente corrente dal JWT token.
-
-## 🔐 Sicurezza Produzione
-
-### JWT Authentication
-- Token firmati con secret sicuro
-- Cookie HttpOnly, Secure, SameSite=Lax
-- Scadenza: 7 giorni
-- Trust proxy abilitato per Render
-
-### Password Security
-- Hash bcrypt con salt rounds: 10
-- Validazione lunghezza minima
-- Protezione contro timing attacks
-
-### Database Security
-- Connection pool PostgreSQL
-- Prepared statements (Drizzle ORM)
-- Validazione input server-side
+**JWT**: Cookie HttpOnly/Secure/SameSite, 7 giorni, trust proxy  
+**Password**: bcrypt salt 10, validazione lunghezza, timing attack protection  
+**Database**: Connection pool, prepared statements, input validation
 
 ## 🚨 Troubleshooting
 
-### Problemi Comuni
+**Build Failure**: Verifica Build Command include `npm install`  
+**Start Failure**: Verifica Start Command `npm start`  
+**DB Connection**: Verifica `SUPABASE_DATABASE_URL`  
+**JWT Errors**: Verifica `JWT_SECRET`
 
-#### Build Failure: "vite: not found"
-**Soluzione**: Verificare Build Command include `npm install`
-```bash
-Build Command: npm install && npm run build
-```
+**Log Monitoring**: Build errors, runtime errors, DB connections, API requests
 
-#### Start Failure: "Cannot find module"
-**Soluzione**: Verificare Start Command
-```bash
-Start Command: npm start
-```
+## 📊 Monitoring
 
-#### Database Connection Error
-**Soluzione**: Verificare `SUPABASE_DATABASE_URL` nelle variabili ambiente
+**Endpoints**: https://matchboxpro.onrender.com (app), `/api/_health` (health), `/api/albums` (API test)  
+**Metriche**: Response time, DB status, JWT validation, error rate
 
-#### JWT Errors
-**Soluzione**: Verificare `JWT_SECRET` configurato correttamente
+## 🔄 Deploy
 
-### Log Monitoring
+**Auto**: Push `main` → build → deploy → health check  
+**Manual**: Dashboard Render → Manual Deploy → select branch
 
-Monitorare i log Render per:
-- Errori di build
-- Errori runtime
-- Connessioni database
-- Richieste API
+## 📝 Pre-Deploy Checklist
 
-## 📊 Monitoraggio
+☐ Env vars ☐ PostgreSQL ☐ Build/Start commands ☐ JWT_SECRET ☐ DB schema ☐ Local tests
 
-### Endpoint di Monitoraggio
+## 🎯 Production
 
-- **App Status**: https://matchboxpro.onrender.com
-- **Health Check**: https://matchboxpro.onrender.com/api/_health
-- **API Test**: https://matchboxpro.onrender.com/api/albums
-
-### Metriche da Monitorare
-
-- Response time endpoint
-- Database connection status
-- JWT token validation
-- Error rate API calls
-
-## 🔄 Deploy Process
-
-### Automatic Deploy
-
-1. Push al branch `main`
-2. Render rileva cambiamenti
-3. Esegue build automatico
-4. Deploy se build successful
-5. Health check automatico
-
-### Manual Deploy
-
-Dal dashboard Render:
-1. Vai al Web Service
-2. Click "Manual Deploy"
-3. Seleziona branch
-4. Conferma deploy
-
-## 📝 Checklist Pre-Deploy
-
-- [ ] Variabili ambiente configurate
-- [ ] Database PostgreSQL attivo
-- [ ] Build command corretto
-- [ ] Start command corretto
-- [ ] JWT_SECRET sicuro configurato
-- [ ] Database schema aggiornato
-- [ ] Test locali passati
-
-## 🎯 URL Produzione
-
-**App Live**: https://matchboxpro.onrender.com
-
-**Endpoint Principali**:
-- Login: `POST /api/auth/login`
-- Albums: `GET /api/albums`
-- Health: `GET /api/_health`
-- Admin: `/admin` (solo utenti admin)
+**Live**: https://matchboxpro.onrender.com  
+**API**: `/api/auth/login`, `/api/albums`, `/api/_health`, `/admin`
 
 ---
 
-**Ultimo aggiornamento**: 2025-08-18 - Deploy completo con JWT e endpoint diagnostici
+**Ultimo aggiornamento**: 2025-08-22 - Refactoring + governance compliance + bulk management

@@ -178,38 +178,33 @@
     padding-top: calc(var(--sat) + 20px) !important;
   }
   
-  /* Bottom Navigation Mobile Fix - iOS Safe Area Definitivo */
-  .bottom-nav-fixed {
-    position: fixed !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    z-index: 9999 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    padding-bottom: env(safe-area-inset-bottom) !important;
-    height: calc(64px + env(safe-area-inset-bottom)) !important;
-    background-color: #0891b2 !important;
-    border-top: 1px solid #0891b2 !important;
-    box-sizing: border-box !important;
+  /* Mobile-Only App - No Desktop Support */
+  body {
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
-  /* Forza viewport units per iOS */
-  @supports (-webkit-touch-callout: none) {
-    .bottom-nav-fixed {
-      bottom: 0 !important;
-      position: fixed !important;
-      transform: translateZ(0) !important;
-      -webkit-transform: translateZ(0) !important;
+  /* Bottom Navigation - Mobile Only */
+  .bottom-navigation-mobile {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100vw;
+    height: calc(64px + env(safe-area-inset-bottom));
+    background-color: #0891b2;
+    border-top: 1px solid #0891b2;
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 1000;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  /* iOS Safe Area Support */
+  @supports (padding: max(0px)) {
+    .bottom-navigation-mobile {
+      padding-bottom: max(env(safe-area-inset-bottom), 0px);
     }
-  }
-
-  /* Content with bottom navigation spacing */
-  .content-with-bottom-nav {
-    padding-bottom: calc(64px + env(safe-area-inset-bottom) + 8px) !important;
-    box-sizing: border-box !important;
   }
 }
 

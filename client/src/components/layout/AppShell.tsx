@@ -61,7 +61,7 @@ export function AppShell({ children, showBottomNav = true }: AppShellProps) {
         {children}
       </div>
 
-      {/* Bottom Navigation - Fixed at Bottom */}
+      {/* Bottom Navigation - Fixed at Bottom with iOS Safe Area */}
       {shouldShowBottomNav && (
         <div 
           className="fixed inset-x-0 bottom-0 bg-brand-azzurro border-t border-brand-azzurro"
@@ -71,14 +71,11 @@ export function AppShell({ children, showBottomNav = true }: AppShellProps) {
             left: '0px',
             right: '0px',
             zIndex: 9999,
-            height: 'calc(64px + env(safe-area-inset-bottom))',
+            height: 'calc(var(--nav-h) + var(--sab))',
             width: '100vw',
             margin: '0px',
-            paddingBottom: 'env(safe-area-inset-bottom)',
-            // Estende il background azzurro fino al fondo dello schermo
-            background: 'linear-gradient(to bottom, var(--brand-azzurro) 0%, var(--brand-azzurro) 64px, var(--brand-azzurro) 100%)',
-            // Assicura che non ci sia spazio bianco sotto
-            minHeight: 'calc(64px + env(safe-area-inset-bottom) + 20px)'
+            paddingBottom: 'var(--sab)',
+            backgroundColor: 'var(--brand-azzurro)'
           }}
         >
           <BottomNavigation onNavigate={setLocation} />

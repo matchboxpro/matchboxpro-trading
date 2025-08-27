@@ -110,7 +110,7 @@ export default function Profile() {
            touchAction: 'pan-y',
            overscrollBehavior: 'contain'
          }}>
-      <div className="p-4 space-y-6 max-w-none w-full flex-1 content-with-bottom-nav" style={{ WebkitOverflowScrolling: 'touch' }}>
+      <div className="p-4 space-y-6 max-w-none w-full flex-1 content-safe-bottom" style={{ WebkitOverflowScrolling: 'touch' }}>
         {/* Account Section */}
         <AccountSection 
           user={user}

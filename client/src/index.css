@@ -34,10 +34,10 @@
   --sticker-double: #f8b400;
   
   /* Safe Area Variables per Mobile */
-  --sat: env(safe-area-inset-top);
-  --sab: env(safe-area-inset-bottom);
-  --sal: env(safe-area-inset-left);
-  --sar: env(safe-area-inset-right);
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
   --nav-h: 64px;
 }
 
@@ -74,15 +74,17 @@
 }
 
 @layer base {
-  /* Mobile Safe Area Base Styles */
+  /* Mobile Safe Area Base Styles - iOS Dynamic Viewport */
   html {
     height: 100%;
-    height: 100svh;
+    min-height: 100svh;
+    min-height: 100dvh;
   }
   
   body {
     height: 100%;
-    height: 100svh;
+    min-height: 100svh;
+    min-height: 100dvh;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -90,7 +92,8 @@
   
   #root {
     height: 100%;
-    height: 100svh;
+    min-height: 100svh;
+    min-height: 100dvh;
     overflow: hidden;
   }
 }
@@ -173,9 +176,14 @@
     height: var(--nav-h);
   }
   
-  /* Header Mobile Safe Area Fix */
+  /* Header Mobile Safe Area Fix - iOS Responsive */
   .header-mobile-safe {
-    padding-top: calc(var(--sat) + 20px) !important;
+    padding-top: calc(var(--sat) + 24px) !important;
+  }
+  
+  /* Content Safe Area - Prevent overlap with bottom nav */
+  .content-safe-bottom {
+    padding-bottom: calc(var(--sab) + var(--nav-h) + 8px) !important;
   }
   
   /* Mobile-Only App - No Desktop Support */

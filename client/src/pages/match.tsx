@@ -72,7 +72,7 @@ export default function Match() {
            overscrollBehavior: 'contain'
          }}>
       {/* Filter Options */}
-      <div className="p-4 space-y-6 max-w-none w-full flex-1 content-with-bottom-nav" style={{ WebkitOverflowScrolling: 'touch' }}>
+      <div className="p-4 space-y-6 max-w-none w-full flex-1 content-safe-bottom" style={{ WebkitOverflowScrolling: 'touch' }}>
         <Card className="bg-brand-azzurro border-0 shadow-lg">
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-3">

@@ -71,10 +71,14 @@ export function AppShell({ children, showBottomNav = true }: AppShellProps) {
             left: '0px',
             right: '0px',
             zIndex: 9999,
-            paddingBottom: 'env(safe-area-inset-bottom)',
             height: 'calc(64px + env(safe-area-inset-bottom))',
             width: '100vw',
-            margin: '0px'
+            margin: '0px',
+            paddingBottom: 'env(safe-area-inset-bottom)',
+            // Estende il background azzurro fino al fondo dello schermo
+            background: 'linear-gradient(to bottom, var(--brand-azzurro) 0%, var(--brand-azzurro) 64px, var(--brand-azzurro) 100%)',
+            // Assicura che non ci sia spazio bianco sotto
+            minHeight: 'calc(64px + env(safe-area-inset-bottom) + 20px)'
           }}
         >
           <BottomNavigation onNavigate={setLocation} />

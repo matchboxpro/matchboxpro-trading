@@ -39,20 +39,9 @@ export const AlbumSelector: React.FC<AlbumSelectorProps> = ({
     }
   };
   return (
-    <div className="h-screen flex flex-col">
-      {/* Header azzurro con logo - fixed */}
-      <div className="bg-brand-azzurro border-b border-brand-azzurro header-mobile-safe pb-8 px-2">
-        <div className="flex items-center justify-center">
-          <img 
-            src="/matchbox-logo.png" 
-            alt="MATCHBOX" 
-            className="h-12 w-auto"
-          />
-        </div>
-      </div>
-
-      {/* Content scrollable */}
-      <div className="flex-1 overflow-y-auto p-4 content-with-bottom-nav" style={{ WebkitOverflowScrolling: 'touch' }}>
+    <div className="h-full flex flex-col">
+      {/* Content scrollable - header gestito da AppShell */}
+      <div className="flex-1 overflow-y-auto p-4 content-safe-bottom" style={{ WebkitOverflowScrolling: 'touch' }}>
         <div className="text-center mb-8">
           <p className="text-[#05637b] text-sm leading-tight">
             Seleziona un album per gestire la tua collezione di figurine

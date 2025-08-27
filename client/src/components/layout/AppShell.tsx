@@ -18,8 +18,8 @@ export function AppShell({ children, showBottomNav = true }: AppShellProps) {
     !location.startsWith("/admin") && 
     isMobile;
 
-  // Don't show header logo on album pages (they have their own)
-  const shouldShowHeaderLogo = !location.startsWith("/album");
+  // Show header logo on all pages except admin and login
+  const shouldShowHeaderLogo = !location.startsWith("/admin") && location !== "/login";
 
   return (
     <div 
@@ -30,13 +30,13 @@ export function AppShell({ children, showBottomNav = true }: AppShellProps) {
       }}
     >
       {/* Header with safe area */}
-      <div 
-        className="bg-brand-azzurro border-b border-brand-azzurro flex-shrink-0 header-mobile-safe"
-        style={{
-          paddingBottom: '8px'
-        }}
-      >
-        {shouldShowHeaderLogo && (
+      {shouldShowHeaderLogo && (
+        <div 
+          className="bg-brand-azzurro border-b border-brand-azzurro flex-shrink-0 header-mobile-safe app-shell-header"
+          style={{
+            paddingBottom: '8px'
+          }}
+        >
           <div className="flex items-center justify-center px-2">
             <img 
               src="/matchbox-logo.png" 
@@ -44,8 +44,8 @@ export function AppShell({ children, showBottomNav = true }: AppShellProps) {
               className="h-12 w-auto"
             />
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Main content area */}
       <div 

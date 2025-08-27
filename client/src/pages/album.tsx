@@ -182,12 +182,10 @@ export default function Album() {
   // If no album selected, show album selection
   if (!selectedAlbum) {
     return (
-      <div className="h-full bg-[#fff4d6] flex flex-col overflow-hidden">
-        <AlbumSelector
-          albums={albums}
-          onAlbumSelect={setSelectedAlbum}
-        />
-      </div>
+      <AlbumSelector
+        albums={albums}
+        onAlbumSelect={setSelectedAlbum}
+      />
     );
   }
 
@@ -195,6 +193,10 @@ export default function Album() {
 
   return (
     <div className="h-full bg-[#fff4d6] flex flex-col overflow-hidden">
+      {/* Hide AppShell header for figurine page only */}
+      <style>{`
+        .app-shell-header { display: none !important; }
+      `}</style>
       <div className="flex-shrink-0">
         <AlbumHeader
           album={selectedAlbumData}

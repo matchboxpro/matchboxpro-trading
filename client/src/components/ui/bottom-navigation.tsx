@@ -10,46 +10,66 @@ export function BottomNavigation({ onNavigate }: BottomNavigationProps) {
 
   const isActive = (path: string) => location === path;
 
+  const handleNavigate = (path: string) => {
+    if (location !== path) onNavigate(path);
+  };
+
   return (
-    <nav className="nav-height w-full">
+    <nav
+      role="navigation"
+      aria-label="Navigazione principale"
+      className="bottom-navigation-mobile bg-brand-azzurro text-white select-none"
+    >
       <div className="grid grid-cols-4 h-full items-center">
         <button
-          onClick={() => onNavigate("/")}
-          className={`flex flex-col items-center py-2 ${
-            isActive("/") ? "text-[#f8b400]" : "text-white"
+          type="button"
+          onClick={() => handleNavigate("/")}
+          className={`touch-manipulation flex flex-col items-center justify-center h-full py-2 ${
+            isActive("/") ? "text-brand-giallo" : "text-white"
           }`}
+          aria-current={isActive("/") ? "page" : undefined}
         >
-          <Home className="w-5 h-5 mb-1" />
+          <Home className="w-5 h-5 mb-1" aria-hidden="true" />
           <span className="text-xs">Home</span>
         </button>
+
         <button
-          onClick={() => onNavigate("/match")}
-          className={`flex flex-col items-center py-2 ${
-            isActive("/match") ? "text-[#f8b400]" : "text-white"
+          type="button"
+          onClick={() => handleNavigate("/match")}
+          className={`touch-manipulation flex flex-col items-center justify-center h-full py-2 ${
+            isActive("/match") ? "text-brand-giallo" : "text-white"
           }`}
+          aria-current={isActive("/match") ? "page" : undefined}
         >
-          <Zap className="w-5 h-5 mb-1" />
+          <Zap className="w-5 h-5 mb-1" aria-hidden="true" />
           <span className="text-xs">Match</span>
         </button>
+
         <button
+          type="button"
           onClick={() => {
-            onNavigate("/album");
-            window.dispatchEvent(new CustomEvent('forceAlbumReset'));
+            handleNavigate("/album");
+            // evento già presente nella tua versione, lo manteniamo
+            window.dispatchEvent(new CustomEvent("forceAlbumReset"));
           }}
-          className={`flex flex-col items-center py-2 ${
-            isActive("/album") ? "text-[#f8b400]" : "text-white"
+          className={`touch-manipulation flex flex-col items-center justify-center h-full py-2 ${
+            isActive("/album") ? "text-brand-giallo" : "text-white"
           }`}
+          aria-current={isActive("/album") ? "page" : undefined}
         >
-          <Image className="w-5 h-5 mb-1" />
+          <Image className="w-5 h-5 mb-1" aria-hidden="true" />
           <span className="text-xs">Album</span>
         </button>
+
         <button
-          onClick={() => onNavigate("/profile")}
-          className={`flex flex-col items-center py-2 ${
-            isActive("/profile") ? "text-[#f8b400]" : "text-white"
+          type="button"
+          onClick={() => handleNavigate("/profile")}
+          className={`touch-manipulation flex flex-col items-center justify-center h-full py-2 ${
+            isActive("/profile") ? "text-brand-giallo" : "text-white"
           }`}
+          aria-current={isActive("/profile") ? "page" : undefined}
         >
-          <User className="w-5 h-5 mb-1" />
+          <User className="w-5 h-5 mb-1" aria-hidden="true" />
           <span className="text-xs">Profilo</span>
         </button>
       </div>

@@ -1,120 +1,102 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+
+    <!-- Viewport corretta per iOS (safe areas) + blocco zoom -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no"
+    />
+
     <title>MATCHBOX - Scambia le tue figurine Panini</title>
-    <meta name="description" content="MATCHBOX - App per lo scambio di figurine Panini tra collezionisti" />
-    
-    <!-- PWA Meta Tags -->
+    <meta
+      name="description"
+      content="MATCHBOX - App per lo scambio di figurine Panini tra collezionisti"
+    />
+
+    <!-- PWA Meta Tags (iOS + Android) -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- usa 'black-translucent' per estendere il contenuto sotto la status bar -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="MATCHBOX" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="theme-color" content="#05637b" />
-    <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="format-detection" content="telephone=no" />
     <meta name="msapplication-tap-highlight" content="no" />
-    <meta name="apple-mobile-web-app-title" content="MATCHBOX" />
-    
-    <!-- Fullscreen Meta Tags -->
-    <meta name="msapplication-TileColor" content="#05637b" />
-    <meta name="msapplication-config" content="none" />
-    <meta name="application-name" content="MATCHBOX" />
-    
-    <!-- Manifest Link -->
+
+    <!-- Manifest -->
     <link rel="manifest" href="/manifest.json" />
-    
-    <!-- Status Bar Styling -->
+
+    <!-- Base CSS minimale e sicuro: niente position:fixed/overflow:hidden globali -->
     <style>
-      /* Ensure full screen coverage and prevent browser UI from showing */
+      /* Safe-area vars disponibili ovunque */
+      :root {
+        --sat: env(safe-area-inset-top, 0px);
+        --sab: env(safe-area-inset-bottom, 0px);
+        --sal: env(safe-area-inset-left, 0px);
+        --sar: env(safe-area-inset-right, 0px);
+
+        /* Altezza nav (puoi sovrascriverla da CSS app) */
+        --nav-h: 64px;
+      }
+
+      html, body, #root {
+        height: 100%;
+      }
+
       html, body {
         margin: 0;
         padding: 0;
-        height: 100vh;
-        height: 100dvh; /* Dynamic viewport height for mobile */
-        background-color: #05637b;
-        overflow: hidden; /* Prevent scrolling that triggers browser UI */
-        position: fixed;
-        width: 100%;
-        top: 0;
-        left: 0;
-        /* Force fullscreen on PWA */
-        -webkit-app-region: no-drag;
-        user-select: none;
-        -webkit-user-select: none;
-        -webkit-touch-callout: none;
-        /* Force hide address bar on mobile */
-        -webkit-transform: translate3d(0, 0, 0);
-        transform: translate3d(0, 0, 0);
-        /* Additional mobile fixes */
+        background-color: #05637b; /* colore di sfondo coerente con l'app */
         -webkit-text-size-adjust: 100%;
-        -ms-text-size-adjust: 100%;
       }
-      
-      #root {
-        height: 100vh;
-        height: 100dvh;
-        background-color: #05637b;
-        overflow: hidden;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        box-sizing: border-box;
-      }
-      
-      /* Prevent any scrolling on the main container */
-      * {
-        -webkit-overflow-scrolling: touch;
-      }
-      
-      /* Force fullscreen behavior */
-      @media (display-mode: standalone) {
-        html, body {
-          height: 100vh;
-          height: 100dvh;
-          overflow: hidden;
-          position: fixed;
-          width: 100%;
-        }
-        
-        /* Hide browser chrome completely */
-        body {
-          -webkit-appearance: none;
-          -moz-appearance: none;
-          appearance: none;
-        }
-      }
-      
-      /* Additional PWA fullscreen rules */
-      @media (display-mode: fullscreen) {
-        html, body {
-          height: 100vh;
-          height: 100dvh;
-          overflow: hidden;
-          position: fixed;
-          width: 100%;
-        }
-      }
-      
-      /* Hide address bar on mobile browsers */
-      @media screen and (max-width: 768px) {
-        html {
-          height: -webkit-fill-available;
-        }
-        
-        body {
-          min-height: 100vh;
-          min-height: -webkit-fill-available;
-        }
-      }
-      
-      /* Remove any padding from body - will be handled by App component */
+
       body {
-        padding: 0 !important;
+        /* Lasciare lo scroll all'app (container main), non bloccare il body! */
+        overscroll-behavior-y: contain;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      #root {
+        /* Il root prende tutta l'altezza disponibile, niente fixed */
+        min-height: 100%;
+        background-color: #05637b;
+      }
+
+      /* Modalità PWA standalone (iOS installata su Home) */
+      @media (display-mode: standalone) {
+        /* Non fissiamo html/body: lasciamo che i contenuti gestiscano 100dvh */
+        html, body, #root {
+          background-color: #05637b;
+        }
       }
     </style>
+
+    <!-- Rilevamento leggero modalità app per eventuali classi condizionali -->
+    <script>
+      (function () {
+        try {
+          var isStandalone =
+            (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+            (window.navigator && "standalone" in window.navigator && window.navigator.standalone === true);
+
+          if (isStandalone) {
+            document.documentElement.classList.add("pwa-standalone");
+          }
+
+          var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+          if (isIOS) {
+            document.documentElement.classList.add("platform-ios");
+          }
+        } catch (_) {
+          /* no-op */
+        }
+      })();
+    </script>
   </head>
+
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>

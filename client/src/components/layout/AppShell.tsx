@@ -12,75 +12,43 @@ export function AppShell({ children, showBottomNav = true }: AppShellProps) {
   const [location, setLocation] = useLocation();
   const isMobile = useIsMobile();
 
-  // Don't show bottom nav on login or admin pages
-  const shouldShowBottomNav = showBottomNav && 
-    location !== "/login" && 
-    !location.startsWith("/admin") && 
-    isMobile;
+  // Non mostrare la bottom nav su login o admin
+  const shouldShowBottomNav =
+    showBottomNav && location !== "/login" && !location.startsWith("/admin") && isMobile;
 
-  // Show header logo on all pages except admin and login
+  // Mostra l'header con logo su tutte tranne admin/login
   const shouldShowHeaderLogo = !location.startsWith("/admin") && location !== "/login";
 
   return (
-    <div 
-      className="relative bg-[#fff4d6] w-full"
-      style={{
-        height: '100svh',
-        overflow: 'hidden'
-      }}
-    >
-      {/* Header with safe area */}
+    <div className="min-h-[100svh] min-h-[100dvh] w-full bg-[#fff4d6] text-foreground flex flex-col">
+      {/* HEADER con safe-area top (nessun calc inline) */}
       {shouldShowHeaderLogo && (
-        <div 
-          className="bg-brand-azzurro border-b border-brand-azzurro flex-shrink-0 header-mobile-safe app-shell-header"
-          style={{
-            paddingBottom: '8px'
-          }}
-        >
-          <div className="flex items-center justify-center px-2">
-            <img 
-              src="/matchbox-logo.png" 
-              alt="MATCHBOX" 
+        <header className="header-mobile-safe bg-brand-azzurro text-white border-b border-brand-azzurro sticky top-0 z-30">
+          <div className="flex items-center justify-center px-2 py-2">
+            <img
+              src="/matchbox-logo.png"
+              alt="MATCHBOX"
               className="h-12 w-auto"
             />
           </div>
-        </div>
+        </header>
       )}
 
-      {/* Main content area */}
-      <div 
-        className="flex-1 overflow-hidden"
-        style={{
-          height: shouldShowBottomNav 
-            ? 'calc(100svh - 80px - var(--sat) - var(--nav-h) - var(--sab))' 
-            : 'calc(100svh - 80px - var(--sat) - var(--sab))',
-          paddingLeft: 'var(--sal)',
-          paddingRight: 'var(--sar)'
-        }}
+      {/* MAIN scrollabile – opzionalmente riserva spazio alla nav se presente */}
+      <main
+        className={[
+          "relative z-10 flex-1 overflow-auto",
+          "safe-left safe-right",
+          shouldShowBottomNav ? "content-safe-bottom" : "",
+        ].join(" ")}
       >
         {children}
-      </div>
+        {/* piccolo spacer anti-aggancio tastiera iOS */}
+        <div className="h-2" />
+      </main>
 
-      {/* Bottom Navigation - Fixed at Bottom with iOS Safe Area */}
-      {shouldShowBottomNav && (
-        <div 
-          className="fixed inset-x-0 bottom-0 bg-brand-azzurro border-t border-brand-azzurro"
-          style={{
-            position: 'fixed',
-            bottom: '0px',
-            left: '0px',
-            right: '0px',
-            zIndex: 9999,
-            height: 'calc(var(--nav-h) + var(--sab))',
-            width: '100vw',
-            margin: '0px',
-            paddingBottom: 'var(--sab)',
-            backgroundColor: 'var(--brand-azzurro)'
-          }}
-        >
-          <BottomNavigation onNavigate={setLocation} />
-        </div>
-      )}
+      {/* BOTTOM NAV – il componente applica .bottom-navigation-mobile (fixed + safe-area) */}
+      {shouldShowBottomNav && <BottomNavigation onNavigate={setLocation} />}
     </div>
   );
 }

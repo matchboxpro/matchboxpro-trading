@@ -23,8 +23,8 @@
   --destructive-foreground: #fff4d6;
   --ring: #05637b;
   --radius: 0.5rem;
-  
-  /* MATCHNODE Brand Colors */
+
+  /* MATCHBOX Brand Colors */
   --brand-azzurro: #05637b;
   --brand-bianco: #fff4d6;
   --brand-giallo: #f8b400;
@@ -32,7 +32,7 @@
   --sticker-yes: hsl(142, 76%, 36%);
   --sticker-no: #052b3e;
   --sticker-double: #f8b400;
-  
+
   /* Safe Area Variables per Mobile */
   --sat: env(safe-area-inset-top, 0px);
   --sab: env(safe-area-inset-bottom, 0px);
@@ -80,26 +80,28 @@
     min-height: 100svh;
     min-height: 100dvh;
   }
-  
+
   body {
     height: 100%;
     min-height: 100svh;
     min-height: 100dvh;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
-  
+
   #root {
     height: 100%;
     min-height: 100svh;
     min-height: 100dvh;
-    overflow: hidden;
   }
 }
 
 @layer utilities {
-  /* Disabilita feedback touch sui pulsanti figurine */
+  /* Disabilita feedback touch */
   .touch-manipulation {
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
@@ -109,106 +111,66 @@
     -ms-user-select: none;
     user-select: none;
   }
-  
-  .touch-manipulation:hover {
-    background-color: inherit !important;
-    opacity: 1 !important;
-  }
-  
+
+  .touch-manipulation:hover,
   .touch-manipulation:active {
     background-color: inherit !important;
     transform: none !important;
     opacity: 1 !important;
   }
 
-  /* MATCHBOX Brand Colors - Solo classi utilizzate */
-  .text-brand-azzurro {
-    color: var(--brand-azzurro);
-  }
-  
-  .bg-brand-azzurro {
-    background-color: var(--brand-azzurro);
-  }
-  
-  .text-brand-giallo {
-    color: var(--brand-giallo);
-  }
-  
-  .bg-brand-giallo {
-    background-color: var(--brand-giallo);
-  }
-  
-  /* Sticker Status Colors - Ottimizzate per performance */
-  .bg-sticker-yes {
-    background-color: var(--sticker-yes);
-  }
-  
-  .bg-sticker-no {
-    background-color: var(--sticker-no);
-  }
-  
-  .bg-sticker-double {
-    background-color: var(--sticker-double);
-  }
-  
-  /* Mobile Layout Utilities */
-  .safe-top {
-    padding-top: var(--sat);
-  }
-  
-  .safe-bottom {
-    padding-bottom: var(--sab);
-  }
-  
-  .safe-left {
-    padding-left: var(--sal);
-  }
-  
-  .safe-right {
-    padding-right: var(--sar);
-  }
-  
+  /* Brand Colors */
+  .text-brand-azzurro { color: var(--brand-azzurro); }
+  .bg-brand-azzurro { background-color: var(--brand-azzurro); }
+  .text-brand-giallo { color: var(--brand-giallo); }
+  .bg-brand-giallo { background-color: var(--brand-giallo); }
+
+  /* Sticker Status */
+  .bg-sticker-yes { background-color: var(--sticker-yes); }
+  .bg-sticker-no { background-color: var(--sticker-no); }
+  .bg-sticker-double { background-color: var(--sticker-double); }
+
+  /* Safe Area Utilities */
+  .safe-top { padding-top: var(--sat); }
+  .safe-bottom { padding-bottom: var(--sab); }
+  .safe-left { padding-left: var(--sal); }
+  .safe-right { padding-right: var(--sar); }
+
+  /* Content vs nav */
   .content-with-nav {
     padding-bottom: calc(var(--nav-h) + var(--sab));
   }
-  
+
   .nav-height {
     height: var(--nav-h);
   }
-  
-  /* Header Mobile Safe Area Fix - iOS Responsive */
+
+  /* Header Mobile Safe Area Fix */
   .header-mobile-safe {
     padding-top: calc(var(--sat) + 24px) !important;
   }
-  
-  /* Content Safe Area - Prevent overlap with bottom nav */
+
+  /* Content Safe Area */
   .content-safe-bottom {
     padding-bottom: calc(var(--sab) + var(--nav-h) + 8px) !important;
   }
-  
-  /* Mobile-Only App - No Desktop Support */
-  body {
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-  }
 
-  /* Bottom Navigation - Mobile Only */
+  /* Bottom Navigation */
   .bottom-navigation-mobile {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    width: 100vw;
-    height: calc(64px + env(safe-area-inset-bottom));
-    background-color: #0891b2;
-    border-top: 1px solid #0891b2;
-    padding-bottom: env(safe-area-inset-bottom);
+    width: 100%;
+    height: calc(var(--nav-h) + var(--sab));
+    background-color: var(--brand-azzurro);
+    border-top: 1px solid var(--brand-azzurro);
+    padding-bottom: var(--sab);
     z-index: 1000;
     margin: 0;
     box-sizing: border-box;
   }
 
-  /* iOS Safe Area Support */
   @supports (padding: max(0px)) {
     .bottom-navigation-mobile {
       padding-bottom: max(env(safe-area-inset-bottom), 0px);
@@ -221,16 +183,10 @@
   scroll-behavior: smooth;
 }
 
-/* Scrollbar ottimizzato per mobile-first */
+/* Scrollbar ottimizzata */
 @media (min-width: 768px) {
-  .scrollbar-thin::-webkit-scrollbar {
-    width: 4px;
-  }
-  
-  .scrollbar-thin::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  
+  .scrollbar-thin::-webkit-scrollbar { width: 4px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
   .scrollbar-thin::-webkit-scrollbar-thumb {
     background: hsl(220, 14%, 60%);
     border-radius: 2px;

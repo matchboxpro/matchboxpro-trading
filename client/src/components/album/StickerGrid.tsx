@@ -194,12 +194,7 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                     transform: 'translateZ(0)',
                     willChange: 'background-color'
                   }}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleUpdateSticker(sticker.id, "yes");
-                  }}
-                  onTouchStart={(e) => {
+                  onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     handleUpdateSticker(sticker.id, "yes");
@@ -221,12 +216,7 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                     transform: 'translateZ(0)',
                     willChange: 'background-color'
                   }}
-                  onMouseDown={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleUpdateSticker(sticker.id, "no");
-                  }}
-                  onTouchStart={(e) => {
+                  onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     handleUpdateSticker(sticker.id, "no");
@@ -251,25 +241,14 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
                     willChange: 'background-color'
                   }}
                   disabled={status !== "yes" && status !== "double"}
-                  onMouseDown={(e) => {
+                  onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     if (status === "no") return;
-                    if (status === "yes") {
-                      handleUpdateSticker(sticker.id, "double");
-                    } else if (status === "double") {
-                      handleUpdateSticker(sticker.id, "yes");
-                    }
-                  }}
-                  onTouchStart={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (status === "no") return;
-                    if (status === "yes") {
-                      handleUpdateSticker(sticker.id, "double");
-                    } else if (status === "double") {
-                      handleUpdateSticker(sticker.id, "yes");
-                    }
+                    
+                    // Logica semplificata per mobile
+                    const newStatus = status === "double" ? "yes" : "double";
+                    handleUpdateSticker(sticker.id, newStatus);
                   }}
                 >
                   <Copy className="w-4 h-4" />

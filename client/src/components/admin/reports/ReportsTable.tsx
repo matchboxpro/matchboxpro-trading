@@ -33,16 +33,6 @@ export function ReportsTable({
   onDeleteSelected,
   onBulkStatusChange
 }: ReportsTableProps) {
-  console.log('ReportsTable - Received reports:', reports.length);
-  console.log('ReportsTable - First 3 reports:', reports.slice(0, 3).map(r => ({ 
-    id: r.id, 
-    status: r.status, 
-    priority: r.priority, 
-    type: r.type 
-  })));
-  
-  // Force re-render check
-  console.log('ReportsTable - Component re-rendered at:', new Date().toISOString());
   const getStatusColor = (status: string) => {
     switch (status) {
       case "nuovo": return "bg-blue-100 text-blue-800 border-blue-200";

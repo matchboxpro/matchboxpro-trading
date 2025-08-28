@@ -26,21 +26,14 @@ export function ReportsSection() {
   const { data: reportsData, isLoading, refetch } = useQuery({
     queryKey: ["/api/admin/reports", filters.status, filters.priority, filters.type, filters.page],
     queryFn: async () => {
-      console.log('🔄 [BROWSER DEBUG] Starting reports query:', {
-        filters,
-        browser: navigator.userAgent.includes('Chrome') ? 'Chrome' : 'Chromium',
-        timestamp: new Date().toISOString()
-      });
 
       const params = new URLSearchParams();
       Object.entries(filters).forEach(([key, value]) => {
         if (value && value !== 'all') {
-          console.log(`Adding filter: ${key} = ${value}`);
           params.set(key, String(value));
         }
       });
       const timestamp = Date.now();
-      console.log(`Final URL params: ${params.toString()}`);
       const response = await fetch(`/api/admin/reports?${params}&_t=${timestamp}`, {
         method: 'GET',
         headers: {
@@ -50,21 +43,10 @@ export function ReportsSection() {
         }
       });
       
-      console.log('📥 [BROWSER DEBUG] Reports query response:', {
-        ok: response.ok,
-        status: response.status,
-        browser: navigator.userAgent.includes('Chrome') ? 'Chrome' : 'Chromium'
-      });
 
       if (!response.ok) throw new Error("Errore nel caricamento segnalazioni");
       const data = await response.json();
       
-      console.log('✅ [BROWSER DEBUG] Reports data received:', {
-        reportsCount: data.reports?.length || 0,
-        total: data.total,
-        hasNextPage: data.hasNextPage,
-        browser: navigator.userAgent.includes('Chrome') ? 'Chrome' : 'Chromium'
-      });
       
       return data;
     },
@@ -78,13 +60,9 @@ export function ReportsSection() {
   const totalPages = reportsData?.totalPages || 1;
   const totalReports = reportsData?.total || 0;
 
-  console.log('ReportsSection - Current filters:', filters);
-  console.log('ReportsSection - Reports from query:', reports.length);
-  console.log('ReportsSection - Total from backend:', totalReports);
 
   // Effetto per forzare refetch quando cambiano i filtri
   useEffect(() => {
-    console.log('Filters changed, forcing refetch:', filters);
     refetch();
   }, [filters.status, filters.priority, filters.type, refetch]);
 

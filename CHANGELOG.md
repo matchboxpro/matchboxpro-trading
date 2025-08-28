@@ -1,62 +1,48 @@
 # Changelog MatchboxPro
 
+## [2025-08-29] - PWA Layout Unification + Mobile Optimization
+
+### 🎯 **PWA LAYOUT UNIFICATION**
+- **Safe-Area Handling**: Unified safe-area CSS variables (--sat, --sab, --sal, --sar)
+  - @media (display-mode: standalone) for PWA detection
+  - @supports (padding: max(0px)) for iOS modern safe-area
+  - Removed user-scalable=no from viewport for better accessibility
+- **Bottom Navigation Overlay**: Fixed height nav with ::after pseudo-element
+  - Prevents icon clipping with overlay approach for safe-area-inset-bottom
+  - Unified content-wrapper class for consistent scroll behavior
+  - Added -webkit-overflow-scrolling: touch for iOS performance
+- **Color Normalization**: Complete CSS variables enforcement
+  - Replaced all hardcoded hex colors with --brand-azzurro, --brand-giallo
+  - Added color-scheme: light and text-rendering: optimizeLegibility
+  - Consistent brand color usage across all components
+
+### 📱 **MOBILE FIXES**
+- **Scroll Fix**: Fixed vertical scroll in figurine lists with overflow-y: auto
+- **Modal Touch**: Album statistics modal now closes on touch outside
+- **Navigation Icons**: Enhanced visibility with larger icons (w-6 h-6) and drop-shadow
+  - Better contrast with text-white/90 for inactive states
+  - Smooth transition-colors for improved UX
+  - Font-medium for enhanced text legibility
+
+### 🔧 **CODE CLEANUP**
+- **Console.log Removal**: Cleaned debug logging from production code
+  - Server routes admin.ts optimized
+  - ReportRepository.ts debug statements removed
+  - Maintained error logging for production monitoring
+- **Touch Event Unification**: Standardized onClick handlers for mobile compatibility
+  - Replaced onMouseDown/onTouchStart with onClick in StickerGrid
+  - Improved mobile touch responsiveness across components
+
+### 🚀 **LAYOUT CONSISTENCY**
+- **Duplicate Header Removal**: Fixed album/figurine pages showing double headers
+- **Content Wrapper Unification**: Single .content-wrapper class for all pages
+  - Consistent padding-bottom for bottom navigation clearance
+  - Unified overflow behavior with overscroll-behavior: contain
+- **PWA Standalone Priority**: PWA installed version as reference implementation
+  - Identical layout between browser and PWA versions
+  - iOS/Android compatibility with safe-area handling
+
 ## [Unreleased]
-
-### Added
-- **Admin Album Reordering**: Drag & drop functionality to reorder albums in admin panel
-- **Persistent Album Order**: Custom album order saved to file system and respected across app
-- **Visual Drag Indicators**: Grip icons and visual feedback during album reordering
-- **Sticker Grid Optimization**: Reduced box height by 25% and minimized spacing for better density
-- Complete optimization of SI/NO/DOPPIA sticker buttons with instant visual feedback
-- Mobile performance improvements with hardware acceleration and touch optimization
-- PWA fullscreen mode enhancements for better app-like experience
-- Real-time statistics synchronization for album sticker counts
-- Advanced profile page management with unified UI design
-- Password visibility toggle functionality with independent controls for each field
-- Persistent toast confirmation system for critical actions
-- Profile modal exclusive opening behavior (only one modal at a time)
-
-### Fixed
-- **Album Order Synchronization**: App now displays albums in exact order set by admin
-- **Server Port Configuration**: Fixed port conflicts for consistent localhost:3001 access
-- **API Endpoint Registration**: Resolved 404 errors for admin album reordering endpoint
-- Critical fix for DOPPIA button logic - now correctly disabled when status is "no"
-- SI button now remains green when status is "double" (business logic requirement)
-- Zero-lag button response on mobile devices through optimized event handling
-- Album statistics modal now correctly includes "double" status stickers in "Mie" count
-- PWA address bar hiding and zoom prevention for true fullscreen experience
-- Profile page password confirmation now uses persistent toast instead of disappearing confirm()
-- Removed placeholder text from password fields for cleaner UI
-
-### Changed
-- **Compact Sticker Layout**: Reduced sticker box height by 25% for better screen utilization
-- **Minimized Spacing**: Reduced gaps between sticker boxes from 4px to 2px
-- **Admin UX Enhancement**: Added drag & drop with @hello-pangea/dnd library
-- **File-based Persistence**: Album order stored in album-order.json for reliability
-- Improved button visual states with proper color coding (green/red/yellow)
-- Enhanced touch responsiveness with onMouseDown and onTouchStart events
-- Optimized CSS with transform3d and will-change for better performance
-- Updated sticker grid layout for better mobile usability
-- Unified profile page design with consistent azzurro theme and white text
-- Removed "Album Attivo" box from profile page for cleaner layout
-- Updated all profile buttons to follow consistent color scheme
-- Added bottom navigation bar to profile page
-- Enhanced password fields with "minimo 6 caratteri" informative text
-- Improved input field readability with white background and black text
-
-### Technical
-- **Album Repository Enhancement**: Added getAlbumsOrdered() method for custom ordering
-- **Admin API Endpoint**: PUT /api/admin/albums/reorder for saving album order
-- **File System Integration**: Persistent storage using fs module for album order
-- **React DnD Integration**: @hello-pangea/dnd for smooth drag & drop experience
-- **Code Cleanup**: Removed debug logging and temporary files for production readiness
-- Implemented requestAnimationFrame for smooth UI updates
-- Added CSS hardware acceleration with translateZ(0)
-- Enhanced event handling with preventDefault and stopPropagation
-- Improved PWA manifest configuration for better mobile integration
-- Added Eye/EyeOff icons from Lucide React for password visibility
-- Implemented toast-based confirmation system for better UX
-- Enhanced modal state management for exclusive opening behaviors
 
 ## [2025-08-21] - Admin Album Reordering + UI Optimizations
 

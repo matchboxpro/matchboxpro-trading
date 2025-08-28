@@ -67,13 +67,10 @@ export class ReportRepository {
       const offset = ((filters.page || 1) - 1) * limit;
       
       let whereConditions: any[] = [];
-      console.log('Building WHERE conditions with filters:', filters);
       if (filters.status) {
-        console.log('Adding status filter:', filters.status);
         whereConditions.push(eq(reports.status, filters.status));
       }
       if (filters.priority) {
-        console.log('Adding priority filter:', filters.priority);
         const priorities = filters.priority.split(',');
         if (priorities.length > 1) {
           whereConditions.push(inArray(reports.priority, priorities));
@@ -82,10 +79,8 @@ export class ReportRepository {
         }
       }
       if (filters.type) {
-        console.log('Adding type filter:', filters.type);
         whereConditions.push(eq(reports.type, filters.type));
       }
-      console.log('Total WHERE conditions:', whereConditions.length);
 
       const baseQuery = db
         .select({
@@ -117,14 +112,6 @@ export class ReportRepository {
             .limit(limit)
             .offset(offset);
 
-      console.log('Query executed, result count:', result.length);
-      if (result.length > 0) {
-        console.log('First result status/priority/type:', {
-          status: result[0].status,
-          priority: result[0].priority,
-          type: result[0].type
-        });
-      }
 
       // Count with same filters
       const [totalResult] = whereConditions.length > 0 
@@ -173,7 +160,6 @@ export class ReportRepository {
   }
 
   async updateReport(id: string, updates: { status?: string; priority?: string }): Promise<Report> {
-    console.log('ReportRepository - updateReport called with:', { id, updates, idType: typeof id });
     
     const result = await db.update(reports)
       .set(updates)
@@ -184,28 +170,22 @@ export class ReportRepository {
   }
 
   async bulkUpdateReportStatus(reportIds: string[], status: string): Promise<number> {
-    console.log('ReportRepository - Bulk updating status:', { reportIds, status });
     
     try {
       // Use individual updates instead of inArray to avoid UUID conversion issues
       let updatedCount = 0;
       
       for (const reportId of reportIds) {
-        console.log(`Updating report ${reportId} to status ${status}`);
         const result = await db.update(reports)
           .set({ status })
           .where(eq(reports.id, reportId))
-          .returning({ id: reports.id });
+          .returning();
         
         if (result.length > 0) {
           updatedCount++;
-          console.log(`Successfully updated report ${reportId}`);
-        } else {
-          console.log(`No report found with ID ${reportId}`);
         }
       }
       
-      console.log('ReportRepository - Total updated reports:', updatedCount);
       return updatedCount;
     } catch (error) {
       console.error('ReportRepository - Error in bulkUpdateReportStatus:', error);

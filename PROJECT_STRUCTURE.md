@@ -11,7 +11,7 @@
 **DB**: PostgreSQL su Render  
 **Auth**: JWT + cookie HttpOnly + bcrypt  
 **Deploy**: Render ($7/mese) - https://matchboxpro.onrender.com  
-**Aggiornato**: 22/08/2025 - Refactoring modulare + governance
+**Aggiornato**: 29/08/2025 - PWA Layout Unification + Mobile Optimization
 
 ## 🎯 Funzionalità Principali
 
@@ -182,11 +182,12 @@ server/
 
 ---
 
-**Ultimo aggiornamento**: 2025-08-22 - Refactoring modulare + governance compliance
+**Ultimo aggiornamento**: 2025-08-29 - PWA Layout Unification + Mobile Optimization
 
-### ✅ Refactoring Recenti
-- **ReportsSection**: Da 404 a 176 righe (estratto ReportsActions + ReportsMutations)
-- **Storage modulare**: Pattern Repository, file <200 righe
-- **Admin panel**: Componenti modulari, governance rispettata
-- **Backup automatico**: Sistema rotativo a 2 backup funzionante
+### ✅ Aggiornamenti Recenti
+- **PWA Safe-Area**: CSS variables unificati (--sat, --sab, --sal, --sar) con @media (display-mode: standalone)
+- **Bottom Navigation**: Sistema overlay con ::after pseudo-element per safe-area-inset-bottom
+- **Color Normalization**: Sostituzione completa hex colors con CSS variables --brand-azzurro/giallo
+- **Mobile Fixes**: Scroll verticale figurine, modal touch outside, icone navigazione migliorate
+- **Code Cleanup**: Rimossi console.log debug da server routes e repositories per produzione
 

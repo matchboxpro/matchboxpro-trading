@@ -37,7 +37,6 @@ export function registerAdminRoutes(app: Express, requireAdmin: any) {
   // Reports routes
   app.get("/api/admin/reports", async (req, res) => {
     try {
-      console.log("Received query params:", req.query);
       const filters = {
         status: req.query.status === 'all' ? undefined : req.query.status as string,
         priority: req.query.priority === 'all' ? undefined : req.query.priority as string,
@@ -45,17 +44,8 @@ export function registerAdminRoutes(app: Express, requireAdmin: any) {
         page: parseInt(req.query.page as string) || 1,
         limit: parseInt(req.query.limit as string) || 20
       };
-      console.log("Processed filters:", filters);
       
       const result = await storage.getReportsWithPagination(filters);
-      console.log("Query result count:", result.reports?.length || 0);
-      console.log("Query result total:", result.total || 0);
-      console.log("First few reports status/priority/type:", result.reports?.slice(0, 3).map(r => ({ 
-        id: r.id, 
-        status: r.status, 
-        priority: r.priority, 
-        type: r.type 
-      })) || []);
       res.json(result);
     } catch (error) {
       console.error("Error fetching reports:", error);
@@ -76,8 +66,6 @@ export function registerAdminRoutes(app: Express, requireAdmin: any) {
         return res.status(400).json({ message: "Stato non valido" });
       }
       
-      console.log(`Bulk status update: ${reportIds.length} reports to status "${status}"`);
-      console.log('Report IDs received:', reportIds);
       
       const updatedCount = await storage.bulkUpdateReportStatus(reportIds, status);
       res.json({ success: true, updatedCount });

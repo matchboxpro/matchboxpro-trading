@@ -152,6 +152,6 @@ Progetto privato - Tutti i diritti riservati
 
 ---
 
-**Ultimo aggiornamento**: 2025-08-22 - Refactoring modulare + Governance compliance
+**Ultimo aggiornamento**: 2025-08-29 - PWA Layout Unification + Mobile Optimization
 
 Made with ❤️ by MatchboxPro Team

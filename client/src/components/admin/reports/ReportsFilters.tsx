@@ -22,9 +22,7 @@ export function ReportsFilters({
   onCopyToReplit 
 }: ReportsFiltersProps) {
   const updateFilter = (key: string, value: string) => {
-    console.log(`ReportsFilters - Updating filter ${key} to:`, value);
     const newFilters = { ...filters, [key]: value, page: 1 };
-    console.log('ReportsFilters - New filters object:', newFilters);
     onFiltersChange(newFilters);
   };
 

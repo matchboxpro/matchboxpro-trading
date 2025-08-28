@@ -34,17 +34,9 @@ export function AppShell({ children, showBottomNav = true }: AppShellProps) {
         </header>
       )}
 
-      {/* MAIN scrollabile – opzionalmente riserva spazio alla nav se presente */}
-      <main
-        className={[
-          "relative z-10 flex-1 overflow-auto",
-          "safe-left safe-right",
-          shouldShowBottomNav ? "content-safe-bottom" : "",
-        ].join(" ")}
-      >
+      {/* MAIN content wrapper - PWA unificato iOS/Android */}
+      <main className="relative z-10 flex-1 content-wrapper safe-left safe-right">
         {children}
-        {/* Barra azzurra vuota in fondo a ogni pagina */}
-        <div className="bg-brand-azzurro nav-height w-full" />
       </main>
 
       {/* BOTTOM NAV – il componente applica .bottom-navigation-mobile (fixed + safe-area) */}

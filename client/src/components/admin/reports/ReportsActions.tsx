@@ -43,56 +43,38 @@ export function useReportsActions(
   };
 
   const updateReportPriority = (id: string, priority: string) => {
-    console.log(`Updating priority for report ${id} to ${priority}`);
+    updateReportMutation.mutate({ id, updates: { priority } });
   };
 
   // Funzione per cambio stato bulk
   const bulkStatusChange = (newStatus: string) => {
-    console.log('🚀 [BROWSER DEBUG] bulkStatusChange called:', {
-      newStatus,
-      selectedReports,
-      browser: navigator.userAgent.includes('Chrome') ? 'Chrome' : 'Chromium',
-      timestamp: new Date().toISOString()
-    });
-
     // Validazione completa
     if (selectedReports.length === 0) {
-      console.log('⚠️ [BROWSER DEBUG] No reports selected, showing error toast');
       toast({ 
         title: "⚠️ Errore", 
         description: "Seleziona almeno una segnalazione e uno stato valido",
         variant: "destructive",
-        duration: 5000
+        duration: 3000
       });
       return;
     }
 
     if (!newStatus || !['nuovo', 'aperto', 'inviato'].includes(newStatus)) {
-      console.log('⚠️ [BROWSER DEBUG] Invalid status, showing error toast');
       toast({ 
         title: "⚠️ Errore", 
         description: "Seleziona almeno una segnalazione e uno stato valido",
         variant: "destructive",
-        duration: 5000
+        duration: 3000
       });
       return;
     }
 
-    console.log('✅ [BROWSER DEBUG] Validation passed, showing confirmation dialog');
-    
     // Conferma dell'azione
     const confirmed = window.confirm(`Sei sicuro di voler cambiare lo stato di ${selectedReports.length} segnalazioni a "${newStatus}"?`);
-    console.log('🤔 [BROWSER DEBUG] User confirmation:', confirmed);
     
     if (!confirmed) {
-      console.log('❌ [BROWSER DEBUG] User cancelled operation');
       return;
     }
-
-    console.log('🎯 [BROWSER DEBUG] Starting mutation with data:', {
-      reportIds: selectedReports,
-      status: newStatus
-    });
 
     bulkUpdateMutation.mutate({ 
       reportIds: selectedReports, 

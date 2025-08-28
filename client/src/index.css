@@ -5,8 +5,8 @@
 :root {
   --background: #fff4d6;
   --foreground: #052b3e;
-  --muted: #fff4d6;
-  --muted-foreground: #052b3e;
+  --muted: #f5f5f5;
+  --muted-foreground: #6b7280;
   --popover: #05637b;
   --popover-foreground: #fff4d6;
   --card: #05637b;
@@ -66,29 +66,33 @@
 }
 
 @layer base {
-  * { @apply border-border; }
+  * { 
+    @apply border-border;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
 
-  body { @apply font-sans antialiased bg-background text-foreground; }
-}
-
-@layer base {
-  /* Mobile Safe Area Base Styles - iOS Dynamic Viewport */
   html {
     height: 100%;
     min-height: 100svh;
     min-height: 100dvh;
+    color-scheme: light;
   }
 
-  body {
+  body { 
+    @apply font-sans antialiased bg-background text-foreground;
     height: 100%;
     min-height: 100svh;
     min-height: 100dvh;
     margin: 0;
     padding: 0;
-    overflow-x: hidden;             /* mai bloccare lo scroll verticale globale */
+    /* NON bloccare overflow globalmente - causa glitch viewport iOS */
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: contain;
   }
 
   #root {
@@ -145,13 +149,21 @@
     padding-top: calc(var(--sat) + 24px) !important;
   }
 
+  /* Content wrapper per PWA - evita sovrapposizione con nav */
+  .content-wrapper {
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding-bottom: calc(var(--nav-h) + var(--sab) + 16px);
+  }
+  
   /* Content Safe Area (impedisce che liste/tabelle finiscano sotto la nav) */
   .content-safe-bottom {
     padding-bottom: calc(var(--sab) + var(--nav-h) + 16px) !important;
   }
 
   /* ------------------------------
-     Bottom Navigation — DEFINITIVA
+     Bottom Navigation — PWA UNIFICATA
      ------------------------------ */
   .bottom-navigation-mobile {
     position: fixed;
@@ -159,38 +171,94 @@
     right: 0;
     bottom: 0;
     width: 100%;
-
-    /* La nav dipinge FINO AL BORDO:
-       altezza = barra + safe-area inferiore */
-    height: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));
-
-    /* Le icone salgono sopra la home-indicator */
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-
+    
+    /* Solo altezza nav, NO safe-area qui */
+    height: var(--nav-h);
+    
     background-color: var(--brand-azzurro);
     border-top: 1px solid var(--brand-azzurro);
     z-index: 1000;
     margin: 0;
     box-sizing: border-box;
   }
-
+  
+  /* Overlay per safe-area inferiore - PWA iOS/Android */
+  .bottom-navigation-mobile::after {
+    content: "";
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: env(safe-area-inset-bottom, 0px);
+    background: var(--brand-azzurro);
+    pointer-events: none;
+    z-index: 999;
+  }
+  
   @supports (padding: max(0px)) {
-    .bottom-navigation-mobile {
-      height: calc(var(--nav-h) + max(env(safe-area-inset-bottom), 0px));
-      padding-bottom: max(env(safe-area-inset-bottom), 0px);
+    .bottom-navigation-mobile::after {
+      height: max(env(safe-area-inset-bottom), 0px);
     }
   }
 }
 
-/* Mobile-first ottimizzato */
-.chat-container { scroll-behavior: smooth; }
+/* PWA Standalone mode - iOS/Android specifici */
+@media (display-mode: standalone) {
+  :root {
+    /* Fine-tuning per PWA installata */
+    --nav-h: 64px;
+  }
+  
+  /* iOS PWA - gestione safe-area ottimizzata */
+  .platform-ios .bottom-navigation-mobile::after {
+    background: var(--brand-azzurro);
+  }
+}
 
-/* Scrollbar ottimizzata (solo desktop/tablet) */
-@media (min-width: 768px) {
-  .scrollbar-thin::-webkit-scrollbar { width: 4px; }
-  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: hsl(220, 14%, 60%);
-    border-radius: 2px;
+@supports (padding: max(0px)) {
+  /* iOS modern - supporto safe-area avanzato */
+  :root {
+    --sat: max(env(safe-area-inset-top), 0px);
+    --sab: max(env(safe-area-inset-bottom), 0px);
+    --sal: max(env(safe-area-inset-left), 0px);
+    --sar: max(env(safe-area-inset-right), 0px);
+  }
+}
+
+@layer utilities {
+  /* Prevenire zoom accidentale su input */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  /* Ottimizzazioni touch per mobile */
+  button, 
+  [role="button"],
+  .clickable {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Mobile-first ottimizzato */
+  .chat-container { 
+    scroll-behavior: smooth; 
+  }
+
+  /* Scrollbar ottimizzata (solo desktop/tablet) */
+  @media (min-width: 768px) {
+    .scrollbar-thin::-webkit-scrollbar { 
+      width: 4px; 
+    }
+    .scrollbar-thin::-webkit-scrollbar-track { 
+      background: transparent; 
+    }
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background: hsl(220, 14%, 60%);
+      border-radius: 2px;
+    }
   }
 }

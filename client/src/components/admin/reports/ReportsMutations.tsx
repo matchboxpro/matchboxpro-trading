@@ -72,95 +72,49 @@ export function useReportMutations(
   // Mutation per aggiornamento bulk dello stato
   const bulkUpdateMutation = useMutation({
     mutationFn: async ({ reportIds, status }: { reportIds: string[]; status: string }) => {
-      console.log('🔄 [BROWSER DEBUG] Starting bulk status update request:', { 
-        reportIds, 
-        status, 
-        browser: navigator.userAgent,
-        timestamp: new Date().toISOString()
-      });
-      
-      const response = await fetch('/api/admin/reports/bulk-status', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch('/api/admin/reports/bulk-update', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
         body: JSON.stringify({ reportIds, status })
       });
       
-      console.log('🌐 [BROWSER DEBUG] Response received:', {
-        ok: response.ok,
-        status: response.status,
-        statusText: response.statusText,
-        browser: navigator.userAgent.includes('Chrome') ? 'Chrome' : 'Chromium'
-      });
-      
       if (!response.ok) {
-        const error = await response.json();
-        console.error('❌ [BROWSER DEBUG] Response error:', error);
-        throw new Error(error.message || 'Errore nell\'aggiornamento');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Errore nell\'aggiornamento dello stato');
       }
       
       const result = await response.json();
-      console.log('✅ [BROWSER DEBUG] Response data:', result);
       return result;
     },
     onSuccess: (data, variables) => {
-      console.log('🎉 [BROWSER DEBUG] Mutation onSuccess triggered:', {
-        data,
-        variables,
-        browser: navigator.userAgent.includes('Chrome') ? 'Chrome' : 'Chromium',
-        timestamp: new Date().toISOString()
-      });
-      
-      console.log('🔄 [BROWSER DEBUG] Invalidating React Query cache...');
       queryClient.invalidateQueries({ queryKey: ["/api/admin/reports"] });
       
-      // Force immediate refetch with timeout for Chromium compatibility
-      console.log('🔄 [BROWSER DEBUG] Forcing immediate refetch...');
+      // Force immediate refetch with timeout for browser compatibility
       setTimeout(() => {
-        console.log('⏰ [BROWSER DEBUG] Timeout refetch triggered');
         refetch();
       }, 100);
       
-      console.log('🗑️ [BROWSER DEBUG] Clearing selected reports...');
       setSelectedReports([]);
       
-      console.log('🍞 [BROWSER DEBUG] Showing success toast...');
-      
-      // Force toast to stay visible with explicit timing for Chromium
       const toastConfig = { 
-        title: "✅ Stato aggiornato", 
-        description: `${data.updatedCount} segnalazioni aggiornate a "${variables.status}"`,
-        duration: 5000,
-        // Force toast to be visible
+        title: "✅ Successo", 
+        description: `Stato aggiornato per ${variables.reportIds.length} segnalazioni`,
+        duration: 3000,
         className: "z-[9999] !opacity-100 !visible"
       };
       
-      console.log('🍞 [BROWSER DEBUG] Toast config:', toastConfig);
-      const toastResult = toast(toastConfig);
-      console.log('🍞 [BROWSER DEBUG] Toast result:', toastResult);
-      
-      // Additional logging for Chromium debugging
-      setTimeout(() => {
-        console.log('⏰ [BROWSER DEBUG] Post-success check - 1 second later');
-        console.log('📊 [BROWSER DEBUG] Current reports count:', reports.length);
-        console.log('🎯 [BROWSER DEBUG] Selected reports:', selectedReports);
-      }, 1000);
+      toast(toastConfig);
     },
     onError: (error: any) => {
-      console.error('💥 [BROWSER DEBUG] Mutation onError triggered:', {
-        error: error.message,
-        stack: error.stack,
-        browser: navigator.userAgent.includes('Chrome') ? 'Chrome' : 'Chromium',
-        timestamp: new Date().toISOString()
-      });
-      
-      console.log('🍞 [BROWSER DEBUG] Showing error toast...');
-      const toastResult = toast({ 
+      toast({ 
         title: "❌ Errore", 
         description: error.message || "Errore nell'aggiornamento dello stato",
         variant: "destructive",
         duration: 5000
       });
-      console.log('🍞 [BROWSER DEBUG] Error toast result:', toastResult);
     }
   });
 

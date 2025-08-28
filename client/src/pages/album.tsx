@@ -192,11 +192,8 @@ export default function Album() {
   const selectedAlbumData = (albums as any[]).find((a: any) => a.id === selectedAlbum);
 
   return (
-    <div className="min-h-[100svh] bg-[#fff4d6] flex flex-col">
-      {/* Hide AppShell header for figurine page only */}
-      <style>{`
-        .app-shell-header { display: none !important; }
-      `}</style>
+    <div className="min-h-[100svh] bg-background flex flex-col">
+      {/* Rimuovi doppio header - usa solo quello dell'AppShell */}
       <div className="flex-shrink-0">
         <AlbumHeader
           album={selectedAlbumData}
@@ -208,23 +205,15 @@ export default function Album() {
         />
       </div>
 
-      {/* Nome album fuori dal box azzurro - font ridotto e senza grassetto */}
-      <div className="px-4 py-3 bg-[#fff4d6]">
-        <h1 className="text-base font-normal text-[#052b3e] text-center">
+      {/* Nome album - usa CSS variables invece di hex */}
+      <div className="px-4 py-3 bg-background">
+        <h1 className="text-base font-normal text-foreground text-center">
           {selectedAlbumData?.name}
         </h1>
       </div>
 
-      <div 
-        className="flex-1 overflow-y-auto overflow-x-hidden w-full content-safe-bottom" 
-        style={{ 
-          WebkitOverflowScrolling: 'touch',
-          touchAction: 'pan-y',
-          overscrollBehavior: 'contain',
-          maxWidth: '100vw',
-          height: 'calc(100vh - 200px)' // Forza altezza per scroll desktop
-        }}
-      >
+      {/* Content wrapper unificato PWA */}
+      <div className="flex-1 content-wrapper">
         <StickerGrid
           stickers={stickers as any[]}
           userStickers={userStickers as any[]}

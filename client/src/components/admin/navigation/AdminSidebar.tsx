@@ -27,7 +27,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           <li>
             <button 
               onClick={() => onSectionChange("dashboard")}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                 activeSection === "dashboard" 
                   ? "text-white bg-[#f8b400]/20 border border-[#f8b400]/30" 
                   : "text-white/70 hover:text-white hover:bg-white/10"
@@ -40,7 +40,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           <li>
             <button 
               onClick={() => onSectionChange("albums")}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                 activeSection === "albums" 
                   ? "text-white bg-[#f8b400]/20 border border-[#f8b400]/30" 
                   : "text-white/70 hover:text-white hover:bg-white/10"
@@ -53,7 +53,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           <li>
             <button 
               onClick={() => onSectionChange("users")}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                 activeSection === "users" 
                   ? "text-white bg-[#f8b400]/20 border border-[#f8b400]/30" 
                   : "text-white/70 hover:text-white hover:bg-white/10"
@@ -66,7 +66,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           <li>
             <button 
               onClick={() => onSectionChange("reports")}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                 activeSection === "reports" 
                   ? "text-white bg-[#f8b400]/20 border border-[#f8b400]/30" 
                   : "text-white/70 hover:text-white hover:bg-white/10"
@@ -79,7 +79,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           <li>
             <button 
               onClick={() => onSectionChange("settings")}
-              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+              className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
                 activeSection === "settings" 
                   ? "text-white bg-[#f8b400]/20 border border-[#f8b400]/30" 
                   : "text-white/70 hover:text-white hover:bg-white/10"

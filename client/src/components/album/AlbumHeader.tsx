@@ -58,40 +58,40 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
   };
 
   return (
-    <div className="bg-brand-azzurro text-white relative w-full header-mobile-safe">
+    <div className="bg-brand-azzurro text-white relative w-full">
       
       {/* Dropdown menu - ingrandito del 50% e centrato */}
       {showMenu && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/20">
           <div 
-            className="bg-gradient-to-br from-[#fff4d6] to-white rounded-xl shadow-xl border-2 border-[#f4a623] min-w-[300px] max-w-[90vw] overflow-hidden"
+            className="bg-gradient-to-br from-background to-white rounded-xl shadow-xl border-2 border-brand-giallo min-w-[300px] max-w-[90vw] overflow-hidden"
             onTouchStart={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header del menu */}
-            <div className="bg-[#05637b] text-white px-4 py-2 text-center">
+            <div className="bg-brand-azzurro text-white px-4 py-2 text-center">
               <span className="font-bold text-sm">Statistiche Album</span>
             </div>
             
             {/* Contenuto statistiche */}
             <div className="p-4 space-y-3">
               <div className="flex justify-between items-center py-2 px-3 bg-green-50 rounded-lg border-l-4 border-green-500">
-                <span className="text-[#052b3e] font-semibold text-sm">Mie:</span>
+                <span className="text-foreground font-semibold text-sm">Mie:</span>
                 <span className="text-green-600 font-bold text-lg">{ownedStickers}</span>
               </div>
               <div className="flex justify-between items-center py-2 px-3 bg-red-50 rounded-lg border-l-4 border-red-500">
-                <span className="text-[#052b3e] font-semibold text-sm">Mancanti:</span>
+                <span className="text-foreground font-semibold text-sm">Mancanti:</span>
                 <span className="text-red-600 font-bold text-lg">{missingStickers}</span>
               </div>
               <div className="flex justify-between items-center py-2 px-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                <span className="text-[#052b3e] font-semibold text-sm">Doppie:</span>
+                <span className="text-foreground font-semibold text-sm">Doppie:</span>
                 <span className="text-blue-600 font-bold text-lg">{doubleStickers}</span>
               </div>
             </div>
             
             {/* Footer con percentuale */}
-            <div className="bg-[#f4a623] text-[#052b3e] px-4 py-2 text-center">
+            <div className="bg-brand-giallo text-foreground px-4 py-2 text-center">
               <span className="font-bold text-sm">
                 Completamento: {Math.round((ownedStickers / totalStickers) * 100)}%
               </span>
@@ -107,8 +107,8 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
             onClick={() => onFilterChange("all")}
             className={`py-2 rounded-lg text-xs font-medium ${
               filter === "all" 
-                ? "bg-[#f4a623] text-black font-semibold" 
-                : "bg-[#05637b] text-white font-semibold hover:bg-[#f4a623] hover:text-black"
+                ? "bg-brand-giallo text-black font-semibold" 
+                : "bg-brand-azzurro text-white font-semibold hover:bg-brand-giallo hover:text-black"
             }`}
           >
             Tutte
@@ -117,8 +117,8 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
             onClick={() => onFilterChange("mine")}
             className={`py-2 rounded-lg text-xs font-medium ${
               filter === "mine" 
-                ? "bg-[#f4a623] text-black font-semibold" 
-                : "bg-[#05637b] text-white font-semibold hover:bg-[#f4a623] hover:text-black"
+                ? "bg-brand-giallo text-black font-semibold" 
+                : "bg-brand-azzurro text-white font-semibold hover:bg-brand-giallo hover:text-black"
             }`}
           >
             Mie
@@ -127,8 +127,8 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
             onClick={() => onFilterChange("missing")}
             className={`py-2 rounded-lg text-xs font-medium ${
               filter === "missing" 
-                ? "bg-[#f4a623] text-black font-semibold" 
-                : "bg-[#05637b] text-white font-semibold hover:bg-[#f4a623] hover:text-black"
+                ? "bg-brand-giallo text-black font-semibold" 
+                : "bg-brand-azzurro text-white font-semibold hover:bg-brand-giallo hover:text-black"
             }`}
           >
             Mancanti
@@ -137,8 +137,8 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
             onClick={() => onFilterChange("double")}
             className={`py-2 rounded-lg text-xs font-medium ${
               filter === "double" 
-                ? "bg-[#f4a623] text-black font-semibold" 
-                : "bg-[#05637b] text-white font-semibold hover:bg-[#f4a623] hover:text-black"
+                ? "bg-brand-giallo text-black font-semibold" 
+                : "bg-brand-azzurro text-white font-semibold hover:bg-brand-giallo hover:text-black"
             }`}
           >
             Doppie
@@ -146,23 +146,18 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
           {/* Status button integrato nella griglia */}
           <div ref={menuRef}>
             <Button
-              onMouseDown={(e) => {
+              onClick={(e) => {
                 e.preventDefault();
                 setShowMenu(!showMenu);
               }}
-              onTouchStart={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setShowMenu(!showMenu);
-              }}
-              className="bg-transparent hover:bg-transparent py-2 px-1 h-auto relative z-50 w-full flex items-center justify-center rounded-lg"
+              className="py-2 rounded-lg text-xs font-medium bg-brand-azzurro text-white font-semibold hover:bg-brand-giallo hover:text-black w-full flex items-center justify-center"
               style={{ 
                 touchAction: 'manipulation',
                 WebkitTapHighlightColor: 'transparent',
                 userSelect: 'none'
               }}
             >
-              <span className="text-xs font-medium text-[#f8b400]">Status</span>
+              <span className="text-xs font-medium text-white">Status</span>
             </Button>
           </div>
         </div>

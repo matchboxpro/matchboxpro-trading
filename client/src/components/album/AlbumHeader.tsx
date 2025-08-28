@@ -62,12 +62,17 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
       
       {/* Dropdown menu - ingrandito del 50% e centrato */}
       {showMenu && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/20">
+        <div 
+          className="fixed inset-0 flex items-center justify-center z-50 bg-black/20"
+          onClick={() => setShowMenu(false)}
+          onTouchEnd={() => setShowMenu(false)}
+        >
           <div 
             className="bg-gradient-to-br from-background to-white rounded-xl shadow-xl border-2 border-brand-giallo min-w-[300px] max-w-[90vw] overflow-hidden"
             onTouchStart={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
             onClick={(e) => e.stopPropagation()}
+            onTouchEnd={(e) => e.stopPropagation()}
           >
             {/* Header del menu */}
             <div className="bg-brand-azzurro text-white px-4 py-2 text-center">

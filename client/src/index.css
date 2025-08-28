@@ -38,6 +38,8 @@
   --sab: env(safe-area-inset-bottom, 0px);
   --sal: env(safe-area-inset-left, 0px);
   --sar: env(safe-area-inset-right, 0px);
+
+  /* Altezza visiva della barra di navigazione */
   --nav-h: 64px;
 }
 
@@ -87,7 +89,7 @@
     min-height: 100dvh;
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
+    overflow-x: hidden;             /* mai bloccare lo scroll verticale globale */
     -webkit-overflow-scrolling: touch;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
@@ -111,7 +113,6 @@
     -ms-user-select: none;
     user-select: none;
   }
-
   .touch-manipulation:hover,
   .touch-manipulation:active {
     background-color: inherit !important;
@@ -136,7 +137,7 @@
   .safe-left { padding-left: var(--sal); }
   .safe-right { padding-right: var(--sar); }
 
-  /* Content vs nav */
+  /* Spazio contenuto vs nav */
   .content-with-nav {
     padding-bottom: calc(var(--nav-h) + var(--sab));
   }
@@ -150,30 +151,46 @@
     padding-top: calc(var(--sat) + 24px) !important;
   }
 
-  /* Content Safe Area */
+  /* Content Safe Area (impedisce che liste/tabelle finiscano sotto la nav) */
   .content-safe-bottom {
     padding-bottom: calc(var(--sab) + var(--nav-h) + 8px) !important;
   }
 
-  /* Bottom Navigation */
+  /* ------------------------------
+     Bottom Navigation — FINALE
+     ------------------------------ */
   .bottom-navigation-mobile {
     position: fixed;
-    bottom: 0;
     left: 0;
     right: 0;
+    bottom: 0;
     width: 100%;
-    height: calc(var(--nav-h) + var(--sab));
+    /* altezza reale della barra (senza safe-area) */
+    height: var(--nav-h);
     background-color: var(--brand-azzurro);
     border-top: 1px solid var(--brand-azzurro);
-    padding-bottom: var(--sab);
     z-index: 1000;
     margin: 0;
     box-sizing: border-box;
+    padding: 0; /* niente padding-bottom: la safe-area viene pitturata dall'overlay */
+  }
+
+  /* Overlay che pittura DAVVERO la safe-area inferiore su iOS (nessuna banda chiara) */
+  .bottom-navigation-mobile::after {
+    content: "";
+    position: fixed;             /* fisso alla viewport, non al contenitore */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: env(safe-area-inset-bottom, 0px);
+    background-color: var(--brand-azzurro);
+    z-index: 999;                /* sotto la nav (1000), sopra lo sfondo pagina */
+    pointer-events: none;        /* non intercetta i tocchi */
   }
 
   @supports (padding: max(0px)) {
-    .bottom-navigation-mobile {
-      padding-bottom: max(env(safe-area-inset-bottom), 0px);
+    .bottom-navigation-mobile::after {
+      height: max(env(safe-area-inset-bottom), 0px);
     }
   }
 }
@@ -183,7 +200,7 @@
   scroll-behavior: smooth;
 }
 
-/* Scrollbar ottimizzata */
+/* Scrollbar ottimizzata (solo desktop/tablet) */
 @media (min-width: 768px) {
   .scrollbar-thin::-webkit-scrollbar { width: 4px; }
   .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }

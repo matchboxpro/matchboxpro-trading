@@ -49,7 +49,6 @@ export function BottomNavigation({ onNavigate }: BottomNavigationProps) {
           type="button"
           onClick={() => {
             handleNavigate("/album");
-            // evento già presente nella tua versione, lo manteniamo
             window.dispatchEvent(new CustomEvent("forceAlbumReset"));
           }}
           className={`touch-manipulation flex flex-col items-center justify-center h-full py-2 ${

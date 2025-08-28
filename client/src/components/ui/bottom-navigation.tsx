@@ -24,7 +24,7 @@ export function BottomNavigation({ onNavigate }: BottomNavigationProps) {
         <button
           type="button"
           onClick={() => handleNavigate("/")}
-          className={`touch-manipulation flex flex-col items-center justify-center h-full py-2 ${
+          className={`touch-manipulation flex flex-col items-center justify-center h-full py-1 ${
             isActive("/") ? "text-brand-giallo" : "text-white"
           }`}
           aria-current={isActive("/") ? "page" : undefined}
@@ -36,7 +36,7 @@ export function BottomNavigation({ onNavigate }: BottomNavigationProps) {
         <button
           type="button"
           onClick={() => handleNavigate("/match")}
-          className={`touch-manipulation flex flex-col items-center justify-center h-full py-2 ${
+          className={`touch-manipulation flex flex-col items-center justify-center h-full py-1 ${
             isActive("/match") ? "text-brand-giallo" : "text-white"
           }`}
           aria-current={isActive("/match") ? "page" : undefined}
@@ -51,7 +51,7 @@ export function BottomNavigation({ onNavigate }: BottomNavigationProps) {
             handleNavigate("/album");
             window.dispatchEvent(new CustomEvent("forceAlbumReset"));
           }}
-          className={`touch-manipulation flex flex-col items-center justify-center h-full py-2 ${
+          className={`touch-manipulation flex flex-col items-center justify-center h-full py-1 ${
             isActive("/album") ? "text-brand-giallo" : "text-white"
           }`}
           aria-current={isActive("/album") ? "page" : undefined}
@@ -63,7 +63,7 @@ export function BottomNavigation({ onNavigate }: BottomNavigationProps) {
         <button
           type="button"
           onClick={() => handleNavigate("/profile")}
-          className={`touch-manipulation flex flex-col items-center justify-center h-full py-2 ${
+          className={`touch-manipulation flex flex-col items-center justify-center h-full py-1 ${
             isActive("/profile") ? "text-brand-giallo" : "text-white"
           }`}
           aria-current={isActive("/profile") ? "page" : undefined}

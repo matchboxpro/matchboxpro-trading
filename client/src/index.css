@@ -152,8 +152,10 @@
   /* Content wrapper per PWA - evita sovrapposizione con nav */
   .content-wrapper {
     min-height: 0;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
     overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
     padding-bottom: calc(var(--nav-h) + var(--sab) + 16px);
   }
   

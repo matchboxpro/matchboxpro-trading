@@ -212,8 +212,21 @@ export default function Album() {
         </h1>
       </div>
 
-      {/* Content wrapper unificato PWA */}
-      <div className="flex-1 content-wrapper">
+      {/* Content wrapper unificato PWA - Fix iPhone scroll DEFINITIVO */}
+      <div 
+        className="flex-1"
+        style={{
+          position: 'fixed',
+          top: '140px',
+          left: '0',
+          right: '0',
+          bottom: 'calc(var(--nav-h) + var(--sab))',
+          overflowY: 'scroll',
+          overflowX: 'hidden',
+          WebkitOverflowScrolling: 'touch',
+          zIndex: 1
+        }}
+      >
         <StickerGrid
           stickers={stickers as any[]}
           userStickers={userStickers as any[]}

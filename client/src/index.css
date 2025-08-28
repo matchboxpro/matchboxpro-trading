@@ -157,6 +157,10 @@
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
     padding-bottom: calc(var(--nav-h) + var(--sab) + 16px);
+    /* Fix iPhone scroll definitivo */
+    position: relative;
+    height: calc(100vh - 140px);
+    transform: translateZ(0);
   }
   
   /* Content Safe Area (impedisce che liste/tabelle finiscano sotto la nav) */

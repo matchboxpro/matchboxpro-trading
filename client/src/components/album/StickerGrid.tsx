@@ -69,7 +69,7 @@ export const StickerGrid: React.FC<StickerGridProps> = ({
   };
 
   return (
-    <div className="bg-[#fff4d6] px-2 py-1 w-full min-h-0">
+    <div className="p-4 space-y-0.5">
       <div className="space-y-0.5 w-full max-w-none">
         {filteredStickers.map((sticker: any) => {
           const status = getUserStickerStatus(sticker.id);

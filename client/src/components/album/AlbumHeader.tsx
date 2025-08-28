@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
+import { Zap } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Search, Settings, BookOpen, Menu } from "lucide-react";
 
@@ -58,20 +59,12 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
 
   return (
     <div className="bg-brand-azzurro text-white relative w-full header-mobile-safe">
-      {/* Logo centrato in alto */}
-      <div className="flex items-center justify-center px-2 pt-2">
-        <img 
-          src="/matchbox-logo.png" 
-          alt="MATCHBOX" 
-          className="h-12 w-auto"
-        />
-      </div>
       
-      {/* Dropdown menu */}
+      {/* Dropdown menu - ingrandito del 50% e centrato */}
       {showMenu && (
-        <div className="relative">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/20">
           <div 
-            className="absolute top-0 right-2 mt-2 bg-gradient-to-br from-[#fff4d6] to-white rounded-xl shadow-xl border-2 border-[#f4a623] min-w-[200px] z-50 overflow-hidden"
+            className="bg-gradient-to-br from-[#fff4d6] to-white rounded-xl shadow-xl border-2 border-[#f4a623] min-w-[300px] max-w-[90vw] overflow-hidden"
             onTouchStart={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
             onClick={(e) => e.stopPropagation()}
@@ -107,16 +100,9 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
         </div>
       )}
 
-      {/* Titolo e statistiche centrati */}
-      <div className="text-center px-4 -mt-1 pb-3">
-        <h1 className="text-lg font-bold text-white">
-          {album?.name}
-        </h1>
-      </div>
-
-      {/* Filtri orizzontali */}
-      <div className="px-4 pb-3">
-        <div className="grid grid-cols-4 gap-1">
+      {/* Filtri orizzontali con hamburger integrato - il più in alto possibile */}
+      <div className="px-4 pt-0 pb-1">
+        <div className="grid grid-cols-5 gap-1">
           <Button
             onClick={() => onFilterChange("all")}
             className={`py-2 rounded-lg text-xs font-medium ${
@@ -157,6 +143,28 @@ export const AlbumHeader: React.FC<AlbumHeaderProps> = ({
           >
             Doppie
           </Button>
+          {/* Status button integrato nella griglia */}
+          <div ref={menuRef}>
+            <Button
+              onMouseDown={(e) => {
+                e.preventDefault();
+                setShowMenu(!showMenu);
+              }}
+              onTouchStart={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setShowMenu(!showMenu);
+              }}
+              className="bg-transparent hover:bg-transparent py-2 px-1 h-auto relative z-50 w-full flex items-center justify-center rounded-lg"
+              style={{ 
+                touchAction: 'manipulation',
+                WebkitTapHighlightColor: 'transparent',
+                userSelect: 'none'
+              }}
+            >
+              <span className="text-xs font-medium text-[#f8b400]">Status</span>
+            </Button>
+          </div>
         </div>
       </div>
     </div>

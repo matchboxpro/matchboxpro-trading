@@ -147,7 +147,7 @@
 
   /* Content Safe Area (impedisce che liste/tabelle finiscano sotto la nav) */
   .content-safe-bottom {
-    padding-bottom: calc(var(--sab) + var(--nav-h) + 8px) !important;
+    padding-bottom: calc(var(--sab) + var(--nav-h) + 16px) !important;
   }
 
   /* ------------------------------

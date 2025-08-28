@@ -43,8 +43,8 @@ export function AppShell({ children, showBottomNav = true }: AppShellProps) {
         ].join(" ")}
       >
         {children}
-        {/* piccolo spacer anti-aggancio tastiera iOS */}
-        <div className="h-2" />
+        {/* Barra azzurra vuota in fondo a ogni pagina */}
+        <div className="bg-brand-azzurro nav-height w-full" />
       </main>
 
       {/* BOTTOM NAV – il componente applica .bottom-navigation-mobile (fixed + safe-area) */}
